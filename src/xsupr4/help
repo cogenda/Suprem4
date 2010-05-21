@@ -1,0 +1,30 @@
+Suprem Plot Help
+
+In the main graphics window:
+    Zoom:
+    A left mouse click and drag can define a new window area for
+    plotting.  The original picture can be obtained by clicking on the
+    unzoom button.
+
+ButtonBox:
+    Help:
+    Creates this window.
+
+    Label:
+    This dialog allows the x and y axis labels and the Plot title to
+    be changed.
+
+    Unzoom:
+    Restores the graphics window to the original size.
+
+    Print:
+    This popups a dialog box.  The dialog prompts for five pieces of
+    information.  First is whether the output should be stored in a
+    file or sent directly to a device.  The second is the name of the
+    device or file.  The third is toggle button is for eliminating the
+    fixed size information and print information from the file so that
+    it can be included in another document.  The dialog can be canceled
+    at any time.
+
+    Close:  This button closes the window.  New windows can be created
+    by Suprem-IV.

@@ -1,0 +1,26 @@
+*** ./src/keyread/Makefile.org	Wed Feb  3 18:26:52 1993
+--- ./src/keyread/Makefile	Sun Dec 24 21:25:53 2000
+***************
+*** 80,89 ****
+  main.o: ../include/sysdep.h
+  main.o: /usr/include/sys/file.h
+  main.o: /usr/include/sys/types.h
+! main.o: /usr/include/sys/stdtypes.h
+  main.o: /usr/include/sys/sysmacros.h
+! main.o: /usr/include/sys/fcntlcom.h
+! main.o: /usr/include/sys/stdtypes.h
+  main.o: /usr/include/sys/stat.h
+  main.o: /usr/include/sys/types.h
+  main.o: ../include/check.h
+--- 80,90 ----
+  main.o: ../include/sysdep.h
+  main.o: /usr/include/sys/file.h
+  main.o: /usr/include/sys/types.h
+! #main.o: /usr/include/sys/stdtypes.h
+  main.o: /usr/include/sys/sysmacros.h
+! #main.o: /usr/include/sys/fcntlcom.h
+! main.o: /usr/include/sys/fcntl.h
+! #main.o: /usr/include/sys/stdtypes.h
+  main.o: /usr/include/sys/stat.h
+  main.o: /usr/include/sys/types.h
+  main.o: ../include/check.h

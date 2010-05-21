@@ -1,0 +1,15 @@
+#!/bin/sh
+# Where is it?
+DIR=/home/suprem45/Rel.9305
+
+KEYFILE=$DIR/data/suprem.uk
+MODELFILE=$DIR/data/modelrc
+IMPFILE=$DIR/data/sup4gs.imp
+MANDIR=$DIR/help
+
+export KEYFILE MODELFILE IMPFILE MANDIR
+
+exec $DIR/bin/suprem $*
+
+#should never get here!
+exit 1

@@ -1,0 +1,18 @@
+#make the contact hole
+etch oxide right p1.x=1.4
+
+#put down the aluminum and etch off
+deposit alum thick=0.1
+etch alum left p1.x=1.4
+
+#remove extra grid nodes to save Pisces compute time
+etch start x=-0.5 y=-0.1
+etch cont  x=1.6 y=-0.1
+etch cont  x=1.6 y=-1.0
+etch done  x=-0.5 y=-1.0
+
+#reflect the structure
+struct mirror left
+
+#save it in Pisces format
+struct pisc=ldd.mesh

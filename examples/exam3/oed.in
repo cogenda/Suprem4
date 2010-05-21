@@ -1,0 +1,46 @@
+#some set stuff
+option quiet
+mode one.dim
+
+#the vertical definition
+line x loc = 0     spacing = 0.02 tag = top
+line x loc = 1.50  spacing = 0.05
+line x loc = 5.0   spacing = 0.5
+line x loc = 28.0  tag=bottom
+
+#the silicon wafer
+region silicon xlo = top xhi = bottom
+
+#set up the exposed surfaces
+bound exposed  xlo = top  xhi = top
+bound backsid  xlo = bottom  xhi = bottom
+
+#calculate the mesh
+init 
+
+#the pad oxide
+deposit oxide thick=0.02
+
+#the diffusion card
+method init=1.0e-3 two.d
+%define otim 0.0
+%define oldfci 1.0
+%define oldbci 1.0
+%define totfci 0.0
+%define totbci 0.0
+%diffuse time=240 temp=1100 dry movie="
+    select z=(inter/ci.star);
+    %define newfci zfn(0.0,sil@oxi(0.0)+1.0e-6)
+    %define newbci zfn(0.0,27.9)
+    %define totfci ${totfci} + 0.5 * (${time}-${otim})*(${newfci}+${oldfci})
+    %define totbci ${totbci} + 0.5 * (${time}-${otim})*(${newbci}+${oldbci})
+    %define den ${time}+1.0e-6
+    printf Data ${time}/60.0 (${totfci}/${den}) (${totbci}/${den})
+    %define otim ${time}
+    %define oldfci ${newfci}
+    %define oldbci ${newbci}"
+
+
+#save the data
+structure out=oed.str
+

@@ -1,0 +1,66 @@
+h38807
+s 00054/00000/00000
+d D 1.1 93/02/03 15:08:28 suprem45 1 0
+c date and time created 93/02/03 15:08:28 by suprem45
+e
+u
+U
+f e 0
+t
+T
+I 1
+#
+#
+# Makefile for suprem4 test version 
+#
+# change this for the port to other machines
+WRKDIR  = ..
+#
+#
+#define the standard libraries needed for life and the pursuit of happiness
+LDFLAGS = 
+#define the location to look for .h files
+IDIR	= $(WRKDIR)/include
+INCL    = -I$(WRKDIR)/include -I.. -I.
+CFLAGS  = -O -g $(INCL) -D$(SYS) $(LOCAL)
+CFILES	= fgtmom.c imp_gtprs.c imp_lat.c imp_prson.c imp_qeqv.c \
+	imp_qpgauss.c imp_qpprs.c imp_setprs.c imp_vert.c imp_zeqv.c implant.c \
+	pearson.c damage.c surf.c
+OBJS  	= fgtmom.o imp_gtprs.o imp_lat.o imp_prson.o imp_qeqv.o \
+	imp_qpgauss.o imp_qpprs.o imp_setprs.o imp_vert.o imp_zeqv.o implant.o \
+	pearson.o damage.o surf.o
+SRCS    = $(CFILES) 
+DEST	= $(WRKDIR)/lib/implant.a
+TMPLIB  = /tmp/lib$$$$.a
+
+$(DEST) : $(OBJS) 
+	ar rv $(TMPLIB) $(OBJS) && ranlib $(TMPLIB) && mv $(TMPLIB) $(DEST)
+
+tags    : $(SRCS) 
+	ctags $(SRCS) $(SUBSRC)
+
+clean   : 
+	rm -f $(OBJS) 
+
+.c~.o	:
+	$(GET) $(GFLAGS) $<
+	$(CC) $(CFLAGS) $*.c
+
+.c~.c	:
+	$(GET) $(GFLAGS) $<
+
+.h~.h	:
+	$(GET) $(GFLAGS) $<
+
+lint	:
+	lint $(INCL) -D$(SYS) -DITERATE $(CFILES)
+
+depend  : 
+	sed '/^#LAST-HUMAN-LINE/q' Makefile > Makefile.new
+	mkdep $(INCL) $(SRCS) 
+	cat .depend >> Makefile.new
+	mv Makefile Makefile.old; mv Makefile.new Makefile
+	rm .depend
+	
+#LAST-HUMAN-LINE
+E 1

@@ -1,0 +1,31 @@
+*** ./src/include/bound.h.org	Wed Feb  3 17:14:05 1993
+--- ./src/include/bound.h	Sun Dec 24 21:25:53 2000
+***************
+*** 21,31 ****
+   *									*
+   ************************************************************************/
+  
+  #ifdef STATIC_ALLOCATION_TIME
+  #define EXTERN
+  #else
+  #define EXTERN extern
+! #endif
+  
+  /* Global min and max specified by user if more than one frame exists */
+  EXTERN float gmin;
+--- 21,35 ----
+   *									*
+   ************************************************************************/
+  
++ #ifndef GlobalH
++ /* Already defined in include/global.h - DClark 19Oct98 */
+  #ifdef STATIC_ALLOCATION_TIME
+  #define EXTERN
+  #else
+  #define EXTERN extern
+! #endif /* STATIC_ALLOCATION_TIME */
+! #endif /* GlobalH */
+! 
+  
+  /* Global min and max specified by user if more than one frame exists */
+  EXTERN float gmin;

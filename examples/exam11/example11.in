@@ -1,0 +1,65 @@
+option quiet
+set echo
+
+line x loc = 0.0 tag=left   spacing = 0.5
+line x loc = 0.50           spacing = 0.5
+line x loc = 4.00           spacing = 0.5
+line x loc = 4.10           spacing = 0.1
+line x loc = 4.20           spacing = 0.05
+line x loc = 4.50           spacing = 0.05
+line x loc = 5.00 tag=right spacing = 0.05
+
+line y loc=0.0 tag=top      spacing=0.03
+line y loc=0.3              spacing=0.03
+line y loc=1.0             spacing=0.1
+line y loc=3.0  tag=bottom  spacing=0.3
+
+region gaas  xlo=left  xhi=right  ylo=top  yhi=bottom
+boundary exposed xlo=left xhi=right ylo=top yhi=top
+boundary backside xlo=left xhi=right ylo=bottom yhi=bottom
+init isilicon conc=3e15
+
+deposit nitride thick=1.0
+etch nitride start x=5 y=0.0
+etch continue x=5 y=-1.10
+etch continue x=4.5 y=-1.10
+etch done x=4.5 y=0.0
+
+implant isilicon dose=1.75e12 energy=75 pearson
+implant beryllium dose=1e13 energy=100 pearson
+
+etch nitride start x=4.5 y=0.0
+etch continue x=4.5 y=-1.10
+etch continue x=0 y=-1.10
+etch done x=0 y=0.0
+
+deposit nitride thick=1.0
+etch nitride start x=4.5 y=0.0
+etch continue x=4.5 y=-1.10
+etch continue x=0.0 y=-1.10
+etch done x=0.0 y=0.0
+
+implant isilicon dose=1e13 energy=100.0 pearson
+
+etch nitride start x=4.5 y=0.0
+etch continue x=4.5 y=-1.10
+etch continue x=5.0 y=-1.10
+etch done x=5.0 y=0.0
+
+deposit nitride thick=.05
+
+structure mirror right
+
+plot.2d bound fill x.min=4.0 x.max=6 y.max=1.6
+select z=log10(silicon)
+foreach v (15. to 18.5 step 0.5)
+contour val=v line.type=2
+end
+
+plot.2d bound fill x.min=4.0 x.max=6 y.max=1.6 cle=f axi=f 
+select z=log10(beryllium)
+foreach v (16.5 to 17.0 step .5)
+contour val=v line.type=4
+end
+
+quit

@@ -1,0 +1,40 @@
+# --Recessed LOCOS cross section: recess 0.3 um, grow 0.54um (0.23 + 0.31)--
+#option quiet
+
+#------------Substrate mesh definition
+line y loc=0  spac=0.05 tag=t
+line y loc=0.6 spac=0.2
+line y loc=1            tag=b
+
+line x loc=-1   spac=0.2 tag=l
+line x loc=-0.2 spac=0.05
+line x loc=0  spac=0.05
+line x loc=1  spac=0.2 tag=r
+
+region silicon xlo=l xhi=r ylo=t yhi=b
+bound  expo    xlo=l xhi=r ylo=t yhi=t
+
+init or=100
+
+#-----------Anisotropic silicon etch
+etch    silicon left p1.x=-0.218 p1.y=0.3 p2.x=0 p2.y=0
+
+#----------Pad oxide and nitride mask
+deposit oxide thick=0.02
+deposit nitride thick=0.1
+etch    nitride left p1.x=0
+etch    oxide   left p1.x=0
+
+plot.2d grid bound 
+pause
+
+#----------Field oxidation
+meth compr
+
+plot.2d bound y.mi=-0.5 line.b=2
+pause
+
+diffuse tim=90 tem=1000 weto2 movie="plot.2d bound cle=f axi=f"
+stru    outf=fc.mesh
+
+plot.2d bound flow vleng=0.1

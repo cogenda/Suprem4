@@ -1,0 +1,27 @@
+h26135
+s 00015/00000/00000
+d D 2.1 93/02/04 13:19:43 suprem45 1 0
+c Initial IV.GS release
+e
+u
+U
+f e 0
+t
+T
+I 1
+#!/bin/sh
+# Where is it?
+DIR=/home/suprem45/Rel.9305
+
+KEYFILE=$DIR/data/suprem.uk
+MODELFILE=$DIR/data/modelrc
+IMPFILE=$DIR/data/sup4gs.imp
+MANDIR=$DIR/help
+
+export KEYFILE MODELFILE IMPFILE MANDIR
+
+exec $DIR/bin/suprem $*
+
+#should never get here!
+exit 1
+E 1

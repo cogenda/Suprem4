@@ -1,0 +1,19 @@
+*** ./src/shell/parser.c.org	Wed Feb  3 18:04:00 1993
+--- ./src/shell/parser.c	Sun Dec 24 21:25:53 2000
+***************
+*** 278,283 ****
+--- 278,291 ----
+  int yyerrflag;			/* error recovery flag */
+  int yychar;			/* current input token number */
+  
++ /* byacc needs yyerror to be defined (no libby.a), so we define a simple one */
++ /* DClark - 19Oct98 */
++ 
++ void yyerror(char * error_message)
++ {
++    fprintf(stderr, "\nERROR: %s\n\n", error_message);
++ }
++ 
+  
+  /*
+  ** yyparse - return 0 if worked, 1 if syntax error not recovered from

@@ -1,0 +1,27 @@
+#---some set stuff
+option quiet
+unset echo
+
+foreach O (100 110 111)
+echo "---------- Orientation < O > --------------------"
+
+#---the minimal mesh
+line x loc = 0.0 tag = left
+line x loc = 1.0 tag = right
+
+line y loc = 0.0 tag = top
+line y loc = 1.0 tag=bottom
+
+region silicon xlo = left xhi = right ylo = top yhi = bottom
+
+bound exposed  xlo = left xhi = right ylo = top  yhi = top
+
+init ori=O
+
+#---the oxidation step
+meth    grid.ox=0.03
+diffuse time=30 temp=900 wet
+
+select z=y*1e8 label="Depth(A)"; print.1d x.v=0 form=8.0f layers
+
+end

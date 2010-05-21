@@ -1,0 +1,1291 @@
+unset interactive
+#set echo
+#
+#
+#*************************************************************************
+#*									 *
+#*     Copyright c 1984 and 1992.					 *
+#*     The board of trustees of the Leland Stanford Junior University.   *
+#*     All rights reserved.		 				 *
+#*     This subroutine may not be used outside of the SUPREM4 computer	 *
+#*     program without the prior written consent of Stanford University. *
+#*									 *
+#*     Copyright c 1991 The board of regents of the University of 	 *
+#*                      Florida.  All rights reserved.			 *
+#*     This subroutine may not be used outside of the SUPREM4 computer	 *
+#*     program without the prior written consent of the University of 	 *
+#*     Florida.								 *
+#*									 *
+#*									 *
+#*************************************************************************/
+#   modelrc                Version 2.2
+#   Last Modification : 4/23/93 12:35:41
+#
+#
+# This file contains the default initialization for the constants
+# used in Suprem IV.  Most of these are the same constants as found
+# in Suprem III.  
+
+# Oxidation parameters
+
+#---------- the dry parabolic coeff (singly activated)
+oxide  dry orient=111 par.h.0  =12.8667    par.h.e =1.23    p.break=0.
+
+#---------- the dry linear coeff (singly activated) for 111
+oxide  dry orient=111 lin.h.0  =1.038e5    lin.h.e=2.0      l.break=0
+
+#---------- thin dry coeffs 
+oxide  dry orient=111 thinox.0 =5.87e6     thinox.e =2.32   thinox.l=0.0078
+oxide  dry orient=110 thinox.0 =5.37e4     thinox.e =1.80   thinox.l=0.0060
+oxide  dry orient=100 thinox.0 =6.57e6     thinox.e =2.37   thinox.l=0.0069
+
+#---------- pressure dependence of dry coefficients
+oxide  dry l.pdep  =0.75       p.pdep   =1.0
+
+#---------- the wet parabolic coefficient (double activated)
+oxide wet par.l.0 =283.333     par.l.e =1.17
+oxide wet par.h.0 =7.00        par.h.e =0.78    p.break=950.
+
+#---------- the wet 111 linear coefficient (doubly activated)
+oxide wet orient=111  lin.l.0=3.45e4       lin.l.e=1.60
+oxide wet orient=111  lin.h.0=2.95e6       lin.h.e=2.05     l.break=900.
+
+#---------- orientation dependence for B/A
+oxide ori.dep = t
+oxide orient=100 ori.fac = 0.595
+oxide orient=110 ori.fac = 0.833
+oxide orient=111 ori.fac = 1.0
+
+#---------- pressure dependence of wet coefficients
+oxide wet l.pdep   =1.0        p.pdep   =1.0
+
+#---------- the fermi level dependent B/A rate model.
+#           values from Plummer 316 class notes.
+oxide baf.dep=t baf.ebk = 241.6 baf.pe=0.46 baf.ppe=1.0 baf.ne=0.145 baf.nne=0.62 baf.k0=2.6e3 baf.ke=1.1
+
+#---------- the chlorine dependence of dry coefficients
+oxide wet hcl.pc     =0.00
+oxide hclP="0 1 3 5 7 10" hclT="900,1000,1100"
+oxide hcl.lin="1,1,1 1.75,1.25,1.621 1.75,1.486,2.207 1.75,1.486,2.207 1.75,1.486,2.207 1.75,1.486,2.207"
+oxide hcl.par="1,1,1 1.083,1.658,1.355 1.25,1.840,1.490 1.444,2.075,1.641 1.639,2.332,1.816 2.028,2.759,2.102"
+
+#defaults values of alpha
+oxide   oxide /silicon alpha = 2.2
+
+#Henry's Law coefficient
+oxide wet henry.coef = 3e19;
+oxide dry henry.coef = 5e16;
+
+#number of oxygen atoms in cm3 of oxide
+oxide wet theta = 2.2e22;
+
+#mass-transfer; Grove guesstimate 5cm/s * H / Cg
+oxide wet oxide /gas trn.0 = 1e6;
+oxide dry oxide /gas trn.0 = 1e+3;
+
+#stress-dependent growth coefficients
+oxide   Vc=0 Vr=0 Vd=0 Vt=0 Dlim=1.0
+oxide   stress.dep = false
+
+# the bogus 1d stuff
+oxide   spread = 1.0 initial = 0.0010 mask.edge = -200
+
+# parameters for GPC model
+oxide nit.thick=-1 erf.q=0.05 erf.delta=0.04
+oxide erf.lbb = (8.25e-3*( 1580.3 - Tox ) * ( Eox ^0.67) * ( eox ^0.3) * exp(-(( en -0.08)^2)/0.06))
+oxide erf.h  = (402 * (0.445 - 1.75 * en ) * exp(- Tox /200 ))
+
+
+#background diffusivity values 
+oxide   nitride wet diff.0 = 1.0e-20 diff.e = 0;
+oxide   nitride dry diff.0 = 1.0e-20 diff.e = 0;
+oxide   poly    wet diff.0 = 1.0e-20 diff.e = 0;
+oxide   poly    dry diff.0 = 1.0e-20 diff.e = 0;
+oxide   oxyni   wet diff.0 = 1.0e-20 diff.e = 0;
+oxide   oxyni   dry diff.0 = 1.0e-20 diff.e = 0;
+oxide   silicon wet diff.0 = 1.0e-20 diff.e = 0;
+oxide   silicon dry diff.0 = 1.0e-20 diff.e = 0;
+
+#mechanical parameters
+#Hetherington (wet) Phys & Chem of Glasses 1964.
+material   oxide   visc.0 = 1.99e-7 visc.E = 5.292 visc.x = 0.499 wet
+material   oxide   visc.0 = 3.1e-13 visc.E = 7.405 visc.x = 0.499 dry
+material   nitride visc.0 = 1.59e10   visc.E=1.12  visc.x = 0.499
+material   silicon visc.0 = 1e30   visc.E=0       visc.x = 0.499
+material   poly    visc.0 = 5e11   visc.E=0       visc.x = 0.499
+material   oxyni   visc.0 = 5e12   visc.E=0       visc.x = 0.499
+material   gaas    visc.0 = 1e30   visc.E=0       visc.x = 0.499
+
+#Spinner J. Am. Ceram. Soc. 1956
+material   oxide   Young.m = 8.3e11    Poiss.r = 0.2
+material   nitride Young.m = 3.89e12 Poiss.r = 0.3
+material   silicon Young.m = 1.7e12  Poiss.r = 0.28
+material   poly    Young.m = 1.7e11  Poiss.r = 0.28
+material   oxyni   Young.m = 3.89e12 Poiss.r = 0.3
+material   gaas    Young.m = 7.5e11  Poiss.r = 0.3
+
+#material parameters for thermal expansion and intrinsic stress
+#from TPRC
+material silicon  lcte="(3.052e-6 + 2 * 6.206e-10 * ( T -293) )"
+material oxide    lcte="(1.206e-7 + 2 * 2.543e-10 * ( T -293) )"
+material aluminum lcte="(2.438e-5 + 2 * 6.660e-9  * ( T -293) )"
+#Tamura & Sunami
+material nitride  lcte=3.0e-6
+#
+material gaas	  lcte="(5.69e-6 + 1.5e-9 * T)"
+material gaas	  p.type  act.a="(1)"			act.b="1.00e21"
+material gaas	  n.type  act.a="(2.2 - 0.00117 * T)"	act.b="1.25e18"
+
+#older values
+#ym[ Si] = 1.5e12;	pr[ Si] = 0.25;
+#ym[ SiO2] = 0.66e12;	pr[ SiO2] = 0.17;
+#ym[ SiNi] = 3.89e12;	pr[ SiNi] = 0.3;
+
+# Impurity parameters
+# Diffusion pre-exponential terms are in cm^2/s
+# Diffusion exponential terms are in eV
+
+antimony 	donor
+arsenic 	donor
+phosphorus 	donor
+germanium 	donor
+selenium 	donor
+isilicon 	donor
+tin	 	donor
+boron 		acceptor
+beryllium	acceptor
+carbon 		acceptor
+magnesium	acceptor
+zinc 		acceptor
+
+#antimony diffusion parameters for each material
+antimony	silicon		Dix.0=0.214	Dix.E=3.65
+antimony	silicon 	Dim.0=15.0	Dim.E=4.08
+antimony	oxide		Dix.0=1.31e16	Dix.E=8.75
+antimony	oxide   	Dim.0=0.0	Dim.E=0.0
+antimony	poly		Dix.0=21.4	Dix.E=3.65
+antimony	poly		Dim.0=1500.0	Dim.E=4.08
+antimony	nitride		Dix.0=0.0	Dix.E=0.0
+antimony	nitride		Dim.0=0.0	Dim.E=0.0
+antimony	oxynitr		Dix.0=0.0	Dix.E=0.0
+antimony	oxynitr		Dim.0=0.0	Dim.E=0.0
+antimony	gaas		Dix.0=0.0	Dix.E=0.0
+antimony	gaas		Dim.0=0.0	Dim.E=0.0
+antimony	silicon 	Fi=0.05
+
+#arsenic diffusion parameters for each material
+arsenic		silicon		Dix.0=0.0666	Dix.E=3.44
+arsenic		silicon 	Dim.0=12.8	Dim.E=4.05
+arsenic		oxide		Dix.0=1.75	Dix.E=4.89
+arsenic		oxide   	Dim.0=0.0	Dim.E=0.0
+arsenic		poly		Dix.0=6.6	Dix.E=3.44
+arsenic		poly		Dim.0=1200.0	Dim.E=4.05
+arsenic		nitride		Dix.0=0.0	Dix.E=0.0
+arsenic		nitride		Dim.0=0.0	Dim.E=0.0
+arsenic		oxynitr		Dix.0=0.0	Dix.E=0.0
+arsenic		oxynitr		Dim.0=0.0	Dim.E=0.0
+arsenic		gaas		Dix.0=0.0	Dix.E=0.0
+arsenic		gaas		Dim.0=0.0	Dim.E=0.0
+arsenic		silicon 	Fi=0.20
+#these are from Fair - stored as the square root of the actual value to avoid
+# underflow problems on stupid computers...
+arsenic		silicon		Ctn.0=3.067e-22 Ctn.E=0.165
+arsenic		poly   		Ctn.0=3.067e-22 Ctn.E=0.165
+
+#gold diffusion parameters for each material
+gold		silicon		K.0=1.02e19	K.E=6.66
+gold		oxide		K.0=0.0		K.E=3.53
+gold		poly		K.0=0.0		K.E=3.46
+gold		nitride		K.0=0.0		K.E=0.0
+gold		oxynitr		K.0=0.0		K.E=0.0
+gold		gaas		K.0=0.0		K.E=0.0
+
+#boron diffusion parameters for each material
+boron		silicon		Dix.0=0.037	Dix.E=3.46
+boron		silicon 	Dip.0=0.76	Dip.E=3.46
+boron		oxide		Dix.0=3.16e-4	Dix.E=3.53
+boron		oxide   	Dip.0=0.0	Dip.E=0.0
+boron		poly		Dix.0=3.66	Dix.E=3.46
+boron		poly		Dip.0=72.0	Dip.E=3.46
+boron		nitride		Dix.0=0.0	Dix.E=0.0
+boron		nitride		Dip.0=0.0	Dip.E=0.0
+boron		oxynitr		Dix.0=0.0	Dix.E=0.0
+boron		oxynitr		Dip.0=0.0	Dip.E=0.0
+boron		gaas		Dix.0=0.0	Dix.E=0.0
+boron		gaas		Dip.0=0.0	Dip.E=0.0
+boron		silicon 	Fi=0.94
+
+#phosphorus diffusion parameters for each material
+phosphorus	silicon		Dix.0=3.85	Dix.E=3.66	Dvx.0=0.0	Dvx.E=0.0
+phosphorus	silicon 	Dim.0=4.44	Dim.E=4.00	Dvm.0=0.0	Dvm.E=0.0
+phosphorus	silicon 	Dimm.0=44.2	Dimm.E=4.37	Dvmm.0=0.0	Dvmm.E=0.0
+phosphorus	oxide		Dix.0=7.6e-3	Dix.E=3.5	Dvx.0=0.0	Dvx.E=0.0
+phosphorus	oxide   	Dim.0=0.0	Dim.E=0.0	Dvm.0=0.0	Dvm.E=0.0
+phosphorus	oxide	 	Dimm.0=0.0	Dimm.E=0.0	Dvmm.0=0.0	Dvmm.E=0.0
+phosphorus	poly		Dix.0=385.0	Dix.E=3.66	Dvx.0=0.0	Dvx.E=0.0
+phosphorus	poly		Dim.0=443.3	Dim.E=4.05	Dvm.0=0.0	Dvm.E=0.0
+phosphorus	poly	 	Dimm.0=4420.0	Dimm.E=4.37	Dvmm.0=0.0	Dvmm.E=0.0
+phosphorus	nitride		Dix.0=0.0	Dix.E=0.0	Dvx.0=0.0	Dvx.E=0.0
+phosphorus	nitride		Dim.0=0.0	Dim.E=0.0	Dvm.0=0.0	Dvm.E=0.0
+phosphorus	nitride 	Dimm.0=0.0	Dimm.E=0.0	Dvmm.0=0.0	Dvmm.E=0.0
+phosphorus	oxynitr		Dix.0=0.0	Dix.E=0.0	Dvx.0=0.0	Dvx.E=0.0
+phosphorus	oxynitr		Dim.0=0.0	Dim.E=0.0	Dvm.0=0.0	Dvm.E=0.0
+phosphorus	oxynitr 	Dimm.0=0.0	Dimm.E=0.0	Dvmm.0=0.0	Dvmm.E=0.0
+phosphorus	gaas		Dim.0=0.0	Dim.E=0.0	Dvm.0=0.0	Dvm.E=0.0
+phosphorus	gaas	 	Dimm.0=0.0	Dimm.E=0.0	Dvmm.0=0.0	Dvmm.E=0.0
+
+#cesium diffusion parameters for each material
+cesium		silicon		D.0=0.0		D.E=0.0
+cesium		oxide		D.0=0.5		D.E=2.9
+cesium		poly		D.0=0.0		D.E=0.0
+cesium		nitride		D.0=0.0		D.E=0.0
+cesium		oxynitr		D.0=0.0		D.E=0.0
+cesium		gaas		D.0=0.0		D.E=0.0
+
+#beryllium diffusion parameters for each material
+beryllium	gaas		Dix.0 = 0.0	Dix.E = 0.0
+beryllium	gaas		Dip.0 = 2.1e-6	Dip.E = 1.74	implanted
+beryllium	gaas		Dip.0 = 2.1e-8	Dip.E = 1.74	grown.in
+beryllium	gaas		Dipp.0= 0.0	Dipp.E= 0.0
+beryllium	silicon		Dix.0 = 0.0	Dix.E = 0.0
+beryllium	silicon 	Dip.0 = 0.0	Dip.E = 0.0
+beryllium	silicon 	Dipp.0= 0.0	Dipp.E= 0.0
+beryllium	oxide		Dix.0 = 1.0e-12	Dipp.E = 0.0
+beryllium	oxide	 	Dip.0 = 0.0	Dip.E = 0.0
+beryllium	oxide		Dipp.0= 0.0	Dipp.E= 0.0
+beryllium	poly		Dix.0 = 0.0	Dix.E = 0.0
+beryllium	poly		Dip.0 = 0.0	Dip.E = 0.0
+beryllium	poly		Dipp.0= 0.0	Dipp.E= 0.0
+beryllium	nitride		Dix.0 = 1.0e-12	Dix.E = 0.0
+beryllium	nitride		Dip.0 = 0.0	Dip.E = 0.0
+beryllium	nitride 	Dipp.0= 0.0	Dipp.E= 0.0
+beryllium	oxynitr		Dix.0 = 1.0e-12	Dix.E = 0.0
+beryllium	oxynitr		Dip.0 = 0.0	Dip.E = 0.0
+beryllium	oxynitr 	Dipp.0= 0.0	Dipp.E= 0.0
+beryllium	gaas	 	Fi = 1.0
+
+#carbon diffusion parameters for each material
+carbon		gaas		Dix.0 = 1e-16	Dix.E = 0.0
+carbon		gaas		Dip.0 = 0.0	Dip.E = 0.0
+carbon		gaas		Dipp.0= 0.0	Dipp.E= 0.0
+carbon		silicon		Dix.0 = 0.0	Dix.E = 0.0
+carbon		silicon 	Dip.0 = 0.0	Dip.E = 0.0
+carbon		silicon 	Dipp.0= 0.0	Dipp.E= 0.0
+carbon		oxide		Dix.0 = 0.0	Dix.E = 0.0
+carbon		oxide	 	Dip.0 = 0.0	Dip.E = 0.0
+carbon		oxide		Dipp.0= 0.0	Dipp.E= 0.0
+carbon		poly		Dix.0 = 0.0	Dix.E = 0.0
+carbon		poly		Dip.0 = 0.0	Dip.E = 0.0
+carbon		poly		Dipp.0= 0.0	Dipp.E= 0.0
+carbon		nitride		Dix.0 = 0.0	Dix.E = 0.0
+carbon		nitride		Dip.0 = 0.0	Dip.E = 0.0
+carbon		nitride 	Dipp.0= 0.0	Dipp.E= 0.0
+carbon		oxynitr		Dix.0 = 0.0	Dix.E = 0.0
+carbon		oxynitr		Dip.0 = 0.0	Dip.E = 0.0
+carbon		oxynitr 	Dipp.0= 0.0	Dipp.E= 0.0
+carbon		gaas	 	Fi = 1.0
+
+#germanium diffusion parameters for each material
+germanium	gaas		Dix.0 = 0.0	Dix.E = 0.0
+germanium	gaas		Dim.0 = 0.0	Dim.E = 0.0
+germanium	gaas		Dimm.0= 1.1e-3	Dimm.E= 2.9
+germanium	silicon		Dix.0 = 0.0	Dix.E = 0.0
+germanium	silicon 	Dim.0 = 0.0	Dim.E = 0.0
+germanium	silicon 	Dimm.0= 0.0	Dimm.E= 0.0
+germanium	oxide		Dix.0 = 0.0	Dix.E = 0.0
+germanium	oxide	 	Dim.0 = 0.0	Dim.E = 0.0
+germanium	oxide		Dimm.0= 0.0	Dimm.E= 0.0
+germanium	poly		Dix.0 = 0.0	Dix.E = 0.0
+germanium	poly		Dim.0 = 0.0	Dim.E = 0.0
+germanium	poly		Dimm.0= 0.0	Dimm.E= 0.0
+germanium	nitride		Dix.0 = 0.0	Dix.E = 0.0
+germanium	nitride		Dim.0 = 0.0	Dim.E = 0.0
+germanium	nitride 	Dimm.0= 0.0	Dimm.E= 0.0
+germanium	oxynitr		Dix.0 = 0.0	Dix.E = 0.0
+germanium	oxynitr		Dim.0 = 0.0	Dim.E = 0.0
+germanium	oxynitr 	Dimm.0= 0.0	Dimm.E= 0.0
+germanium	gaas	 	Fi = 0.0
+
+#magnesium diffusion parameters for each material
+magnesium	gaas		Dix.0 = 0.0	Dix.E = 0.0
+magnesium	gaas		Dip.0 = 6.1e-2	Dip.E = 2.8	implanted
+magnesium	gaas		Dip.0 = 6.8e-3	Dip.E = 2.8	grown.in
+magnesium	gaas		Dipp.0= 0.0	Dipp.E= 0.0
+magnesium	silicon		Dix.0 = 0.0	Dix.E = 0.0
+magnesium	silicon 	Dip.0 = 0.0	Dip.E = 0.0
+magnesium	silicon 	Dipp.0= 0.0	Dipp.E= 0.0
+magnesium	oxide		Dix.0 = 1.0e-12	Dix.E = 0.0
+magnesium	oxide	 	Dip.0 = 0.0	Dip.E = 0.0
+magnesium	oxide		Dipp.0= 0.0	Dipp.E= 0.0
+magnesium	poly		Dix.0 = 0.0	Dix.E = 0.0
+magnesium	poly		Dip.0 = 0.0	Dip.E = 0.0
+magnesium	poly		Dipp.0= 0.0	Dipp.E= 0.0
+magnesium	nitride		Dix.0 = 1.0e-12	Dix.E = 0.0
+magnesium	nitride		Dip.0 = 0.0	Dip.E = 0.0
+magnesium	nitride 	Dipp.0= 0.0	Dipp.E= 0.0
+magnesium	oxynitr		Dix.0 = 1.0e-12	Dix.E = 0.0
+magnesium	oxynitr		Dip.0 = 0.0	Dip.E = 0.0
+magnesium	oxynitr 	Dipp.0= 0.0	Dipp.E= 0.0
+magnesium	gaas	 	Fi = 1.0
+
+#selenium diffusion parameters for each material
+selenium	gaas		Dix.0 = 1.8e-8	Dix.E = 1.6	implanted
+selenium	gaas		Dix.0 = 0.0	Dix.E = 0.0	grown.in
+selenium	gaas		Dim.0 = 0.0	Dim.E = 0.0
+selenium	gaas		Dimm.0= 0.0	Dimm.E= 0.0	implanted
+selenium	gaas		Dimm.0= 1.2	Dimm.E= 3.6	grown.in
+selenium	silicon		Dix.0 = 0.0	Dix.E = 0.0
+selenium	silicon 	Dim.0 = 0.0	Dim.E = 0.0
+selenium	silicon 	Dimm.0= 0.0	Dimm.E= 0.0
+selenium	oxide		Dix.0 = 0.0	Dix.E = 0.0
+selenium	oxide	 	Dim.0 = 0.0	Dim.E = 0.0
+selenium	oxide		Dimm.0= 0.0	Dimm.E= 0.0
+selenium	poly		Dix.0 = 0.0	Dix.E = 0.0
+selenium	poly		Dim.0 = 0.0	Dim.E = 0.0
+selenium	poly		Dimm.0= 0.0	Dimm.E= 0.0
+selenium	nitride		Dix.0 = 0.0	Dix.E = 0.0
+selenium	nitride		Dim.0 = 0.0	Dim.E = 0.0
+selenium	nitride 	Dimm.0= 0.0	Dimm.E= 0.0
+selenium	oxynitr		Dix.0 = 0.0	Dix.E = 0.0
+selenium	oxynitr		Dim.0 = 0.0	Dim.E = 0.0
+selenium	oxynitr 	Dimm.0= 0.0	Dimm.E= 0.0
+selenium	gaas	 	Fi = 0.0
+
+#silicon diffusion parameters for each material
+isilicon	gaas		Dix.0 = 1.8e-9	Dix.E = 1.6	implanted
+isilicon	gaas		Dix.0 = 0.0	Dix.E = 0.0	grown.in
+isilicon	gaas		Dim.0 = 0.0	Dim.E = 0.0
+isilicon	gaas		Dimm.0= 0.0	Dimm.E= 0.0	implanted
+isilicon	gaas		Dimm.0= 33.0	Dimm.E= 3.9	grown.in
+isilicon	silicon		Dix.0 = 0.0	Dix.E = 0.0
+isilicon	silicon 	Dim.0 = 0.0	Dim.E = 0.0
+isilicon	silicon 	Dimm.0= 0.0	Dimm.E= 0.0
+isilicon	oxide		Dix.0 = 0.0	Dix.E = 0.0
+isilicon	oxide	 	Dim.0 = 0.0	Dim.E = 0.0
+isilicon	oxide		Dimm.0= 0.0	Dimm.E= 0.0
+isilicon	poly		Dix.0 = 0.0	Dix.E = 0.0
+isilicon	poly		Dim.0 = 0.0	Dim.E = 0.0
+isilicon	poly		Dimm.0= 0.0	Dimm.E= 0.0
+isilicon	nitride		Dix.0 = 0.0	Dix.E = 0.0
+isilicon	nitride		Dim.0 = 0.0	Dim.E = 0.0
+isilicon	nitride 	Dimm.0= 0.0	Dimm.E= 0.0
+isilicon	oxynitr		Dix.0 = 0.0	Dix.E = 0.0
+isilicon	oxynitr		Dim.0 = 0.0	Dim.E = 0.0
+isilicon	oxynitr 	Dimm.0= 0.0	Dimm.E= 0.0
+isilicon	gaas	 	Fi = 0.0
+
+#tin diffusion parameters for each material
+tin		gaas		Dix.0 = 0.0	Dix.E = 0.0
+tin		gaas		Dim.0 = 0.0	Dim.E = 0.0
+tin		gaas		Dimm.0= 9.6e1	Dimm.E= 3.9
+tin		silicon		Dix.0 = 0.0	Dix.E = 0.0
+tin		silicon 	Dim.0 = 0.0	Dim.E = 0.0
+tin		silicon 	Dimm.0= 0.0	Dimm.E= 0.0
+tin		oxide		Dix.0 = 0.0	Dix.E = 0.0
+tin		oxide	 	Dim.0 = 0.0	Dim.E = 0.0
+tin		oxide		Dimm.0= 0.0	Dimm.E= 0.0
+tin		poly		Dix.0 = 0.0	Dix.E = 0.0
+tin		poly		Dim.0 = 0.0	Dim.E = 0.0
+tin		poly		Dimm.0= 0.0	Dimm.E= 0.0
+tin		nitride		Dix.0 = 0.0	Dix.E = 0.0
+tin		nitride		Dim.0 = 0.0	Dim.E = 0.0
+tin		nitride 	Dimm.0= 0.0	Dimm.E= 0.0
+tin		oxynitr		Dix.0 = 0.0	Dix.E = 0.0
+tin		oxynitr		Dim.0 = 0.0	Dim.E = 0.0
+tin		oxynitr 	Dimm.0= 0.0	Dimm.E= 0.0
+tin		gaas	 	Fi = 0.0
+
+#zinc diffusion parameters for each material
+zinc		gaas		Dix.0 = 0.0	Dix.E = 0.0
+zinc		gaas		Dip.0 = 0.0	Dip.E = 0.0
+zinc		gaas		Dipp.0= 1.2e2	Dipp.E= 3.9	implanted
+zinc		gaas		Dipp.0= 1.56e+1	Dipp.E= 3.9	grown.in
+zinc		silicon		Dix.0 = 0.0	Dix.E = 0.0
+zinc		silicon 	Dip.0 = 0.0	Dip.E = 0.0
+zinc		silicon 	Dipp.0= 0.0	Dipp.E= 0.0
+zinc		oxide		Dix.0 = 1.0e-12	Dix.E = 0.0
+zinc		oxide	 	Dip.0 = 0.0	Dip.E = 0.0
+zinc		oxide		Dipp.0= 0.0	Dipp.E= 0.0
+zinc		poly		Dix.0 = 0.0	Dix.E = 0.0
+zinc		poly		Dip.0 = 0.0	Dip.E = 0.0
+zinc		poly		Dipp.0= 0.0	Dipp.E= 0.0
+zinc		nitride		Dix.0 = 1.0e-12	Dix.E = 0.0
+zinc		nitride		Dip.0 = 0.0	Dip.E = 0.0
+zinc		nitride 	Dipp.0= 0.0	Dipp.E= 0.0
+zinc		oxynitr		Dix.0 = 1.0e-12	Dix.E = 0.0
+zinc		oxynitr		Dip.0 = 0.0	Dip.E = 0.0
+zinc		oxynitr 	Dipp.0= 0.0	Dipp.E= 0.0
+zinc		gaas	 	Fi = 1.0
+
+#generic diffusion parameters for each material
+generic		gaas		Dix.0  = 0.0	Dix.E  = 0.0
+generic		gaas		Dim.0  = 0.0	Dim.E  = 0.0
+generic		gaas		Dimm.0 = 0.0	Dimm.E = 0.0
+generic		gaas		Dimmm.0= 0.0	Dimmm.E= 0.0
+generic		gaas		Dip.0  = 0.0	Dip.E  = 0.0
+generic		gaas		Dipp.0 = 0.0	Dipp.E = 0.0
+generic		gaas		Dippp.0= 0.0	Dippp.E= 0.0
+generic		silicon		Dix.0  = 0.0	Dix.E  = 0.0
+generic		silicon		Dim.0  = 0.0	Dim.E  = 0.0
+generic		silicon		Dimm.0 = 0.0	Dimm.E = 0.0
+generic		silicon		Dimmm.0= 0.0	Dimmm.E= 0.0
+generic		silicon		Dip.0  = 0.0	Dip.E  = 0.0
+generic		silicon		Dipp.0 = 0.0	Dipp.E = 0.0
+generic		silicon		Dippp.0= 0.0	Dippp.E= 0.0
+generic		oxide		Dix.0  = 0.0	Dix.E  = 0.0
+generic		oxide		Dim.0  = 0.0	Dim.E  = 0.0
+generic		oxide		Dimm.0 = 0.0	Dimm.E = 0.0
+generic		oxide		Dimmm.0= 0.0	Dimmm.E= 0.0
+generic		oxide		Dip.0  = 0.0	Dip.E  = 0.0
+generic		oxide		Dipp.0 = 0.0	Dipp.E = 0.0
+generic		oxide		Dippp.0= 0.0	Dippp.E= 0.0
+generic		poly		Dix.0  = 0.0	Dix.E  = 0.0
+generic		poly		Dim.0  = 0.0	Dim.E  = 0.0
+generic		poly		Dimm.0 = 0.0	Dimm.E = 0.0
+generic		poly		Dimmm.0= 0.0	Dimmm.E= 0.0
+generic		poly		Dip.0  = 0.0	Dip.E  = 0.0
+generic		poly		Dipp.0 = 0.0	Dipp.E = 0.0
+generic		poly		Dippp.0= 0.0	Dippp.E= 0.0
+generic		nitride		Dix.0  = 0.0	Dix.E  = 0.0
+generic		nitride		Dim.0  = 0.0	Dim.E  = 0.0
+generic		nitride		Dimm.0 = 0.0	Dimm.E = 0.0
+generic		nitride		Dimmm.0= 0.0	Dimmm.E= 0.0
+generic		nitride		Dip.0  = 0.0	Dip.E  = 0.0
+generic		nitride		Dipp.0 = 0.0	Dipp.E = 0.0
+generic		nitride		Dippp.0= 0.0	Dippp.E= 0.0
+generic		oxynitr		Dix.0  = 0.0	Dix.E  = 0.0
+generic		oxynitr		Dim.0  = 0.0	Dim.E  = 0.0
+generic		oxynitr		Dimm.0 = 0.0	Dimm.E = 0.0
+generic		oxynitr		Dimmm.0= 0.0	Dimmm.E= 0.0
+generic		oxynitr		Dip.0  = 0.0	Dip.E  = 0.0
+generic		oxynitr		Dipp.0 = 0.0	Dipp.E = 0.0
+generic		oxynitr		Dippp.0= 0.0	Dippp.E= 0.0
+generic		gaas	 	Fi = 0.0
+
+# Segregation coefficients
+# Transport coefficients are in cm/s
+
+#antimony segregation coefficients
+antimony	silicon	/oxide	Seg.0=30.0   Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=2.5e-3  Trn.E=1.04
+antimony	poly	/oxide	Seg.0=30.0   Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=2.5e-3  Trn.E=1.04
+antimony	oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+antimony	gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+#arsenic segregation coefficients
+arsenic		silicon	/oxide	Seg.0=30.0   Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.5     Trn.E=1.99
+arsenic		poly	/oxide	Seg.0=30.0   Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.5     Trn.E=1.99
+arsenic		oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+arsenic		gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+#gold segregation coefficients
+gold		silicon	/oxide	Seg.0=1.0    Seg.E=0.0  Trn.0=1.66e-1 Trn.E=0.0
+gold		silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		poly	/oxide	Seg.0=1.0    Seg.E=0.0  Trn.0=1.66e-1 Trn.E=0.0
+gold		poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+gold		gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-1 Trn.E=0.0
+
+#boron segregation coefficients
+boron		silicon	/oxide	Seg.0=1126.0 Seg.E=0.91 Trn.0=1.66e-7 Trn.E=0.0
+boron		silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=27.9    Trn.E=2.48
+boron		poly	/oxide	Seg.0=1226.0 Seg.E=0.91 Trn.0=1.66e-7 Trn.E=0.0
+boron		poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=27.9    Trn.E=2.48
+boron		oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=27.9    Trn.E=2.48
+boron		nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+boron		gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+#phosphorus segregation coefficients
+phosphorus	silicon	/oxide	Seg.0=30.0   Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.5     Trn.E=1.99
+phosphorus	poly	/oxide	Seg.0=30.0   Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.5     Trn.E=1.99
+phosphorus	oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+phosphorus	gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+#cesium segregation coefficients
+cesium	silicon	/oxide	Seg.0=50.0   Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0 g.0=0.0
+cesium	silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	poly	/oxide	Seg.0=50.0   Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0 g.0=0.0
+cesium	poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+cesium	gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=0.0     Trn.E=0.0 g.0=0.0
+
+#beryllium segregation coefficients
+beryllium	silicon	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	poly	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+beryllium	gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+#carbon segregation coefficients
+carbon		silicon	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		poly	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+carbon		gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+#germanium segregation coefficients
+germanium	silicon	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	poly	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+germanium	gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+#magnesium segregation coefficients
+magnesium	silicon	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	poly	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+magnesium	gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+#selenium segregation coefficients
+selenium	silicon	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	poly	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+selenium	gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+#silicon segregation coefficients
+isilicon	silicon	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	poly	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+isilicon	gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+#tin segregation coefficients
+tin		silicon	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		poly	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+tin		gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+#zinc segregation coefficients
+zinc		silicon	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		silicon	/poly	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		silicon	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		silicon	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		silicon	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		silicon	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		poly	/oxide	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		poly	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		poly	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		poly	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		poly	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		oxide	/nitri	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		oxide	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		oxide	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		oxide	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		nitri	/oxyni	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		nitri	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		nitri	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		oxyni	/gaas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		oxyni	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+zinc		gaas	/gas	Seg.0=1.0    Seg.E=0.0	Trn.0=1.66e-7 Trn.E=0.0
+
+
+# Interstitial bulk parameters
+# the diffusivity and Ci* values are from Boit
+# bulk recombination is from Law Optimization of Guerrero, Packan
+interst silicon D.0=1.03e6  D.E=3.22
+interst silicon Cstar.0=3.11e19  Cstar.E=1.58
+interst silicon Kr.0=1.40474 Kr.E=3.9962
+
+#for the sake of anything better - poly is same as silicon
+interst poly D.0=1.03e6  D.E=3.22
+interst poly Cstar.0=3.11e19  Cstar.E=1.58
+interst poly Kr.0=1.40474 Kr.E=3.9962
+
+#for GaAs
+interst	gaas	D.0=1.0e-12 D.E=0.0
+interst	gaas	Kr.0=1.0e-18 Kr.E=0.0
+interst	gaas	Cstar.0=1.0e14 Cstar.E=0.0
+
+#zero out the other materials
+interst	oxide	D.0=0.0 D.E=0.0  Kr.0=0.0 Kr.E=0.0  Cstar.0=1.0 Cstar.E=0.0
+interst	oxynitr	D.0=0.0 D.E=0.0  Kr.0=0.0 Kr.E=0.0  Cstar.0=1.0 Cstar.E=0.0
+interst	nitride	D.0=0.0 D.E=0.0  Kr.0=0.0 Kr.E=0.0  Cstar.0=1.0 Cstar.E=0.0
+interst	gas	D.0=0.0 D.E=0.0  Kr.0=0.0 Kr.E=0.0  Cstar.0=1.0 Cstar.E=0.0
+
+#charge state information
+#Giles extraction from Miyake data
+#negative charge state at 0.09 and positive at 0.33
+interst	silicon	neu.0=1.0 neg.0=5.68 dneg.0=0.0 pos.0=5.68 dpos.0=0.0
+interst	silicon	neu.E=0.0 neg.E=0.50 dneg.E=0.0 pos.E=0.26 dpos.E=0.0
+interst	poly	neu.0=1.0 neg.0=5.68 dneg.0=0.0 pos.0=5.68 dpos.0=0.0
+interst	poly	neu.E=0.0 neg.E=0.50 dneg.E=0.0 pos.E=0.26 dpos.E=0.0
+
+interst	oxide	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+interst	oxide	neu.E=0.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+interst	oxynitr	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+interst	oxynitr	neu.E=0.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+interst	nitride	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+interst	nitride	neu.E=0.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+interst gaas	neu.0=1 pos.0=0.0530 neg.0=0 dneg.0=0 dpos.0=0.0
+interst gaas	neu.E=0 pos.E=-0.788 neg.E=0 dneg.E=0 dpos.E=0.0
+interst gaas	tpos.0=0.0 tpos.E=0.0 tneg.0=0 tneg.E=0
+interst	gas	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+interst	gas	neu.E=0.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+interst	alum	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+interst	alum	neu.E=0.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+interst	photo	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+interst	photo	neu.E=0.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+
+#trap models are fits to membrane [Ahn] and 2d experiments [Griffin 86iedm]
+#trap capture coefficient is diffusion limited
+interst	silicon	ktrap.0=1.1e-2 ktrap.E=3.22
+interst	oxide	ktrap.0=0.0 ktrap.E=0.0
+interst	oxynitr	ktrap.0=0.0 ktrap.E=0.0
+interst	nitride	ktrap.0=0.0 ktrap.E=0.0
+interst	poly	ktrap.0=1.1e-2 ktrap.E=3.22
+interst	gaas	ktrap.0=1.1e-2 ktrap.E=3.22
+interst	gas	ktrap.0=0.0 ktrap.E=0.0
+interst	alum	ktrap.0=0.0 ktrap.E=0.0
+interst	photo	ktrap.0=0.0 ktrap.E=0.0
+
+#defect interface recombination parameters
+#Griffin IEDM data for surface recombination - Optimized by Law
+interst sili /oxi Ksurf.0=1.204e-3 Ksurf.E=0.4392
+interst sili /oxi Krat.0=6.794e8 Krat.E=1.513
+interst sili /oxi Kpow.0=0.9081 Kpow.E=5.152e-2
+#Make poly the same for lack of better things
+interst poly /oxi Ksurf.0=1.204e-3 Ksurf.E=0.4392
+interst poly /oxi Krat.0=6.794e8 Krat.E=1.513
+interst poly /oxi Kpow.0=0.9081 Kpow.E=5.152e-2
+#GaAs
+interst gaas /oxi Ksurf.0=0.0 Ksurf.E=0.0
+interst gaas /oxi Krat.0=0.0 Krat.E=0.0
+interst gaas /oxi Kpow.0=0.0 Kpow.E=0.0
+
+#make the gas look like inert oxide
+interst sili /gas Ksurf.0=1.204e-3 Ksurf.E=0.4392
+interst sili /gas Krat.0=6.794e8 Krat.E=1.513
+interst poly /gas Ksurf.0=1.204e-3 Ksurf.E=0.4392
+interst poly /gas Krat.0=6.794e8 Krat.E=1.513
+interst gaas /gas Ksurf.0=0.0 Ksurf.E=0.0
+interst gaas /gas Krat.0=0.0 Krat.E=0.0
+
+#all these parameters are essentially unknown - some data exists at 1100
+interst	sili /poly  Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+interst	sili /nitri Ksurf.0=1.0e-5 Ksurf.E=0 Krat.0=0 Krat.E=0 Kpow.0=1 Kpow.E=0
+interst	sili /oxyni Ksurf.0=1.0e-2 Ksurf.E=0 Krat.0=0 Krat.E=0 Kpow.0=1 Kpow.E=0
+
+interst	poly /nitri Ksurf.0=1.0e-5 Ksurf.E=0 Krat.0=0 Krat.E=0 Kpow.0=1 Kpow.E=0
+interst	poly /oxyni Ksurf.0=1.0e-2 Ksurf.E=0 Krat.0=0 Krat.E=0 Kpow.0=1 Kpow.E=0
+
+interst	gaas /sili  Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+interst	gaas /poly  Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+interst	gaas /nitri Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+interst	gaas /oxyni Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+
+#zero the insulators
+interst	oxide	/nitri Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+interst	oxide	/oxyni Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+interst	oxide	/gas   Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+interst	nitri	/oxyni Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+interst	nitri	/gas   Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+interst	oxyni	/gas   Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+
+#these are fit from OED experiemnts of all kinds
+#interstitial surface rates fit from OED and optimized
+interst sili /oxi theta.0=1.970 theta.E=0.5481
+interst sili /oxi Gpow.0=0.000000e+00 Gpow.E=0.0 vmole=5.0e22
+interst poly /oxi theta.0=1.970 theta.E=0.5481
+interst poly /oxi Gpow.0=0.000000e+00 Gpow.E=0.0 vmole=5.0e22
+
+
+#zero the rest
+interst	silicon	/nitri theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+interst	silicon	/oxyni theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+interst	silicon	/gaas  theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+interst	silicon	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+interst	poly	/nitri theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+interst	poly	/oxyni theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+interst	poly	/gaas  theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+interst	poly	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+interst	silicon	/poly  theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+interst	oxide	/nitri theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+interst	oxide	/oxyni theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+interst	oxide	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+interst	nitri	/oxyni theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+interst	nitri	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+interst	oxyni	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+interst	gaas	/oxide theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+interst	gaas	/nitri theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+interst	gaas	/oxyni theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+interst	gaas	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+
+#defect time dependent injection interface parameters
+#some data for oxynitride and nitride at 1100
+interst	silicon	/nitri A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	silicon	/oxyni A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	poly	/nitri A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	poly	/oxyni A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+
+#zero the rest
+interst	silicon	/gaas  A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	silicon	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	poly	/gaas  A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	poly	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	oxide	/nitri A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	oxide	/oxyni A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	oxide	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	nitri	/oxyni A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	nitri	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	oxyni	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	gaas	/oxide A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	gaas	/nitri A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	gaas	/oxyni A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+interst	gaas	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+
+#defect interface models
+interst	silicon	/oxide growth.inj recomb
+interst	silicon	/poly  time.inj   recomb
+interst	silicon	/nitri time.inj   recomb
+interst	silicon	/oxyni time.inj   recomb
+interst	silicon	/gaas  time.inj   recomb
+interst	silicon	/gas   time.inj   recomb
+interst	poly	/oxide growth.inj recomb
+interst	poly	/nitri time.inj   recomb
+interst	poly	/oxyni time.inj   recomb
+interst	poly	/gaas  time.inj   recomb
+interst	poly	/gas   time.inj   recomb
+interst	oxide	/nitri time.inj   recomb
+interst	oxide	/oxyni time.inj   recomb
+interst	oxide	/gas   time.inj   recomb
+interst	nitri	/oxyni time.inj   recomb
+interst	nitri	/gas   time.inj   recomb
+interst	oxyni	/gas   time.inj   recomb
+interst	gaas	/oxide time.inj   recomb
+interst	gaas	/nitri time.inj   recomb
+interst	gaas	/oxyni time.inj   recomb
+interst	gaas	/gas   time.inj   recomb
+
+
+# Defect bulk parameters
+#from Tan and Gosele
+#recombination from Packan and Guerrero
+vacancy	silicon	D.0=6.338e3  D.E=3.29
+vacancy silicon Cstar.0=4.77333e18  Cstar.E=0.7134
+vacancy	poly	D.0=6.338e3  D.E=3.29
+vacancy poly Cstar.0=4.77333e18  Cstar.E=0.7134
+
+#Bulk recombination rate extracted and optimized
+vacancy silicon Kr.0=1.40474 Kr.E=3.9962
+vacancy poly Kr.0=1.40474 Kr.E=3.9962
+
+#zero the rest of the materials
+vacancy	oxide	D.0=0.0  D.E=0.0  Kr.0=0.0  Kr.E=0.0  Cstar.0=1.0  Cstar.E=0.0
+vacancy	oxynitr	D.0=0.0  D.E=0.0  Kr.0=0.0  Kr.E=0.0  Cstar.0=1.0  Cstar.E=0.0
+vacancy	nitride	D.0=0.0  D.E=0.0  Kr.0=0.0  Kr.E=0.0  Cstar.0=1.0  Cstar.E=0.0
+vacancy	gas	D.0=0.0  D.E=0.0  Kr.0=0.0  Kr.E=0.0  Cstar.0=1.0  Cstar.E=0.0
+
+#vacancy charge states from Watkins
+vacancy	silicon	neu.0=1.0 neg.0=5.68  dneg.0=32.47 pos.0=5.68  dpos.0=0.0
+vacancy	silicon	neu.E=0.0 neg.E=0.145 dneg.E=0.62  pos.E=0.455 dpos.E=0.0
+vacancy	poly	neu.0=1.0 neg.0=5.68  dneg.0=32.47 pos.0=5.68  dpos.0=0.0
+vacancy	poly   	neu.E=0.0 neg.E=0.145 dneg.E=0.62  pos.E=0.455 dpos.E=0.0
+
+# GaAs need values.
+vacancy	gaas	D.0=1.0e-12  D.E=0.0
+vacancy gaas	Kr.0=1.0e-18  Kr.E=0.0
+vacancy gaas	Cstar.0=1.0e14  Cstar.E=0.0
+vacancy	gaas	neu.0=1 pos.0=0 neg.0=.05305 dneg.0=.00281 dpos.0=0
+vacancy	gaas	neu.E=0 pos.E=0 neg.E=-.588  dneg.E=-.856  dpos.E=0
+vacancy gaas	tneg.0=1.4896e-4 tneg.E=-.894 tpos.0=0 tneg.E=0
+
+
+#zero the insulator materials
+vacancy	oxide	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+vacancy	oxynitr	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+vacancy	nitride	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+vacancy	gas	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+vacancy	alum	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+vacancy	photo	neu.0=1.0 neg.0=0.0 dneg.0=0.0 pos.0=0.0 dpos.0=0.0
+vacancy	oxide	neu.E=1.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+vacancy	oxynitr	neu.E=1.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+vacancy	nitride	neu.E=1.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+vacancy	gas	neu.E=1.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+vacancy	alum	neu.E=1.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+vacancy	photo	neu.E=1.0 neg.E=0.0 dneg.E=0.0 pos.E=0.0 dpos.E=0.0
+
+#defect interface recombination parameters
+#these are fit using guerrero and packan as a guide
+#the near surface behavior of the V is determined by both
+vacancy sili /oxi Ksurf.0=1.117e4 Ksurf.E=2.478
+vacancy sili /oxi Krat.0=2.620e12 Krat.E=2.885
+vacancy sili /oxi Kpow.0=1.790e-7 Kpow.E=-1.914
+vacancy poly /oxi Ksurf.0=1.117e4 Ksurf.E=2.478
+vacancy poly /oxi Krat.0=2.620e12 Krat.E=2.885
+vacancy poly /oxi Kpow.0=1.790e-7 Kpow.E=-1.914
+#GaAs
+vacancy gaas /oxi Ksurf.0=0.0 Ksurf.E=0.0
+vacancy gaas /oxi Krat.0=0.0 Krat.E=0.0
+vacancy gaas /oxi Kpow.0=0.0 Kpow.E=0.0
+
+#assume the gas interface looks like inert oxide
+vacancy sili /gas Ksurf.0=1.117e4 Ksurf.E=2.478
+vacancy sili /gas Krat.0=0.0 Krat.E=0.0
+vacancy poly /gas Ksurf.0=1.117e4 Ksurf.E=2.478
+vacancy poly /gas Krat.0=0.0 Krat.E=0.0
+vacancy gaas /gas Ksurf.0=0.0 Ksurf.E=0.0
+vacancy gaas /gas Krat.0=0.0 Krat.E=0.0
+
+#who knows?? - some data exists for oxynit and nitride
+vacancy	silicon	/nitri Ksurf.0=1.0e-9 Ksurf.E=0    Krat.0=0 Kpow.0=1 Kpow.E=0
+vacancy	silicon	/oxyni Ksurf.0=1.0e-5 Ksurf.E=0    Krat.0=0 Kpow.0=1 Kpow.E=0
+vacancy	poly	/nitri Ksurf.0=1.0e-9 Ksurf.E=0  Krat.0=0 Kpow.0=1 Kpow.E=0
+vacancy	poly	/oxyni Ksurf.0=1.0e-5 Ksurf.E=0  Krat.0=0 Kpow.0=1 Kpow.E=0
+
+#zero the rest
+vacancy	silicon	/poly  Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+vacancy	oxide	/nitri Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+vacancy	oxide	/oxyni Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+vacancy	oxide	/gas   Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+vacancy	nitri	/oxyni Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+vacancy	nitri	/gas   Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+vacancy	oxyni	/gas   Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+vacancy	gaas	/sili  Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+vacancy	gaas	/poly  Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+vacancy	gaas	/nitri Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+vacancy	gaas	/oxyni Ksurf.0=0 Ksurf.E=0  Krat.0=0 Krat.E=0  Kpow.0=1 Kpow.E=0
+
+#defect growth injection interface parameters
+vacancy	silicon	/oxide theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+vacancy	silicon	/poly  theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+vacancy	silicon	/nitri theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+vacancy	silicon	/oxyni theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+vacancy	silicon	/gaas  theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+vacancy	silicon	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+vacancy	poly	/oxide theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+vacancy	poly	/nitri theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+vacancy	poly	/oxyni theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+vacancy	poly	/gaas  theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+vacancy	poly	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=5.0e22
+vacancy	oxide	/nitri theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+vacancy	oxide	/oxyni theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+vacancy	oxide	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+vacancy	nitri	/oxyni theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+vacancy	nitri	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+vacancy	oxyni	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+vacancy	gaas 	/oxide theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+vacancy	gaas 	/nitri theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+vacancy	gaas 	/oxyni theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+vacancy	gaas 	/gas   theta.0=0 theta.E=0  Gpow.0=1 Gpow.E=0  vmole=0
+
+#defect time dependent injection interface parameters
+vacancy	silicon	/oxide A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	silicon	/poly  A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	silicon	/nitri A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	silicon	/oxyni A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	silicon	/gaas  A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	silicon	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	poly	/oxide A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	poly	/nitri A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	poly	/oxyni A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	poly	/gaas  A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	poly	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	oxide	/nitri A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	oxide	/oxyni A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	oxide	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	nitri	/oxyni A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	nitri	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	oxyni	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	gaas	/oxide A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	gaas	/nitri A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	gaas	/oxyni A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+vacancy	gaas	/gas   A.0=0 A.E=0  t0.0=1 t0.E=0  Tpow.0=0 Tpow.E=0
+
+#defect interface models
+vacancy	silicon	/oxide time.inj   recomb
+vacancy	silicon	/poly  time.inj   recomb
+vacancy	silicon	/nitri time.inj   recomb
+vacancy	silicon	/oxyni time.inj   recomb
+vacancy	silicon	/gaas  time.inj   recomb
+vacancy	silicon	/gas   time.inj   recomb
+vacancy	poly	/oxide time.inj   recomb
+vacancy	poly	/nitri time.inj   recomb
+vacancy	poly	/oxyni time.inj   recomb
+vacancy	poly	/gaas  time.inj   recomb
+vacancy	poly	/gas   time.inj   recomb
+vacancy	oxide	/nitri time.inj   recomb
+vacancy	oxide	/oxyni time.inj   recomb
+vacancy	oxide	/gas   time.inj   recomb
+vacancy	nitri	/oxyni time.inj   recomb
+vacancy	nitri	/gas   time.inj   recomb
+vacancy	oxyni	/gas   time.inj   recomb
+vacancy	gaas	/oxide time.inj   recomb
+vacancy	gaas	/nitri time.inj   recomb
+vacancy	gaas	/oxyni time.inj   recomb
+vacancy	gaas	/gas   time.inj   recomb
+
+#trap parameters
+trap	silicon total=2.0e18 frac.0=2.386e5 frac.E=1.574 enable
+trap	oxide	total=1.0 frac.0=0.5 frac.E=0.0
+trap	oxynitr	total=1.0 frac.0=0.5 frac.E=0.0
+trap	nitride	total=1.0 frac.0=0.5 frac.E=0.0
+trap	poly	total=2.0e18 frac.0=2.386e5 frac.E=1.574 enable
+trap	gas	total=1.0 frac.0=0.5 frac.E=0.0
+trap	gaas	total=1.0 frac.0=0.5 frac.E=0.0
+trap	alum	total=1.0 frac.0=0.5 frac.E=0.0
+trap	photo	total=1.0 frac.0=0.5 frac.E=0.0
+
+#material parameters for the diffusion stuff
+material silicon Ni.0=3.9e16	Ni.Pow=1.5	Ni.E=0.605	eps=11.8
+material poly    Ni.0=3.9e16	Ni.Pow=1.5	Ni.E=0.605	eps=11.8
+material oxide   Ni.0=1.0	Ni.Pow=0.0	Ni.E=0.0	eps=3.9
+material oxynitr Ni.0=1.0	Ni.Pow=0.0	Ni.E=0.0	eps=7.5
+material nitride Ni.0=1.0	Ni.Pow=0.0	Ni.E=0.0	eps=7.5
+material photore Ni.0=1.0	Ni.Pow=0.0	Ni.E=0.0	eps=3.9
+material aluminu Ni.0=1.0	Ni.Pow=0.0	Ni.E=0.0	eps=0.0
+material gaas	 Ni.0=4.0e16	Ni.Pow=1.5	Ni.E=0.905	eps=0.0
+
+
+#reasonable defaults for the solution methods
+method min.fi min.fr=0 cg back=3 init.ti=0.1 trbdf ferm vert skip.s=t blk.itl=20 time redo.oxide=5 diag oxide.rel=1e-6 oxide.gdt=0.25 oxide.early=0.5 oxide.late=0.9 grain.gdt=0.25 grid.grain=0.04
+method ox.obfix=2 gloop.emin=120 gloop.emax=170 gloop.imax=170
+method vacan rel.err=0.01 abs.err=1.0e5
+method inter rel.err=0.01 abs.err=1.0e5
+method arsen rel.err=0.01 abs.err=1.0e9
+method phosp rel.err=0.01 abs.err=1.0e9
+method antim rel.err=0.01 abs.err=1.0e9
+method boron rel.err=0.01 abs.err=1.0e9
+method gallium rel.err=0.01 abs.err=1.0e9
+method oxida rel.err=0.01 abs.err=1.0e9
+method veloc rel.err=0.01 abs.err=1.0e9
+method traps rel.err=0.01 abs.err=1.0e9
+method gold  rel.err=0.01 abs.err=1.0e9
+method psi   rel.err=0.001 abs.err=1e-6
+method cesiu rel.err=0.01 abs.err=1.0e5
+method elec rel.err=0.01 abs.err=1.0e10
+method hole rel.err=0.01 abs.err=1.0e10
+method beryllium rel.err=0.01 abs.err=1.0e9
+method carbon	 rel.err=0.01 abs.err=1.0e9
+method magnesium rel.err=0.01 abs.err=1.0e9
+method germanium rel.err=0.01 abs.err=1.0e9
+method selenium	 rel.err=0.01 abs.err=1.0e9
+method isilicon	 rel.err=0.01 abs.err=1.0e9
+method tin	 rel.err=0.01 abs.err=1.0e9
+method zinc	 rel.err=0.01 abs.err=1.0e9
+method generic	 rel.err=0.01 abs.err=1.0e9
+
+#solid solubiity data
+#*   $Log:	modelrc,v $
+# Revision 1.1  91/07/23  15:46:20  suprem45
+# Initial revision
+# 
+#*Revision 1.2  85/04/17  14:24:07  suprem3
+#**** empty log message ***
+#*
+#*   Boron solid solubility as a function of temperature.
+#*   Column 1 = Temp (C)
+#*   Column 2 = Silicon Solid Solubility (at/cm3)
+#*        Ref. `Solubility and Precipitation of Boron in Silicon and
+#*        Supersaturation Resulting by Thermal Predeposition',
+#*        by A. Armigliato, D. Nobili, P. Ostoja, M. Servidori, and
+#*        S. Solmi
+#*   Column 3 = Insulator Solid Solubility (at/cm3)
+#*
+boron ss.temp=800.0    ss.conc=3.4499e+19    ss.clear
+boron ss.temp=825.0    ss.conc=4.1291e+19
+boron ss.temp=850.0    ss.conc=4.9027e+19
+boron ss.temp=875.0    ss.conc=5.7777e+19
+boron ss.temp=900.0    ss.conc=6.7615e+19
+boron ss.temp=925.0    ss.conc=7.8610e+19
+boron ss.temp=950.0    ss.conc=9.0832e+19
+boron ss.temp=975.0    ss.conc=1.0435e+20
+boron ss.temp=1000.    ss.conc=1.1922e+20
+boron ss.temp=1025.    ss.conc=1.3552e+20
+boron ss.temp=1050.    ss.conc=1.5331e+20
+boron ss.temp=1075.    ss.conc=1.7263e+20
+boron ss.temp=1100.    ss.conc=1.9356e+20
+boron ss.temp=1125.    ss.conc=2.1613e+20
+boron ss.temp=1150.    ss.conc=2.4041e+20
+boron ss.temp=1175.    ss.conc=2.6643e+20
+boron ss.temp=1200.    ss.conc=2.9423e+20
+boron ss.temp=1225.    ss.conc=3.2387e+20
+boron ss.temp=1250.    ss.conc=3.5536e+20
+boron ss.temp=1275.    ss.conc=3.8876e+20
+
+#*   $Log:	modelrc,v $
+# Revision 1.1  91/07/23  15:46:20  suprem45
+# Initial revision
+# 
+#*Revision 1.2  85/04/17  14:24:40  suprem3
+#**** empty log message ***
+#*
+#*   Phosphorus solid solubility as a function of temperature.
+#*   Column 1 = Temp (C)
+#*   Column 2 = Silicon Solid solubility (at/cm3)
+#*        Ref. `Precipitation as the phenomenon responsible for the
+#*        electrically inactive phosphorus in silicon', by D. Nobili,
+#*        A. Armigliato, M. Finetti, and S. Solmi, J. Appl. Phys., 53(3),
+#*        March 1982.
+#*   Column 3 = Insulator Solid Solubility (at/cm3)
+#*
+phosphor ss.temp=850.0    ss.conc=2.7943e+20    ss.clear
+phosphor ss.temp=900.0    ss.conc=3.1585e+20
+phosphor ss.temp=1000.    ss.conc=3.3981e+20
+phosphor ss.temp=1100.    ss.conc=3.7943e+20
+
+#*   $Log:	modelrc,v $
+# Revision 1.1  91/07/23  15:46:20  suprem45
+# Initial revision
+# 
+#*Revision 1.2  85/04/23  16:06:05  suprem3
+#**** empty log message ***
+#*
+#*Revision 1.1  85/04/23  16:05:18  suprem3
+#*Initial revision
+#*
+#*   Antimony Solid solubility as a function of temperature.
+#*   Column 1 = Temp (C)
+#*   Column 2 = Silicon Solid solubility (at/cm3)
+#*        Ref. `Solid Solubilities of Impurity Elements in Germanium
+#*        and Silicon', by F. A Trumbore, Bell System Tech J., Jan 1960.
+#*   Column 3 = Insulator Solid solubility (at/cm3)
+antimony ss.temp=800.     ss.conc=2.3000e+19     ss.clear
+antimony ss.temp=900.     ss.conc=3.0000e+19
+antimony ss.temp=1000.    ss.conc=4.0000e+19
+antimony ss.temp=1100.    ss.conc=4.8000e+19
+antimony ss.temp=1250.    ss.conc=6.2000e+19
+
+#*   Arsenic solid solubility as a function of temperature.
+#*   Column 1 = Temp (C)
+#*   Column 2 = Silicon Solid Solubility (at/cm3)
+#*        Ref. `Precipitation as the phenomenon responsible for the
+#*        electrically inactive arsenic in silicon', by D. Nobili,
+#*        A. Carabelas, G. Celotti, and S. Solmi, J. Elect. Soc.,
+#*        Vol 130, p. 922, April 1983.
+#*   Column 3 = Insulator Solid Solubility (at/cm3)
+#*
+arsenic ss.temp=800.0    ss.conc=1.1585e+20    ss.clear
+arsenic ss.temp=900.0    ss.conc=1.6310e+20
+arsenic ss.temp=1000.    ss.conc=2.1413e+20
+arsenic ss.temp=1200.0   ss.conc=5.0e20
+
+# A crude and cruel hack for dopants in GaAs.
+beryllium	ss.temp =  700	ss.conc = 1.0e19	ss.clear
+beryllium	ss.temp = 1250	ss.conc = 1.0e19	ss.clear
+carbon		ss.temp =  700	ss.conc = 1.0e19	ss.clear
+carbon		ss.temp = 1250	ss.conc = 1.0e19	ss.clear
+germanium	ss.temp =  700	ss.conc = 1.0e19	ss.clear
+germanium	ss.temp = 1250	ss.conc = 1.0e19	ss.clear
+magnesium	ss.temp =  700	ss.conc = 1.0e19	ss.clear
+magnesium	ss.temp = 1250	ss.conc = 1.0e19	ss.clear
+selenium	ss.temp =  700	ss.conc = 1.0e19	ss.clear
+selenium	ss.temp = 1250	ss.conc = 1.0e19	ss.clear
+isilicon	ss.temp =  700	ss.conc = 1.0e19	ss.clear
+isilicon	ss.temp = 1250	ss.conc = 1.0e19	ss.clear
+tin		ss.temp =  700	ss.conc = 1.0e19	ss.clear
+tin		ss.temp = 1250	ss.conc = 1.0e19	ss.clear
+zinc		ss.temp =  700	ss.conc = 1.0e19	ss.clear
+zinc		ss.temp = 1250	ss.conc = 1.0e19	ss.clear
+generic		ss.temp =  700	ss.conc = 1.0e19	ss.clear
+generic		ss.temp = 1250	ss.conc = 1.0e19	ss.clear
+
+mode two.dim

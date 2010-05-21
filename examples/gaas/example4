@@ -1,0 +1,28 @@
+option quiet
+option term = tekc
+set echo
+
+mode one.dim
+line x loc=0.0 spacing=0.01 tag=top
+line x loc=1.0 spacing=0.01
+line x loc=20 spacing=0.25 tag=bottom
+
+region gaas	xlo=top  xhi=bottom
+boundary exposed xlo=top xhi=top
+boundary backside xlo=bottom xhi=bottom
+
+init carbon conc=1e15
+implant beryllium dose=1e14 energy=100 pearson
+
+deposit nitride thick=.3
+
+	select z=log10(beryllium)	
+	plot.1d x.min=0.0 x.ma=2.0 y.mi=14.0 y.max=20.0 line.type=4
+
+method fermi init=1e-5
+method full.fac
+diffuse time=15 temp=800 argon 
+	select z=log10(beryllium)	
+	plot.1d x.min=0.0 x.ma=2.0 y.mi=14.0 y.max=20.0 cle=f axi=f line.type=2
+
+quit

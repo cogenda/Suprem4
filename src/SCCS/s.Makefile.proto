@@ -1,0 +1,409 @@
+h51706
+s 00094/00045/00140
+d D 2.1 93/02/03 13:57:16 suprem45 2 1
+c Modified Suprem-IV version 9130 Makefile
+e
+s 00185/00000/00000
+d D 1.1 93/02/03 13:51:46 suprem45 1 0
+c date and time created 93/02/03 13:51:46 by suprem45
+e
+u
+U
+f e 0
+t
+T
+I 1
+D 2
+# Makefile 3.2 3/2/88 09:30:10
+E 2
+I 2
+# Makefile for SUPREM-IV.GS
+E 2
+#
+D 2
+# Makefile for SUPREMIV 
+E 2
+I 2
+#   %M%                Version %I%
+#   Last Modification : %G% %U%
+E 2
+#
+#----------------------------------------
+# change these lines when porting to other machines
+#
+# SYS should be one of {BSD, CONVEX, HPUX, CRAY}
+# BSD - "vanilla" BSD4.2 system
+# SYSV - vanilla system V unix
+# CONVEX - like BSD but uses vectorizing Fortran sparse matrix routines
+# HPUX - example of a non-BSD system
+# CRAY - like HPUX, but uses vectorizing Fortran sparse matrix routines
+
+SYS     = BSD
+
+FC="f77"
+D 2
+CC=cc
+E 2
+I 2
+CC=gcc
+E 2
+AR=ar
+RANLIB=ranlib
+OPT=-g
+
+# LOCAL is any global C compiler flags
+
+LOCAL   = -DDEVICE -DHAVE_KSH
+#----------------------------------------
+
+#edit these to change the location of the include files
+MANDIR = '-DMANLOC="/home/suprem45/rel.9130/man"'
+KEYFILE = '-DKEYLOC="/home/suprem45/rel.9130/suprem.uk"'
+MODELFILE = '-DMODELLOC="/home/suprem45/rel.9130/modelrc"'
+IMP_FILE = '-DIMPLOC="/home/suprem45/rel.9130/implant/SUP4imp.dat"'
+I 2
+#MANDIR = '-DMANLOC="/home/suprem45/man"'
+#KEYFILE = '-DKEYLOC="/home/suprem45/lib/suprem.uk"'
+#MODELFILE = '-DMODELLOC="/home/suprem45/lib/modelrc"'
+#IMP_FILE = '-DIMPLOC="/home/suprem45/lib/SUP4imp.dat"'
+E 2
+
+WRKDIR  = .
+#
+#
+DEST	= suprem
+INCL    = -I$(WRKDIR)/include
+
+I 2
+JOBS	= -j 4
+MAKE	= gmake $(JOBS)
+E 2
+CFLAGS  = -c $(OPT) $(INCL) -D$(SYS) $(LOCAL) $(MANDIR) $(KEYFILE) $(MODELFILE) $(IMP_FILE)
+LFLAGS  = -v -n -q $(INCL) -D$(SYS) $(LOCAL) $(MANDIR) $(KEYFILE) $(MODELFILE) $(IMP_FILE)
+LDFLAGS =  -g $(LOCAL)
+SUBLIB  = lib/diffuse.a lib/oxide.a lib/mesh.a \
+	  lib/math.a lib/shell.a lib/check.a lib/implant.a \
+	  lib/refine.a lib/libfe.a lib/device.a lib/imagetool.a \
+D 2
+	  lib/dbase.a lib/misc.a lib/geom.a lib/plot.a lib/readline.a
+E 2
+I 2
+	  lib/dbase.a lib/misc.a lib/geom.a lib/plot.a \
+	  /icl/lib/libedline.a
+#	  lib/readline.a
+E 2
+SUBSRC  = diffuse/*.c oxide/*.c mesh/*.c \
+	  math/*.c shell/*.c check/*.c implant/*.c \
+	  refine/*.c finel/*.c device/*.c \
+	  imagetool/*.c dbase/*.c misc/*.c \
+D 2
+	  geom/*.c plot/*.c xsup/*.c
+E 2
+I 2
+	  geom/*.c plot/*.c xsup/*.c gpsup/*.c
+E 2
+SCCS	= 
+D 2
+SRCS	= main.c bsd.c 
+CFILES  = main.c bsd.c 
+OBJS    = main.o bsd.o 
+LSRCS   = main.c bsd.c $(SUBSRC)
+E 2
+I 2
+SRCS	= main.c bsd.c pa.c
+CFILES  = main.c bsd.c pa.c
+OBJS    = main.o bsd.o pa.o
+LSRCS   = main.c bsd.c ps.o $(SUBSRC)
+E 2
+GPDIR	= 
+R3GR	= lib/xsup3.a -lX11
+R4GR	= lib/xsup4.a -lXaw -lXmu -lXt -lXext -lX11 
+D 2
+GPGR	= lib/gpsup.a
+LIBS    = $(R4GR) -ll -lm -ltermcap
+E 2
+I 2
+GPGR	= lib/gpsup.a -L/icl/lib -lgplot -lhigh2
+LIBS    = $(GPGR) -ll -lm -ltermcap
+#LIBS    = $(R4GR) -ll -lm -ltermcap
+#LIBS    = $(R4GR) -ll -lm -ltermcap /usr/lib/debug/malloc.o
+E 2
+SLIB	= 
+
+
+makeall	: bin lib $(OBJS) incl bin/keyread suprem.uk suprem 
+
+#1) Compiling on top of an executing copy fails on many systems.
+#2) If the compile fails, this keeps a working copy around.
+suprem 	: libs $(OBJS) 
+	date
+	time $(CC) $(LDFLAGS) $(OBJS) $(SUBLIB) $(SLIB) $(LIBS) -o suprem 
+
+load :
+	time $(CC) $(LDFLAGS) $(OBJS) $(SUBLIB) $(SLIB) $(LIBS) -o suprem 
+I 2
+
+purify :
+	purify $(CC) $(LDFLAGS) $(OBJS) $(SUBLIB) $(SLIB) $(LIBS) -o suprem 
+E 2
+	
+lint    : 
+	lint $(LFLAGS) $(LSRCS) lint.c | lint.awk > lint.list
+
+libs    :
+D 2
+	cd shell; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd shell; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd check; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd check; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd mesh; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd mesh; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd geom; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd geom; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd plot; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd plot; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd misc; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd misc; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd math; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd math; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd diffuse; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd diffuse; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd oxide; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd oxide; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd implant; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd implant; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd refine; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd refine; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd finel;  make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd finel;  $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd device; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd device; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd imagetool; make SYS=$(SYS) LOCAL='$(LOCAL)'  OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd imagetool; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd dbase; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd dbase; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+D 2
+	cd xsupr4; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd xsupr4; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+I 2
+	cd gpsup; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+		AR=$(AR) RANLIB=$(RANLIB)
+E 2
+
+tape    :
+	tar -cvf tape main.c bsd.c Makefile modelrc suprem.key README 
+	tar -rvf tape include/*.[chrfly] include/Makefile
+	tar -rvf tape shell/*.[chrfly] shell/Makefile
+	tar -rvf tape check/*.[chrfly] check/Makefile
+	tar -rvf tape mesh/*.[chrfly] mesh/Makefile
+	tar -rvf tape geom/*.[chrfly] geom/Makefile
+	tar -rvf tape plot/*.[chrfly] plot/Makefile
+	tar -rvf tape misc/*.[chrfly] misc/Makefile
+	tar -rvf tape math/*.[chrfly] math/Makefile
+	tar -rvf tape diffuse/*.[chrfly] diffuse/Makefile
+	tar -rvf tape oxide/*.[chrfly] oxide/Makefile
+	tar -rvf tape implant/*.[chrfly] implant/Makefile implant/SUP4imp.dat
+	tar -rvf tape refine/*.[chrfly] refine/Makefile
+	tar -rvf tape finel/*.[chrfly]  finel/Makefile
+	tar -rvf tape device/*.[chrfly] device/Makefile
+	tar -rvf tape imagetool/*.[chrfly] imagetool/Makefile
+	tar -rvf tape dbase/*.[chrfly] dbase/Makefile
+	tar -rvf tape xsupr4/*.[chrfly] xsupr4/Makefile
+	tar -rvf tape xsupr3/*.[chrfly] xsupr3/Makefile
+	tar -rvf tape gpsup/*.[chrfly] 
+	tar -rvf tape keyread/*.[chrfly] keyread/Makefile
+	tar -rvf tape examples
+
+release:
+
+bin	:
+	mkdir bin
+lib	:
+	mkdir lib
+
+incl 	:
+D 2
+	cd include; make
+E 2
+I 2
+	cd include; $(MAKE)
+E 2
+
+tags    : $(SRCS) $(SUBSRC)
+	ctags $(SRCS) $(SUBSRC)
+
+bin/keyread : 
+D 2
+	cd keyread; make SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+I 2
+	cd keyread; $(MAKE) SYS=$(SYS) LOCAL='$(LOCAL)' OPT='$(OPT)' CC=$(CC) \
+E 2
+		AR=$(AR) RANLIB=$(RANLIB)
+
+suprem.uk : suprem.key 
+	bin/keyread < suprem.key 
+
+clean   : 
+	rm -f $(OBJS)
+
+cleanall :
+D 2
+	cd shell; make clean
+	cd check; make clean
+	cd mesh; make clean
+	cd geom; make clean
+	cd plot; make clean
+	cd misc; make clean
+	cd math; make clean
+	cd diffuse; make clean
+	cd oxide; make clean
+	cd implant; make clean
+	cd refine; make clean
+	cd finel;  make clean
+	cd device; make clean
+	cd imagetool; make clean
+	cd dbase; make clean
+	cd xsupr4; make clean
+E 2
+I 2
+	cd shell; $(MAKE) clean
+	cd check; $(MAKE) clean
+	cd mesh; $(MAKE) clean
+	cd geom; $(MAKE) clean
+	cd plot; $(MAKE) clean
+	cd misc; $(MAKE) clean
+	cd math; $(MAKE) clean
+	cd diffuse; $(MAKE) clean
+	cd oxide; $(MAKE) clean
+	cd implant; $(MAKE) clean
+	cd refine; $(MAKE) clean
+	cd finel;  $(MAKE) clean
+	cd device; $(MAKE) clean
+	cd imagetool; $(MAKE) clean
+	cd dbase; $(MAKE) clean
+	cd xsupr4; $(MAKE) clean
+	cd gpsup; $(MAKE) clean
+E 2
+
+depend  : 
+	sed '/^#LAST-HUMAN-LINE/q' Makefile > Makefile.new
+	mkdep $(INCL) $(SRCS) 
+	cat .depend >> Makefile.new
+	mv Makefile Makefile.old; mv Makefile.new Makefile
+	rm .depend
+	
+#LAST-HUMAN-LINE
+I 2
+main.o: main.c
+main.o: include/global.h
+main.o: include/check.h
+main.o: include/constant.h
+main.o: include/dbaccess.h
+main.o: include/geom.h
+main.o: include/skel.h
+main.o: include/diffuse.h
+main.o: include/impurity.h
+main.o: include/defect.h
+main.o: include/key.h
+main.o: include/material.h
+main.o: include/matrix.h
+main.o: include/plot.h
+main.o: include/regrid.h
+main.o: include/shell.h
+main.o: include/implant.h
+main.o: include/sysdep.h
+main.o: include/expr.h
+main.o: include/refine.h
+main.o: include/poly.h
+bsd.o: bsd.c
+jacob.o: jacob.c
+jacob.o: include/constant.h
+jacob.o: include/global.h
+jacob.o: include/geom.h
+jacob.o: include/dbaccess.h
+jacob.o: include/skel.h
+jacob.o: include/impurity.h
+jacob.o: include/matrix.h
+jacob.o: include/diffuse.h
+pa.o: pa.c
+E 2
+E 1

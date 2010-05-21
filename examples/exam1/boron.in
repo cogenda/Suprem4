@@ -1,0 +1,39 @@
+#some set stuff
+set echo
+option quiet
+mode one.dim
+
+#the vertical definition
+line x loc = 0     spacing = 0.02 tag = top
+line x loc = 0.50  spacing = 0.02
+line x loc = 2.0   spacing = 0.25 tag=bottom
+
+#the silicon wafer
+region silicon xlo = top xhi = bottom
+
+#set up the exposed surfaces
+bound exposed  xlo = top  xhi = top
+
+#calculate the mesh
+init boron conc=1.0e14
+
+#the pad oxide
+deposit oxide thick=0.075
+
+#the uniform boron implant
+implant boron dose=3e14 energy=70 pearson
+
+#plot the initial profile
+select z=log10(boron)
+plot.1d x.ma=2.0 y.mi=14.0 y.max=20.0
+
+#the diffusion card
+diffuse time=30 temp=1100 
+
+#save the data
+structure out=boron.str
+
+#plot the final profile
+select z=log10(bor)
+plot.1d x.v=0.1 cle=f axi=f
+

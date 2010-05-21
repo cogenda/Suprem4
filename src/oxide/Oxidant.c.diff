@@ -1,0 +1,78 @@
+*** ./src/oxide/Oxidant.c.org	Wed Feb  3 17:28:12 1993
+--- ./src/oxide/Oxidant.c	Sun Dec 24 21:25:53 2000
+***************
+*** 497,503 ****
+  	}
+  	if (dlam*Vd != 0) {
+  	    sigd = 8.62e-5 * 1.6e-12 * proc_temp / (dlam*Vd);
+! 	    expl( 0.5 * (sig[XX] + sig[YY])/sigd, &f, &dfda, dlam);
+  	    if( f > Dlim) {f = Dlim; dfda=0;}
+  	    dfds = 0.5 * dfda/sigd;
+  	}
+--- 497,505 ----
+  	}
+  	if (dlam*Vd != 0) {
+  	    sigd = 8.62e-5 * 1.6e-12 * proc_temp / (dlam*Vd);
+! /* expl is reserved word in C Standard ISO90 and conflicts with mathcalls */
+! /* DClark - 18Oct98 */
+! 	    exp_l( 0.5 * (sig[XX] + sig[YY])/sigd, &f, &dfda, dlam);
+  	    if( f > Dlim) {f = Dlim; dfda=0;}
+  	    dfds = 0.5 * dfda/sigd;
+  	}
+***************
+*** 562,568 ****
+  	    sign = sig[XX]*n[X]*n[X] + sig[YY]*n[Y]*n[Y] + 2*sig[XY]*n[X]*n[Y];
+  
+  	    arg = sign/sigr;
+! 	    expl( arg, &f1, &dfda, rlam);
+  	    if( f1 > 1) {f1 = 1; dfda = 0;}
+  
+  	    dfds1 = dfda/sigr;
+--- 564,572 ----
+  	    sign = sig[XX]*n[X]*n[X] + sig[YY]*n[Y]*n[Y] + 2*sig[XY]*n[X]*n[Y];
+  
+  	    arg = sign/sigr;
+! /* expl is reserved word in C Standard ISO90 and conflicts with mathcalls */
+! /* DClark - 18Oct98 */
+! 	    exp_l( arg, &f1, &dfda, rlam);
+  	    if( f1 > 1) {f1 = 1; dfda = 0;}
+  
+  	    dfds1 = dfda/sigr;
+***************
+*** 577,583 ****
+  	    sigh = sig[XX]*n[Y]*n[Y] + sig[YY]*n[X]*n[X] - 2*sig[XY]*n[X]*n[Y];
+  	    
+  	    arg = sigh/sigt;
+! 	    expl( arg, &f2, &dfda, rlam);
+  	    if( f2 > 1) {f2 = 1; dfda = 0;}
+  
+  	    dfds2 = dfda/sigt;
+--- 581,589 ----
+  	    sigh = sig[XX]*n[Y]*n[Y] + sig[YY]*n[X]*n[X] - 2*sig[XY]*n[X]*n[Y];
+  	    
+  	    arg = sigh/sigt;
+! /* expl is reserved word in C Standard ISO90 and conflicts with mathcalls */
+! /* DClark - 18Oct98 */
+! 	    exp_l( arg, &f2, &dfda, rlam);
+  	    if( f2 > 1) {f2 = 1; dfda = 0;}
+  
+  	    dfds2 = dfda/sigt;
+***************
+*** 710,716 ****
+      }
+  }
+  
+! expl( arg, f, dfda, lambda)
+      double arg, *f, *dfda, lambda;
+  {	
+      double argLim, eargl;
+--- 716,724 ----
+      }
+  }
+  
+! /* expl is reserved word in C Standard ISO90 and conflicts with mathcalls */
+! /* DClark - 18Oct98 */
+! exp_l( arg, f, dfda, lambda)
+      double arg, *f, *dfda, lambda;
+  {	
+      double argLim, eargl;

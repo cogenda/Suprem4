@@ -1,0 +1,201 @@
+The following examples illustrate how one can use SUPREM 45 to
+simulate GaAs fabrication processes.  Only those commands that are
+unique or are especially pertinent to GaAs simulation are discussed.
+For more information on other commands, refer to the silicon
+technology examples given in the SUPREM IV manual.
+
+
+Example 1.
+
+This example simulates a simple 1D GaAs mesfet structure underneath
+the gate.  This utilizes SUPREM IV's new true 1D mode.  First, the 1D
+grid is set up and initialized with carbon as a background dopant.
+Beryllium and silicon are implanted into GaAs.  Note that silicon as
+in impurity is designated as "isilicon" (however, when selecting
+silicon in order to plot it, "silicon" is used for the dopant).  The
+as-implanted dopant concentration-depth profiles are plotted in 1D in
+Figure 1.  Next an anneal step is done, using the Fermi method, and
+the diffused beryllium profile is then plotted in the same figure.
+The hump in the beryllium profile at the beryllium/silicon junction is
+due to the electric field effect on diffusion.  Since the beryllium
+was implanted, the implanted diffusivity numbers (as opposed to the
+grown-in numbers) are used.  If you wish to change the beryllium
+diffusivity parameters, you would uncomment the line: 
+
+#beryllium gaas Dip.0=2.1e-8 Dip.E=1.74 
+
+put in your own values.
+
+
+Example 2. 
+
+This shows how one would do a 2D GaAs simulation.  A 2D grid is set
+up, and silicon and beryllium are implanted in the source, drain and
+channel regions.  Then the doping contours are plotted for the
+designated concentration levels in Figure 2.  In this example, only
+one half of the structure is simulated, then mirrored before the
+result is plotted, in order to speed up simulation time.
+
+
+Example 3. 
+
+Here the SUPREM 45 dopant activation model is illustrated.  Silicon is
+implanted into GaAs with a beryllium doped background.  Figure 3a
+shows the 1D plot of this.  The default n and p-type activation models
+are used (commented out in the lines: 
+
+#material gaas p.type act.a="(2.2 - 0.00117 * T)" act.b="1.00e21" 
+#material gaas n.type act.a="(2.2 - 0.00117 * T)" act.b="1.25e18" ) 
+
+Plotted in this figure are the silicon profile, the electron profile,
+and the net doping profile.  The electron profile takes into account
+the less that 100 percent net n-type dopant activation under the
+silicon peak, as well as the reduced electron concentration in the
+bulk due to the beryllium background doping.  The abs(doping) profile
+clearly shows the silicon/beryllium n/p junction.
+
+Figure 3b shows the results when the n-type activation model
+parameters are changed.  In this case, the following line is included:
+
+material gaas n.type act.a="(2.2 - 0.00117 * T)" act.b="4.25e18" 
+
+Note that the act.b parameter has been changed.  This increases the
+net active n-type dopant concentration under the peak of the silicon
+implant profile.
+
+
+Example 4.
+
+Examples 4,5, and 6 illustrate the differences in using implanted vs.
+grown-in dopants, and how it effects the diffusivity values used.  In
+Example 4, beryllium is implanted in GaAs, and the structure is
+annealed.  The as-implanted and diffused beryllium profiles are shown
+in Figure 4.
+
+
+Example 5. 
+
+Here, Be is grown into the GaAs by using the deposit statements
+
+deposit gaas thick=.5 divisions=100 beryllium conc=5e18
+deposit gaas thick=.5 divisions=100 beryllium conc=1e15     
+
+instead of an implant statement.  In this case, SUPREM 45 uses the
+lower "as-grown" diffusivities for beryllium.  The as-grown and
+diffused profiles are shown in Figure5.  The extent of beryllium
+diffusion is seen to be much less the this case compared to the
+implanted case (Example 4), even though the same anneal conditions
+are used and the beryllium peak concentrations are comparable (the
+diffusion is hole, or concentration, dependent).
+
+
+Example 6. 
+
+In this example, the "implanted" diffusivities are used, even though
+there is no implant statement.  The as-implanted profile is inputted
+from a file ("be1") by using the profile statement: profile infile=be1
+beryllium File be1 contains the x,concentration values for the
+as-implanted beryllium profile.  In order to use the "implanted"
+diffusivities even though there is no implant statement a "dummy"
+implant is done" implant beryllium dose=1e1 energy=100 pearson in
+which a very low dose beryllium implant is used.  As shown in Figure
+6, the extent of diffusion is comparable to that of Example 4, and
+much more than in Example 5, indicating the higher "implanted"
+diffusivity is used.
+
+
+Example 7.
+
+Here the two.dim method for diffusion is illustrated.  In Example 4,
+the fermi method for diffusion was used, in which it is assumed that
+interstitial and vacancy concentrations are at their equilibrium
+values throughout the simulation.  Therefore, the diffusivities are
+only dependent on temperature and the local doping concentrations (n
+or p).  In Example 5, the two.dim method for diffusion is used, in
+which extrinsic interstitials or vacancies (i.e. added from some
+source, such as implant damage, or from oxidation in the case of
+silicon technology) are taken into account in the diffusion of
+dopants.  In this case I/I* or V/V* may not equal one, and these terms
+are included in the diffusion equations.  In this example, the
+interstitial profile is input by the statement: 
+
+profile infile=file1
+
+inter where file1 contains the x,concentration values for the
+interstitials that might be caused by implantation damage.  Now the
+statement: 
+
+method two.dim init=1e-5 
+
+is used, rather than the fermi method statement.  Parameters for
+various interstitial and vacancy properties are also included.  For
+example, only +1 charge state interstitials are used, according to the
+statements: 
+
+interstitial gaas neu.0=0 pos.0=1 neu.E=0 neg.0=0 pos.E=0 dneg.0=0 
+interstitial gaas dpos.0=0 dpos.E=0 neg.E=0 tpos.0=0 tneg.0=0
+
+The as-implanted and diffused profiles of beryllium and interstitials
+are shown in Figure 7.  The diffused beryllium profile is much
+different than that in Example 4, where the fermi method was used
+(with no added interstitials).  The simulation predicts the famous
+"uphill diffusion" of implanted p-type dopants often observed.
+
+
+Example 8.
+
+In this example, the full.coupled method of diffusion is illustrated.
+Here Example 4 is repeated, but using the full.coupled diffusion
+method rather than the fermi method.  In this method, non-equilibrium
+levels of interstitials or vacancies can be produced by the diffusion
+process itself, without adding non-equilibrium levels of defects at
+the beginning, as was done in Example 7.  This is because in the
+diffusion process, the dopant diffuses as a dopant/defect pair, and
+defects are carried along with the dopant.  This can result in local
+regions of non-equilibrium concentrations of defects and can in turn
+effect the dopant diffusion.  (If one believes that the "kick-out"
+mechanism is occurring rather than the pair mechanism, the same effect
+occurs as the interstitial dopant kicks-out a matrix atom, creating an
+interstitial.)  The method statement is now: 
+
+method full.cpl init=1e-5
+
+Note that there is an initial very short diffuse statement: 
+
+diffuse time=.00001 temp=800 argon 
+
+In this first diffuse step, a short time anneal is done to establish
+the equilibrium defect concentrations in case you want to plot the
+initial values of these (since they are temperature dependent).  In
+the second diffuse statement: 
+
+diffuse time=15 temp=800 continue argon
+
+the continue command is used to maintain the initial defect values.
+Therefore, the initial diffuse uses the fermi method, and the defect
+levels are initially set at their equilibrium values.  (Since the
+interstitials are set at the +1 charge state, the equilibrium
+interstitial concentration is fermi level dependent and therefore the
+initial interstitial profile follows the beryllium profile).  The main
+diffuse step uses the full.cpl method.  The dopant/defect pairing
+parameters are specified by the following statements.  
+
+interstitial gaas beryllium neu.0=0 pos.0=0 neg.0=0 dneg.0=0 dpos.0=0 
+interstitial gaas beryllium tneg.0=0 tpos.0=0 
+
+These are all normally set to 0 if one assumes that the pair
+concentration is much less than the defect concentration
+(non-equilibrium levels of defects will still occur, since the defect
+flux equation in the full-coupled mode still takes into account the
+extra defects produced by the diffusion process).  In Figure 8, the
+as-implanted and diffused beryllium and interstitial profiles
+generated are shown.  One can see that, compared to Example 4, a kink
+in the profile occurs due to this defect non-equilibrium effect.  If
+one increases the interstitial diffusivity in the statement:
+
+interstitial gaas D.0=5e-14 D.E= 0.  
+
+from 5e-14 to 1e-11 for example, the interstitials are able to diffuse
+back to their equilibrium levels everywhere, and normal "Example 4
+type" diffusion occurs.
+

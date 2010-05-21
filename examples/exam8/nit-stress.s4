@@ -1,0 +1,29 @@
+#
+# nitride on silicon example
+foreach SEP ( 10 5 4 2.5 )
+
+    line x loc=(-$SEP) tag=l
+    line x loc=-2.0 spac=0.3
+    line x loc=0 spac=0.1 tag=m
+    line x loc=2.0 spac=0.3
+    line x loc=($SEP) tag=r
+
+    line y loc=0 spac=0.1 tag=si
+    line y loc=2 spac=0.3
+    line y loc=5 tag=b
+
+    region silicon xlo=l xhi=r ylo=si yhi=b
+    bound expos xlo=l xhi=r ylo=si yhi=si
+    initial ori=111
+
+    deposit nitride thick=0.02 div=2
+    etch nitride left p1.x=0.0
+
+    material intrin.sig=1.4e10 nitride
+
+    stress temp1=1000 temp2=1000
+
+    plot.2d bound x.mi=-2.0 x.ma=2.0 y.ma=4.0 cl=f
+    select z=Sxy
+    contour val=-3.0e7
+end

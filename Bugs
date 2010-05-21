@@ -1,0 +1,3 @@
+When you are using the gplot code, if you specify axis=f on the
+first plot_1d in a run then the program hangs when plotting.
+No boundaries are set in this case.

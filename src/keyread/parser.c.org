@@ -1,0 +1,927 @@
+extern char *malloc(), *realloc();
+
+# line 2 "parser.y"
+
+/*************************************************************************
+ *									 *
+ *   Original : MEL         Stanford University        Sept, 1984	 *
+ *									 *
+ *     Copyright c 1984 The board of trustees of the Leland Stanford 	 *
+ *                      Junior University. All rights reserved.		 *
+ *     This subroutine may not be used outside of the SUPREM4 computer	 *
+ *     program without the prior written consent of Stanford University. *
+ *									 *
+ *************************************************************************/
+/*   parser.y                Version 4.2     */
+/*   Last Modification : 3/20/91  09:25:42 */
+
+#include <stdio.h>
+#include <ctype.h>
+#include "check.h"
+#include "key.h"
+
+#ifdef MEMDEB
+#define malloc MALLOC
+#endif
+
+#define FALSE 0
+#define TRUE 1
+
+
+# line 32 "parser.y"
+typedef union   {
+    int ival;
+    float dval;
+    char *sval;
+    struct bool_exp *bval;
+    } YYSTYPE;
+# define CARD 257
+# define BG_GRP 258
+# define END_GRP 259
+# define PARTYPE 260
+# define EOL 261
+# define BOOLSTART 262
+# define GRT 263
+# define LES 264
+# define GRTE 265
+# define LESE 266
+# define OR 267
+# define AND 268
+# define EQU 269
+# define NOTEQU 270
+# define NOT 271
+# define PLUS 272
+# define TIMES 273
+# define RCONST 274
+# define STRING 275
+# define INTEGER 276
+# define NUMB 277
+# define NAME 278
+# define UNITS 279
+# define ERR_MSG 280
+# define COMMENT 281
+# define PARNAME 282
+#define yyclearin yychar = -1
+#define yyerrok yyerrflag = 0
+extern int yychar;
+extern int yyerrflag;
+#ifndef YYMAXDEPTH
+#define YYMAXDEPTH 150
+#endif
+YYSTYPE yylval, yyval;
+# define YYERRCODE 256
+
+# line 290 "parser.y"
+
+
+#include "lexical.c"
+
+
+
+/************************************************************************
+ *									*
+ *	node(type, val, left, right) - this routine builds the boolean	*
+ *  expression node of a tree with the given value.  It mallocs the 	*
+ *  space and assigns the data.						*
+ *									*
+ ************************************************************************/
+struct bool_exp *node(type, val, left, right)
+int type;
+val_str val;
+struct bool_exp *left, *right;
+{
+    struct bool_exp *t;
+
+    t = (struct bool_exp *)malloc( sizeof(struct bool_exp) );
+    t->value = val;
+    t->type = type;
+    t->left = left;
+    t->right = right;
+    return(t);
+}
+int yyexca[] ={
+-1, 1,
+	0, -1,
+	-2, 0,
+	};
+# define YYNPROD 38
+# define YYLAST 254
+int yyact[]={
+
+    22,     7,     9,     5,     6,    10,    33,    34,    35,    36,
+    37,    38,    39,    40,    13,    41,    42,    33,    34,    35,
+    36,    56,    38,    39,    40,    15,     4,    42,    29,    45,
+    28,    30,    31,    32,    33,    34,    35,    36,    17,    20,
+    39,    40,    33,    34,    35,    36,    14,    19,    21,     2,
+    18,    11,    12,     3,     8,    24,    16,     1,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,    43,    44,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,    46,    47,    48,    49,    50,    51,    52,    53,
+    54,    55,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+     0,    23,     0,     0,    25,     0,    27,     0,     0,     0,
+     0,     0,    26,    33,    34,    35,    36,    37,    38,    39,
+    40,     0,    41,    42 };
+int yypact[]={
+
+  -255,  -255, -1000,  -266, -1000, -1000, -1000,  -215,  -253, -1000,
+ -1000, -1000,  -224, -1000, -1000,   -14,  -222,   -40,  -249,  -243,
+ -1000,  -257,   -40,   -40, -1000, -1000, -1000, -1000,  -248, -1000,
+ -1000, -1000, -1000,   -40,   -40,   -40,   -40,   -40,   -40,   -40,
+   -40,   -40,   -40,   -20, -1000, -1000, -1000, -1000, -1000, -1000,
+  -246,  -229,  -221,  -221,  -246,  -229, -1000 };
+int yypgo[]={
+
+     0,    57,    56,    55,    48,    54,    49,    53,    52,    50 };
+int yyr1[]={
+
+     0,     1,     1,     6,     6,     6,     6,     6,     7,     7,
+     7,     7,     5,     5,     9,     9,     9,     9,     8,     8,
+     2,     2,     4,     4,     4,     4,     4,     4,     4,     4,
+     4,     4,     4,     4,     4,     3,     3,     3 };
+int yyr2[]={
+
+     0,     2,     4,     9,     3,     3,     3,     5,     7,     9,
+     9,    11,     3,     3,     5,     5,     5,     1,     3,     1,
+     5,     1,     7,     7,     7,     7,     7,     7,     7,     7,
+     7,     5,     7,     7,     3,     3,     3,     3 };
+int yychk[]={
+
+ -1000,    -1,    -6,    -7,   281,   258,   259,   256,    -5,   257,
+   260,    -6,    -8,   280,   261,   278,    -2,   262,    -9,    61,
+   261,    -4,    40,   271,    -3,   274,   282,   276,   279,   277,
+   274,   275,   276,   263,   264,   265,   266,   267,   268,   269,
+   270,   272,   273,    -4,    -4,   277,    -4,    -4,    -4,    -4,
+    -4,    -4,    -4,    -4,    -4,    -4,    41 };
+int yydef[]={
+
+     0,    -2,     1,    19,     4,     5,     6,     0,     0,    12,
+    13,     2,    21,    18,     7,    17,     0,     0,     8,     0,
+     3,    20,     0,     0,    34,    35,    36,    37,     9,    10,
+    14,    15,    16,     0,     0,     0,     0,     0,     0,     0,
+     0,     0,     0,     0,    31,    11,    23,    24,    25,    26,
+    27,    28,    29,    30,    32,    33,    22 };
+typedef struct { char *t_name; int t_val; } yytoktype;
+#ifndef YYDEBUG
+#	define YYDEBUG	0	/* don't allow debugging */
+#endif
+
+#if YYDEBUG
+
+yytoktype yytoks[] =
+{
+	"CARD",	257,
+	"BG_GRP",	258,
+	"END_GRP",	259,
+	"PARTYPE",	260,
+	"EOL",	261,
+	"BOOLSTART",	262,
+	"GRT",	263,
+	"LES",	264,
+	"GRTE",	265,
+	"LESE",	266,
+	"OR",	267,
+	"AND",	268,
+	"EQU",	269,
+	"NOTEQU",	270,
+	"NOT",	271,
+	"PLUS",	272,
+	"TIMES",	273,
+	"RCONST",	274,
+	"STRING",	275,
+	"INTEGER",	276,
+	"NUMB",	277,
+	"NAME",	278,
+	"UNITS",	279,
+	"ERR_MSG",	280,
+	"COMMENT",	281,
+	"PARNAME",	282,
+	"-unknown-",	-1	/* ends search */
+};
+
+char * yyreds[] =
+{
+	"-no such reduction-",
+	"keyfile : parameter",
+	"keyfile : keyfile parameter",
+	"parameter : identifier err_msg boolean EOL",
+	"parameter : COMMENT",
+	"parameter : BG_GRP",
+	"parameter : END_GRP",
+	"parameter : error EOL",
+	"identifier : id NAME deflt",
+	"identifier : id NAME deflt UNITS",
+	"identifier : id NAME deflt NUMB",
+	"identifier : id NAME deflt UNITS NUMB",
+	"id : CARD",
+	"id : PARTYPE",
+	"deflt : '=' RCONST",
+	"deflt : '=' STRING",
+	"deflt : '=' INTEGER",
+	"deflt : /* empty */",
+	"err_msg : ERR_MSG",
+	"err_msg : /* empty */",
+	"boolean : BOOLSTART bexp",
+	"boolean : /* empty */",
+	"bexp : '(' bexp ')'",
+	"bexp : bexp GRT bexp",
+	"bexp : bexp LES bexp",
+	"bexp : bexp GRTE bexp",
+	"bexp : bexp LESE bexp",
+	"bexp : bexp OR bexp",
+	"bexp : bexp AND bexp",
+	"bexp : bexp EQU bexp",
+	"bexp : bexp NOTEQU bexp",
+	"bexp : NOT bexp",
+	"bexp : bexp PLUS bexp",
+	"bexp : bexp TIMES bexp",
+	"bexp : term",
+	"term : RCONST",
+	"term : PARNAME",
+	"term : INTEGER",
+};
+#endif /* YYDEBUG */
+#line 1 "/usr/lib/yaccpar"
+/*	@(#)yaccpar 1.10 89/04/04 SMI; from S5R3 1.10	*/
+
+/*
+** Skeleton parser driver for yacc output
+*/
+
+/*
+** yacc user known macros and defines
+*/
+#define YYERROR		goto yyerrlab
+#define YYACCEPT	{ free(yys); free(yyv); return(0); }
+#define YYABORT		{ free(yys); free(yyv); return(1); }
+#define YYBACKUP( newtoken, newvalue )\
+{\
+	if ( yychar >= 0 || ( yyr2[ yytmp ] >> 1 ) != 1 )\
+	{\
+		yyerror( "syntax error - cannot backup" );\
+		goto yyerrlab;\
+	}\
+	yychar = newtoken;\
+	yystate = *yyps;\
+	yylval = newvalue;\
+	goto yynewstate;\
+}
+#define YYRECOVERING()	(!!yyerrflag)
+#ifndef YYDEBUG
+#	define YYDEBUG	1	/* make debugging available */
+#endif
+
+/*
+** user known globals
+*/
+int yydebug;			/* set to 1 to get debugging */
+
+/*
+** driver internal defines
+*/
+#define YYFLAG		(-1000)
+
+/*
+** static variables used by the parser
+*/
+static YYSTYPE *yyv;			/* value stack */
+static int *yys;			/* state stack */
+
+static YYSTYPE *yypv;			/* top of value stack */
+static int *yyps;			/* top of state stack */
+
+static int yystate;			/* current state */
+static int yytmp;			/* extra var (lasts between blocks) */
+
+int yynerrs;			/* number of errors */
+
+int yyerrflag;			/* error recovery flag */
+int yychar;			/* current input token number */
+
+
+/*
+** yyparse - return 0 if worked, 1 if syntax error not recovered from
+*/
+int
+yyparse()
+{
+	register YYSTYPE *yypvt;	/* top of value stack for $vars */
+	unsigned yymaxdepth = YYMAXDEPTH;
+
+	/*
+	** Initialize externals - yyparse may be called more than once
+	*/
+	yyv = (YYSTYPE*)malloc(yymaxdepth*sizeof(YYSTYPE));
+	yys = (int*)malloc(yymaxdepth*sizeof(int));
+	if (!yyv || !yys)
+	{
+		yyerror( "out of memory" );
+		return(1);
+	}
+	yypv = &yyv[-1];
+	yyps = &yys[-1];
+	yystate = 0;
+	yytmp = 0;
+	yynerrs = 0;
+	yyerrflag = 0;
+	yychar = -1;
+
+	goto yystack;
+	{
+		register YYSTYPE *yy_pv;	/* top of value stack */
+		register int *yy_ps;		/* top of state stack */
+		register int yy_state;		/* current state */
+		register int  yy_n;		/* internal state number info */
+
+		/*
+		** get globals into registers.
+		** branch to here only if YYBACKUP was called.
+		*/
+	yynewstate:
+		yy_pv = yypv;
+		yy_ps = yyps;
+		yy_state = yystate;
+		goto yy_newstate;
+
+		/*
+		** get globals into registers.
+		** either we just started, or we just finished a reduction
+		*/
+	yystack:
+		yy_pv = yypv;
+		yy_ps = yyps;
+		yy_state = yystate;
+
+		/*
+		** top of for (;;) loop while no reductions done
+		*/
+	yy_stack:
+		/*
+		** put a state and value onto the stacks
+		*/
+#if YYDEBUG
+		/*
+		** if debugging, look up token value in list of value vs.
+		** name pairs.  0 and negative (-1) are special values.
+		** Note: linear search is used since time is not a real
+		** consideration while debugging.
+		*/
+		if ( yydebug )
+		{
+			register int yy_i;
+
+			(void)printf( "State %d, token ", yy_state );
+			if ( yychar == 0 )
+				(void)printf( "end-of-file\n" );
+			else if ( yychar < 0 )
+				(void)printf( "-none-\n" );
+			else
+			{
+				for ( yy_i = 0; yytoks[yy_i].t_val >= 0;
+					yy_i++ )
+				{
+					if ( yytoks[yy_i].t_val == yychar )
+						break;
+				}
+				(void)printf( "%s\n", yytoks[yy_i].t_name );
+			}
+		}
+#endif /* YYDEBUG */
+		if ( ++yy_ps >= &yys[ yymaxdepth ] )	/* room on stack? */
+		{
+			/*
+			** reallocate and recover.  Note that pointers
+			** have to be reset, or bad things will happen
+			*/
+			int yyps_index = (yy_ps - yys);
+			int yypv_index = (yy_pv - yyv);
+			int yypvt_index = (yypvt - yyv);
+			yymaxdepth += YYMAXDEPTH;
+			yyv = (YYSTYPE*)realloc((char*)yyv,
+				yymaxdepth * sizeof(YYSTYPE));
+			yys = (int*)realloc((char*)yys,
+				yymaxdepth * sizeof(int));
+			if (!yyv || !yys)
+			{
+				yyerror( "yacc stack overflow" );
+				return(1);
+			}
+			yy_ps = yys + yyps_index;
+			yy_pv = yyv + yypv_index;
+			yypvt = yyv + yypvt_index;
+		}
+		*yy_ps = yy_state;
+		*++yy_pv = yyval;
+
+		/*
+		** we have a new state - find out what to do
+		*/
+	yy_newstate:
+		if ( ( yy_n = yypact[ yy_state ] ) <= YYFLAG )
+			goto yydefault;		/* simple state */
+#if YYDEBUG
+		/*
+		** if debugging, need to mark whether new token grabbed
+		*/
+		yytmp = yychar < 0;
+#endif
+		if ( ( yychar < 0 ) && ( ( yychar = yylex() ) < 0 ) )
+			yychar = 0;		/* reached EOF */
+#if YYDEBUG
+		if ( yydebug && yytmp )
+		{
+			register int yy_i;
+
+			(void)printf( "Received token " );
+			if ( yychar == 0 )
+				(void)printf( "end-of-file\n" );
+			else if ( yychar < 0 )
+				(void)printf( "-none-\n" );
+			else
+			{
+				for ( yy_i = 0; yytoks[yy_i].t_val >= 0;
+					yy_i++ )
+				{
+					if ( yytoks[yy_i].t_val == yychar )
+						break;
+				}
+				(void)printf( "%s\n", yytoks[yy_i].t_name );
+			}
+		}
+#endif /* YYDEBUG */
+		if ( ( ( yy_n += yychar ) < 0 ) || ( yy_n >= YYLAST ) )
+			goto yydefault;
+		if ( yychk[ yy_n = yyact[ yy_n ] ] == yychar )	/*valid shift*/
+		{
+			yychar = -1;
+			yyval = yylval;
+			yy_state = yy_n;
+			if ( yyerrflag > 0 )
+				yyerrflag--;
+			goto yy_stack;
+		}
+
+	yydefault:
+		if ( ( yy_n = yydef[ yy_state ] ) == -2 )
+		{
+#if YYDEBUG
+			yytmp = yychar < 0;
+#endif
+			if ( ( yychar < 0 ) && ( ( yychar = yylex() ) < 0 ) )
+				yychar = 0;		/* reached EOF */
+#if YYDEBUG
+			if ( yydebug && yytmp )
+			{
+				register int yy_i;
+
+				(void)printf( "Received token " );
+				if ( yychar == 0 )
+					(void)printf( "end-of-file\n" );
+				else if ( yychar < 0 )
+					(void)printf( "-none-\n" );
+				else
+				{
+					for ( yy_i = 0;
+						yytoks[yy_i].t_val >= 0;
+						yy_i++ )
+					{
+						if ( yytoks[yy_i].t_val
+							== yychar )
+						{
+							break;
+						}
+					}
+					(void)printf( "%s\n", yytoks[yy_i].t_name );
+				}
+			}
+#endif /* YYDEBUG */
+			/*
+			** look through exception table
+			*/
+			{
+				register int *yyxi = yyexca;
+
+				while ( ( *yyxi != -1 ) ||
+					( yyxi[1] != yy_state ) )
+				{
+					yyxi += 2;
+				}
+				while ( ( *(yyxi += 2) >= 0 ) &&
+					( *yyxi != yychar ) )
+					;
+				if ( ( yy_n = yyxi[1] ) < 0 )
+					YYACCEPT;
+			}
+		}
+
+		/*
+		** check for syntax error
+		*/
+		if ( yy_n == 0 )	/* have an error */
+		{
+			/* no worry about speed here! */
+			switch ( yyerrflag )
+			{
+			case 0:		/* new error */
+				yyerror( "syntax error" );
+				goto skip_init;
+			yyerrlab:
+				/*
+				** get globals into registers.
+				** we have a user generated syntax type error
+				*/
+				yy_pv = yypv;
+				yy_ps = yyps;
+				yy_state = yystate;
+				yynerrs++;
+			skip_init:
+			case 1:
+			case 2:		/* incompletely recovered error */
+					/* try again... */
+				yyerrflag = 3;
+				/*
+				** find state where "error" is a legal
+				** shift action
+				*/
+				while ( yy_ps >= yys )
+				{
+					yy_n = yypact[ *yy_ps ] + YYERRCODE;
+					if ( yy_n >= 0 && yy_n < YYLAST &&
+						yychk[yyact[yy_n]] == YYERRCODE)					{
+						/*
+						** simulate shift of "error"
+						*/
+						yy_state = yyact[ yy_n ];
+						goto yy_stack;
+					}
+					/*
+					** current state has no shift on
+					** "error", pop stack
+					*/
+#if YYDEBUG
+#	define _POP_ "Error recovery pops state %d, uncovers state %d\n"
+					if ( yydebug )
+						(void)printf( _POP_, *yy_ps,
+							yy_ps[-1] );
+#	undef _POP_
+#endif
+					yy_ps--;
+					yy_pv--;
+				}
+				/*
+				** there is no state on stack with "error" as
+				** a valid shift.  give up.
+				*/
+				YYABORT;
+			case 3:		/* no shift yet; eat a token */
+#if YYDEBUG
+				/*
+				** if debugging, look up token in list of
+				** pairs.  0 and negative shouldn't occur,
+				** but since timing doesn't matter when
+				** debugging, it doesn't hurt to leave the
+				** tests here.
+				*/
+				if ( yydebug )
+				{
+					register int yy_i;
+
+					(void)printf( "Error recovery discards " );
+					if ( yychar == 0 )
+						(void)printf( "token end-of-file\n" );
+					else if ( yychar < 0 )
+						(void)printf( "token -none-\n" );
+					else
+					{
+						for ( yy_i = 0;
+							yytoks[yy_i].t_val >= 0;
+							yy_i++ )
+						{
+							if ( yytoks[yy_i].t_val
+								== yychar )
+							{
+								break;
+							}
+						}
+						(void)printf( "token %s\n",
+							yytoks[yy_i].t_name );
+					}
+				}
+#endif /* YYDEBUG */
+				if ( yychar == 0 )	/* reached EOF. quit */
+					YYABORT;
+				yychar = -1;
+				goto yy_newstate;
+			}
+		}/* end if ( yy_n == 0 ) */
+		/*
+		** reduction by production yy_n
+		** put stack tops, etc. so things right after switch
+		*/
+#if YYDEBUG
+		/*
+		** if debugging, print the string that is the user's
+		** specification of the reduction which is just about
+		** to be done.
+		*/
+		if ( yydebug )
+			(void)printf( "Reduce by (%d) \"%s\"\n",
+				yy_n, yyreds[ yy_n ] );
+#endif
+		yytmp = yy_n;			/* value to switch over */
+		yypvt = yy_pv;			/* $vars top of value stack */
+		/*
+		** Look in goto table for next state
+		** Sorry about using yy_state here as temporary
+		** register variable, but why not, if it works...
+		** If yyr2[ yy_n ] doesn't have the low order bit
+		** set, then there is no action to be done for
+		** this reduction.  So, no saving & unsaving of
+		** registers done.  The only difference between the
+		** code just after the if and the body of the if is
+		** the goto yy_stack in the body.  This way the test
+		** can be made before the choice of what to do is needed.
+		*/
+		{
+			/* length of production doubled with extra bit */
+			register int yy_len = yyr2[ yy_n ];
+
+			if ( !( yy_len & 01 ) )
+			{
+				yy_len >>= 1;
+				yyval = ( yy_pv -= yy_len )[1];	/* $$ = $1 */
+				yy_state = yypgo[ yy_n = yyr1[ yy_n ] ] +
+					*( yy_ps -= yy_len ) + 1;
+				if ( yy_state >= YYLAST ||
+					yychk[ yy_state =
+					yyact[ yy_state ] ] != -yy_n )
+				{
+					yy_state = yyact[ yypgo[ yy_n ] ];
+				}
+				goto yy_stack;
+			}
+			yy_len >>= 1;
+			yyval = ( yy_pv -= yy_len )[1];	/* $$ = $1 */
+			yy_state = yypgo[ yy_n = yyr1[ yy_n ] ] +
+				*( yy_ps -= yy_len ) + 1;
+			if ( yy_state >= YYLAST ||
+				yychk[ yy_state = yyact[ yy_state ] ] != -yy_n )
+			{
+				yy_state = yyact[ yypgo[ yy_n ] ];
+			}
+		}
+					/* save until reenter driver code */
+		yystate = yy_state;
+		yyps = yy_ps;
+		yypv = yy_pv;
+	}
+	/*
+	** code supplied by user is placed in this switch
+	*/
+	switch( yytmp )
+	{
+		
+case 3:
+# line 67 "parser.y"
+{
+	    /*add the pointer to the top of the boolean tree*/
+	    current[0]->bexp = yypvt[-1].bval;
+
+	    /*everything has parsed okey-dokey, bump the pointer*/
+	    current++;
+	} break;
+case 4:
+# line 75 "parser.y"
+{
+	    /*ignore the sucker*/
+	} break;
+case 5:
+# line 79 "parser.y"
+{
+	    /*push everything down on the stack*/
+	    current = (struct par_str **)push(current);
+	} break;
+case 6:
+# line 84 "parser.y"
+{
+	    /*pop a layer off and finish off the pointer list*/
+	    current = (struct par_str **)pop();
+	    /*if we pop a NULL, it is time to quit*/
+	    if (current == NULL)
+		return(0);
+	} break;
+case 7:
+# line 92 "parser.y"
+{
+	    /*ignore the line in error*/
+	    fprintf(stderr, "error in parsing the input key file\n");
+	} break;
+case 8:
+# line 102 "parser.y"
+{
+	    if (strlen(yypvt[-1].sval) >= 12)
+		*(yypvt[-1].sval + 11) = '\0';
+	    strcpy(current[0]->name, yypvt[-1].sval);
+	    current[0]->units = NULL;
+	    current[0]->type = yypvt[-2].ival;
+	} break;
+case 9:
+# line 110 "parser.y"
+{
+	    if (strlen(yypvt[-2].sval) >= 12)
+		*(yypvt[-2].sval + 11) = '\0';
+	    strcpy(current[0]->name, yypvt[-2].sval);
+	    current[0]->units = yypvt[-0].sval;
+	    current[0]->type = yypvt[-3].ival;
+	} break;
+case 10:
+# line 118 "parser.y"
+{
+	    if (strlen(yypvt[-2].sval) >= 12)
+		*(yypvt[-2].sval + 11) = '\0';
+	    strcpy(current[0]->name, yypvt[-2].sval);
+	    current[0]->units = NULL;
+	    current[0]->type = yypvt[-3].ival | (yypvt[-0].ival & INDEX);
+	} break;
+case 11:
+# line 126 "parser.y"
+{
+	    if (strlen(yypvt[-3].sval) >= 12)
+		*(yypvt[-3].sval + 11) = '\0';
+	    strcpy(current[0]->name, yypvt[-3].sval);
+	    current[0]->units = yypvt[-1].sval;
+	    current[0]->type = yypvt[-4].ival | (yypvt[-0].ival & INDEX);
+	} break;
+case 12:
+# line 138 "parser.y"
+{
+	    yyval.ival = COMM;
+	} break;
+case 13:
+# line 142 "parser.y"
+{
+	    yyval.ival = yypvt[-0].ival;
+	} break;
+case 14:
+# line 150 "parser.y"
+{
+	    current[0]->def.dval = yypvt[-0].dval;
+	} break;
+case 15:
+# line 154 "parser.y"
+{
+	    current[0]->def.sval = yypvt[-0].sval;
+	} break;
+case 16:
+# line 158 "parser.y"
+{
+	    current[0]->def.ival = yypvt[-0].ival;
+	} break;
+case 17:
+# line 162 "parser.y"
+{ 
+	    current[0]->def.ival = 0; 
+	} break;
+case 18:
+# line 170 "parser.y"
+{
+	    current[0]->err_msg = yypvt[-0].sval;
+	} break;
+case 19:
+# line 174 "parser.y"
+{
+	    current[0]->err_msg = NULL;
+	} break;
+case 20:
+# line 181 "parser.y"
+{
+	    yyval.bval = yypvt[-0].bval;
+	} break;
+case 21:
+# line 185 "parser.y"
+{
+	    yyval.bval = NULL;
+	} break;
+case 22:
+# line 193 "parser.y"
+{
+	    yyval.bval = yypvt[-1].bval;
+	} break;
+case 23:
+# line 197 "parser.y"
+{
+	    val_str t;
+	    t.ival = '>';
+	    yyval.bval = node(OPER, t, yypvt[-2].bval, yypvt[-0].bval);
+	} break;
+case 24:
+# line 203 "parser.y"
+{
+	    val_str t;
+	    t.ival = '<';
+	    yyval.bval = node(OPER, t, yypvt[-2].bval, yypvt[-0].bval);
+	} break;
+case 25:
+# line 209 "parser.y"
+{
+	    val_str t;
+	    t.ival = 'g';
+	    yyval.bval = node(OPER, t, yypvt[-2].bval, yypvt[-0].bval);
+	} break;
+case 26:
+# line 215 "parser.y"
+{
+	    val_str t;
+	    t.ival = 'l';
+	    yyval.bval = node(OPER, t, yypvt[-2].bval, yypvt[-0].bval);
+	} break;
+case 27:
+# line 221 "parser.y"
+{
+	    val_str t;
+	    t.ival = '|';
+	    yyval.bval = node(OPER, t, yypvt[-2].bval, yypvt[-0].bval);
+	} break;
+case 28:
+# line 227 "parser.y"
+{
+	    val_str t;
+	    t.ival = '&';
+	    yyval.bval = node(OPER, t, yypvt[-2].bval, yypvt[-0].bval);
+	} break;
+case 29:
+# line 233 "parser.y"
+{
+	    val_str t;
+	    t.ival = '=';
+	    yyval.bval = node(OPER, t, yypvt[-2].bval, yypvt[-0].bval);
+	} break;
+case 30:
+# line 239 "parser.y"
+{
+	    val_str t;
+	    t.ival = 'n';
+	    yyval.bval = node(OPER, t, yypvt[-2].bval, yypvt[-0].bval);
+	} break;
+case 31:
+# line 245 "parser.y"
+{
+	    val_str t;
+	    t.ival = '!';
+	    yyval.bval = node(OPER, t, NULL, yypvt[-0].bval);
+	} break;
+case 32:
+# line 251 "parser.y"
+{
+	    val_str t;
+	    t.ival = '+';
+	    yyval.bval = node(OPER, t, yypvt[-2].bval, yypvt[-0].bval);
+	} break;
+case 33:
+# line 257 "parser.y"
+{
+	    val_str t;
+	    t.ival = '*';
+	    yyval.bval = node(OPER, t, yypvt[-2].bval, yypvt[-0].bval);
+	} break;
+case 34:
+# line 263 "parser.y"
+{
+	    yyval.bval = yypvt[-0].bval;
+	} break;
+case 35:
+# line 271 "parser.y"
+{
+	    val_str t;
+	    t.dval = yypvt[-0].dval;
+	    yyval.bval = node(REAL, t, NULL, NULL);
+	} break;
+case 36:
+# line 277 "parser.y"
+{
+	    val_str t;
+	    t.sval = yypvt[-0].sval;
+	    yyval.bval = node(PARVAL, t, NULL, NULL);
+	} break;
+case 37:
+# line 283 "parser.y"
+{
+	    val_str t;
+	    t.dval = (float)yypvt[-0].ival;
+	    yyval.bval = node(REAL, t, NULL, NULL);
+	} break;
+	}
+	goto yystack;		/* reset registers in driver code */
+}

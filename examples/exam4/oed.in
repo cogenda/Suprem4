@@ -1,0 +1,39 @@
+#some set stuff
+set echo
+
+#the x dimension definition
+line x loc = -2.0 tag = left
+line x loc = 0.0 spacing=0.05
+line x loc = 5.0 tag = right 
+
+#the vertical definition
+line y loc = 0     spacing = 0.02 tag = top
+line y loc = 1.5   spacing = 0.05 
+line y loc = 400.0                tag=bottom
+
+#the silicon wafer
+region silicon xlo = left xhi = right ylo = top yhi = bottom
+
+#set up the exposed surfaces
+bound exposed  xlo = left xhi = right ylo = top  yhi = top
+
+#calculate the mesh
+init boron conc=1.0e14
+
+#the pad oxide
+deposit oxide thick=0.02
+
+#deposit the nitride mask
+deposit nitride thick=0.05
+etch nitride right p1.x=0.0 p2.x=0.0
+
+#the boron implant
+implant boron dose=3e14 energy=40 pearson
+
+#the diffusion card
+method two.d
+diffuse time=30 temp=1100 dry
+
+#save the data
+structure out=oed.str
+

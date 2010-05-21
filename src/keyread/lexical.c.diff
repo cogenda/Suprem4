@@ -1,0 +1,19 @@
+*** ./src/keyread/lexical.c.org	Wed Feb  3 17:17:32 1993
+--- ./src/keyread/lexical.c	Sun Dec 24 22:07:40 2000
+***************
+*** 17,23 ****
+  int yymorfg;
+  extern char *yysptr, yysbuf[];
+  int yytchar;
+! FILE *yyin = {stdin}, *yyout = {stdout};
+  extern int yylineno;
+  struct yysvf { 
+  	struct yywork *yystoff;
+--- 17,23 ----
+  int yymorfg;
+  extern char *yysptr, yysbuf[];
+  int yytchar;
+! FILE *yyin, *yyout;
+  extern int yylineno;
+  struct yysvf { 
+  	struct yywork *yystoff;

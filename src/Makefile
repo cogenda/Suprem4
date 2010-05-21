@@ -1,0 +1,612 @@
+#----------------------------------------------------------------------
+# Makefile for SUPREM-IV.GS 
+#
+#   %M%                Version %I%     
+#   Last Modification : %G% %U% 
+#
+#  Original: Stephen Hansen (hansen@gloworm.stanford.edu)
+#		Mon Feb  1 14:57:45 PST 1993
+#
+#----------------------------------------------------------------------
+
+# change these lines when porting to other machines
+#
+# SYS should be one of {BSD, CONVEX, HPUX, CRAY}
+# BSD - "vanilla" BSD4.2 system
+# SYSV - vanilla system V unix
+# CONVEX - like BSD but uses vectorizing Fortran sparse matrix routines
+# HPUX - example of a non-BSD system
+# CRAY - like HPUX, but uses vectorizing Fortran sparse matrix routines
+SYS     = BSD
+
+#.. Where are we?
+HERE	 = .
+
+#.. What are we going to call it and where does it go?
+BINDIR  = $(HERE)/../bin
+SUPREM	= suprem
+
+#.. Edit these to change the location of the help and data files
+HELPDIR	= $(HERE)/../help
+DATADIR	= $(HERE)/../data
+
+#.. Which C and Fortran Compiler?
+CC	= gcc
+FC	= "f77"
+
+#.. What optimization level for the compilers?
+#COPT	= -O3
+#FOPT	= -O2
+COPT	= -g
+FOPT	= -g
+
+#.. if you want the X11 plotting uncomment the following.
+#GRLIBS	= -lXaw -lXmu -lXt -lXext -lX11
+#GRINC	= 
+#GRARC	= $(LIBDEST)/xsupr4.a
+#GRSRCS	= xsupr4/Graph.c xsupr4/app1.c xsupr4/draw.c xsupr4/help.c \
+#	xsupr4/hpgl.c xsupr4/idraw.c xsupr4/interface.c xsupr4/ps.c \
+#	xsupr4/xgX.c
+#GROBJS	= xsupr4/Graph.o xsupr4/app1.o xsupr4/draw.o xsupr4/help.o \
+#	xsupr4/hpgl.o xsupr4/idraw.o xsupr4/interface.o xsupr4/ps.o \
+#	xsupr4/xgX.o
+
+
+#.. otherwise if you want the gplot plotting package then use this.
+#.. although you need to change the /icl/include and /icl/lib to
+#.. wherever the package include and archive files are.
+GRLIBS	= -L/icl/lib -lgplot -lhigh2
+GRINC	= -I/icl/include
+GRARC	= $(LIBDEST)/gpsup.a
+GRSRCS	= gpsup/gpcover.c
+GROBJS	= gpsup/gpcover.o
+
+# sysV uses termlib
+#LIBS	= $(GRLIBS) -ly -ll -lm -ltermlib
+# bsd uses termcap
+LIBS	= $(GRLIBS) -ly -ll -lm -ltermcap
+
+#.. SysV users take note!  Down where the archive files are ranlib'd
+#.. is some real crufty stuff.  This is to get around a bug in ranlib
+#.. that shows up mainly when running gmake with the multi-job flag.
+AR	= ar
+ARFLAGS	= rv
+#.. BSD folks need this.
+RANLIB	= ranlib
+#.. SysV folks need to do this.
+#RANLIB	= \#
+
+#--- You shouldn't need to mess with anything below here ---
+#----------------------------------------------------------------------
+
+MANDIR = -DMANLOC='"$(HELPDIR)"'
+KEYFILE = -DKEYLOC='"$(DATADIR)/suprem.uk"'
+MODELFILE = -DMODELLOC='"$(DATADIR)/modelrc"'
+IMP_FILE = -DIMPLOC='"$(DATADIR)/sup4gs.imp"'
+DATAFILES = $(MANDIR) $(KEYFILE) $(MODELFILE) $(IMP_FILE)
+
+LOCDEFS	= -DDEVICE -DHAVE_KSH -D$(SYS) -DNO_F77
+
+INCLUDE = $(GRINC) -Iinclude
+CFLAGS	= -c $(COPT) $(LOCDEFS) $(INCLUDE)
+LFLAGS	= -v -n -q $(COPT) $(LOCDEFS) $(INCLUDE)
+FFLAGS	= -c $FOPT
+LDFLAGS	= $(COPT) $(LOCDEFS)
+
+
+SUBDIRS = dbase device diffuse finel geom gpsup imagetool \
+	implant math mesh misc oxide plot refine shell xsupr4
+
+LIBDEST = arlib
+
+SLIBS = $(LIBDEST)/diffuse.a $(LIBDEST)/oxide.a $(LIBDEST)/mesh.a \
+	$(LIBDEST)/math.a $(LIBDEST)/shell.a $(LIBDEST)/check.a \
+	$(LIBDEST)/implant.a $(LIBDEST)/refine.a $(LIBDEST)/finel.a \
+	$(LIBDEST)/device.a $(LIBDEST)/imagetool.a $(LIBDEST)/dbase.a \
+	$(LIBDEST)/misc.a $(LIBDEST)/geom.a $(LIBDEST)/plot.a $(GRARC)
+
+MAINSRCS = ./main.c
+MAINOBJS = ./main.o
+
+CHECKSRCS = check/check.c check/eval.c check/lexical.c check/parse.c \
+	check/reduce.c check/sint.c check/split.c check/vector.c \
+	check/verify.c
+CHECKOBJS = check/check.o check/eval.o check/lexical.o check/parse.o \
+	check/reduce.o check/sint.o check/split.o check/vector.o \
+	check/verify.o
+
+DBASESRCS = dbase/alloc.c dbase/check.c dbase/clktri.c dbase/couple.c \
+	dbase/dimen.c dbase/dispose.c dbase/edge.c dbase/element.c \
+	dbase/flip.c dbase/geom.c dbase/geometry.c dbase/grid_loop.c \
+	dbase/grid_upd.c dbase/kill_node.c dbase/list.c dbase/locate.c \
+	dbase/make_db.c dbase/neigh.c dbase/new_layer.c dbase/node.c \
+	dbase/point.c dbase/region.c dbase/remove.c
+DBASEOBJS = dbase/alloc.o dbase/check.o dbase/clktri.o dbase/couple.o \
+	dbase/dimen.o dbase/dispose.o dbase/edge.o dbase/element.o \
+	dbase/flip.o dbase/geom.o dbase/geometry.o dbase/grid_loop.o \
+	dbase/grid_upd.o dbase/kill_node.o dbase/list.o dbase/locate.o \
+	dbase/make_db.o dbase/neigh.o dbase/new_layer.o dbase/node.o \
+	dbase/point.o dbase/region.o dbase/remove.o
+
+DEVICESRCS = device/Electron.c device/Hole.c device/Psi.c \
+	device/circuit.c device/contact.c device/dev_blkset.c \
+	device/dev_prep.c device/dev_solve.c device/device.c
+DEVICEOBJS = device/Electron.o device/Hole.o device/Psi.o \
+	device/circuit.o device/contact.o device/dev_blkset.o \
+	device/dev_prep.o device/dev_solve.o device/device.o
+
+DIFFUSESRCS = diffuse/Antimony.c diffuse/Arsenic.c diffuse/Beryllium.c \
+	diffuse/Boron.c diffuse/Carbon.c diffuse/Cesium.c \
+	diffuse/Generic.c diffuse/Germanium.c diffuse/Gold.c \
+	diffuse/Interst.c diffuse/Magnesium.c diffuse/Phosphorus.c \
+	diffuse/Selenium.c diffuse/Silicon.c diffuse/Tin.c \
+	diffuse/Trap.c diffuse/Vacancy.c diffuse/Zinc.c \
+	diffuse/active.c diffuse/block_set.c diffuse/defect.c \
+	diffuse/diff_init.c diffuse/diffuse.c diffuse/movie.c \
+	diffuse/moving.c diffuse/norm.c diffuse/poly.c \
+	diffuse/predep.c diffuse/prepare.c diffuse/setup.c \
+	diffuse/solve.c diffuse/solve_time.c diffuse/species.c \
+	diffuse/time.c
+DIFFUSEOBJS = diffuse/Antimony.o diffuse/Arsenic.o diffuse/Beryllium.o \
+	diffuse/Boron.o diffuse/Carbon.o diffuse/Cesium.o \
+	diffuse/Generic.o diffuse/Germanium.o diffuse/Gold.o \
+	diffuse/Interst.o diffuse/Magnesium.o diffuse/Phosphorus.o \
+	diffuse/Selenium.o diffuse/Silicon.o diffuse/Tin.o \
+	diffuse/Trap.o diffuse/Vacancy.o diffuse/Zinc.o \
+	diffuse/active.o diffuse/block_set.o diffuse/defect.o \
+	diffuse/diff_init.o diffuse/diffuse.o diffuse/movie.o \
+	diffuse/moving.o diffuse/norm.o diffuse/poly.o \
+	diffuse/predep.o diffuse/prepare.o diffuse/setup.o \
+	diffuse/solve.o diffuse/solve_time.o diffuse/species.o \
+	diffuse/time.o
+
+FINELSRCS = finel/FEassmb.c finel/FEsolve.c finel/tomcal.c \
+	finel/tri6.c finel/tri7.c
+FINDELFSRCS = finel/interface.r finel/toms508.f
+FINELOBJS = finel/FEassmb.o finel/FEsolve.o finel/tomcal.o \
+	finel/tri6.o finel/tri7.o finel/interface.o finel/toms508.o
+
+GEOMSRCS = geom/limits.c geom/misc.c geom/tnabor.c
+GEOMOBJS = geom/limits.o geom/misc.o geom/tnabor.o
+
+IMAGETOOLSRCS = imagetool/fill_grid.c imagetool/image_write.c \
+	imagetool/make_grid.c imagetool/makeframe.c imagetool/window.c
+IMAGETOOLOBJS = imagetool/fill_grid.o imagetool/image_write.o \
+	imagetool/make_grid.o imagetool/makeframe.o imagetool/window.o
+
+IMPLANTSRCS = implant/damage.c implant/fgtmom.c implant/imp_gtprs.c \
+	implant/imp_lat.c implant/imp_prson.c implant/imp_qeqv.c \
+	implant/imp_qpgauss.c implant/imp_qpprs.c implant/imp_setprs.c \
+	implant/imp_vert.c implant/imp_zeqv.c implant/implant.c \
+	implant/pearson.c implant/surf.c
+IMPLANTOBJS = implant/damage.o implant/fgtmom.o implant/imp_gtprs.o \
+	implant/imp_lat.o implant/imp_prson.o implant/imp_qeqv.o \
+	implant/imp_qpgauss.o implant/imp_qpprs.o implant/imp_setprs.o \
+	implant/imp_vert.o implant/imp_zeqv.o implant/implant.o \
+	implant/pearson.o implant/surf.o
+
+MATHSRCS = math/blklu.c math/coldata.c math/generate.c math/genrow.c \
+	math/min_fill.c math/mxv.c math/solblk.c math/symb.c
+MATHFSRCS = math/vector.f
+MATHOBJS = math/blklu.o math/coldata.o math/generate.o math/genrow.o \
+	math/min_fill.o math/mxv.o math/solblk.o math/symb.o math/vector.o
+
+MESHSRCS = mesh/check_active.c mesh/ig2_meshio.c mesh/initialize.c \
+	mesh/newbackside.c mesh/pi_meshio.c mesh/profile.c \
+	mesh/rect.c mesh/save_simpl.c mesh/structure.c
+MESHOBJS = mesh/check_active.o mesh/ig2_meshio.o mesh/initialize.o \
+	mesh/newbackside.o mesh/pi_meshio.o mesh/profile.o \
+	mesh/rect.o mesh/save_simpl.o mesh/structure.o
+
+MISCSRCS = misc/bsd.c misc/cpu.c misc/echo.c misc/get.c misc/man.c \
+	misc/pa.c misc/panic.c misc/print_time.c misc/read.c \
+	misc/reader.c misc/sint.c
+MISCOBJS = misc/bsd.o misc/cpu.o misc/echo.o misc/get.o misc/man.o \
+	misc/pa.o misc/panic.o misc/print_time.o misc/read.o \
+	misc/reader.o misc/sint.o
+
+OXIDESRCS = oxide/FEbc.c oxide/FEconvert.c oxide/Oxidant.c oxide/coeffox.c \
+	oxide/elast.c oxide/erfit.c oxide/mater.c oxide/oxgrow.c \
+	oxide/oxide_vel.c oxide/oxrate.c oxide/triox.c oxide/vert.c \
+	oxide/viscous.c
+OXIDEOBJS = oxide/FEbc.o oxide/FEconvert.o oxide/Oxidant.o oxide/coeffox.o \
+	oxide/elast.o oxide/erfit.o oxide/mater.o oxide/oxgrow.o \
+	oxide/oxide_vel.o oxide/oxrate.o oxide/triox.o oxide/vert.o \
+	oxide/viscous.o
+
+PLOTSRCS = plot/contour.c plot/do_1d.c plot/intersect.c plot/label.c \
+	plot/matedge.c plot/material.c plot/option.c plot/plot.c \
+	plot/plot_1d.c plot/plot_2d.c plot/print_1d.c plot/select.c
+PLOTOBJS = plot/contour.o plot/do_1d.o plot/intersect.o plot/label.o \
+	plot/matedge.o plot/material.o plot/option.o plot/plot.o \
+	plot/plot_1d.o plot/plot_2d.o plot/print_1d.o plot/select.o
+
+REFINESRCS = refine/bfill.c refine/dbase.c refine/deloop.c \
+	refine/deposit.c refine/etch.c refine/grid.c refine/hinit.c \
+	refine/interp.c refine/offset.c refine/rate.c refine/rect_tri.c \
+	refine/skel.c refine/sp_edge.c refine/string_etch.c \
+	refine/string_off.c refine/surface.c refine/triang.c \
+	refine/tridata.c refine/triheur.c
+REFINEOBJS = refine/bfill.o refine/dbase.o refine/deloop.o \
+	refine/deposit.o refine/etch.o refine/grid.o refine/hinit.o \
+	refine/interp.o refine/offset.o refine/rate.o refine/rect_tri.o \
+	refine/skel.o refine/sp_edge.o refine/string_etch.o \
+	refine/string_off.o refine/surface.o refine/triang.o \
+	refine/tridata.o refine/triheur.o
+
+SHELLSRCS = shell/do_action.c shell/help.c shell/input.c shell/lex.c \
+	shell/list.c shell/macro.c shell/parser.c shell/parser_boot.c \
+	shell/proc.c shell/set.c shell/smisc.c
+SHELLYSRCS = shell/parser.y
+SHELLOBJS = shell/parser.o shell/do_action.o shell/help.o shell/input.o \
+	shell/lex.o shell/list.o shell/macro.o shell/parser_boot.o \
+	shell/proc.o shell/set.o shell/smisc.o
+
+CSRCS	= $(MAINSRCS) $(CHECKSRCS) $(DBASESRCS) $(DEVICESRCS) \
+	$(DIFFUSESRCS) $(FINELSRCS) $(GEOMSRCS) $(IMAGETOOLSRCS) \
+	$(IMPLANTSRCS) $(MATHSRCS) $(MESHSRCS) $(MISCSRCS) $(OXIDESRCS) \
+	$(PLOTSRCS) $(REFINESRCS) $(SHELLSRCS) $(GRSRCS)
+YSRCS	= $(SHELLYSRCS)
+FSRCS	= $(FINDELFSRCS) $(MATHFSRCS )
+SRCS	= $(CSRCS) $(FSRCS)
+
+OBJS	= $(MAINOBJS) $(CHECKOBJS) $(DBASEOBJS) $(DEVICEOBJS) \
+	$(DIFFUSEOBJS) $(FINELOBJS) $(GEOMOBJS) $(IMAGETOOLOBJS) \
+	$(IMPLANTOBJS) $(MATHOBJS) $(MESHOBJS) $(MISCOBJS) $(OXIDEOBJS) \
+	$(PLOTOBJS) $(REFINEOBJS) $(SHELLOBJS) $(GROBJS)
+
+# change the default actions
+.c~.o	:
+	$(GET) $(GFLAGS) $<
+	$(CC) $(CFLAGS) $*.c -o $*.o
+
+.c.o   :
+	$(CC) $(CFLAGS) $*.c -o $*.o
+
+.c~.c	:
+	$(GET) $(GFLAGS) $<
+
+.y.o    :
+	$(YACC) $(YFLAGS) -d $<
+	mv y.tab.c $*.c
+	mv y.tab.h $*.h
+	$(CC) $(CFLAGS) $*.c -o $*.o
+
+.y.c	:
+	$(YACC) $(YFLAGS) -d $<
+	mv y.tab.c $*.c
+	mv y.tab.h $*.h
+
+.y~.y   :
+	$(GET) $(GFLAGS) $<
+
+.l~.l   :
+	$(GET) $(GFLAGS) $<
+
+.h~.h	:
+	$(GET) $(GFLAGS) $<
+
+.f~.o	:
+	$(GET) $(GFLAGS) $<
+	$(FC) $(FFLAGS) $*.f -o $*.o
+
+.f~.f	:
+	$(GET) $(GFLAGS) $<
+
+.f.o	:
+	$(FC) $(FFLAGS) $*.f -o $*.o
+
+.r.f    :
+	ratfor -C -6c < $*.r > $*.f
+
+#----------------------------------------------------------------------
+local: $(SUPREM)
+	install -m 755 $(SUPREM) $(BINDIR)
+
+$(SUPREM): $(MAINOBJS) $(SLIBS)
+	date
+	time $(CC) $(LDFLAGS) $(MAINOBJS) $(SLIBS) $(LIBS) -o $@
+
+install: $(SUPREM) $(BINDIR) $(DATADIR) $(HELPDIR) suprem.uk
+	install -m 755 $(SUPREM) $(BINDIR)
+	install -m 644 data/modelrc data/sup4gs.imp $(DATADIR)
+
+keyread: always
+	cd keyread; $(MAKE) SYS='$(SYS)' OPT='$(OPT)' CC='$(CC)'
+
+suprem.uk : data/suprem.key keyread
+	keyread/keyread data/suprem.uk < data/suprem.key
+	install -m 644 data/suprem.uk $(DATADIR)
+
+#.. If necessary, create the directory for the suprem executable file.
+$(BINDIR):
+	mkdir -p $(BINDIR)
+	chmod -f 755 $(BINDIR)
+
+#.. If necessary, create the directory for the suprem data files.
+$(DATADIR):
+	mkdir -p $(DATADIR)
+	chmod -f 755 $(DATADIR)
+
+#.. If necessary, create the directory for the suprem help files.
+#.. Don't get your hopes up though.  There aren't any yet.
+$(HELPDIR):
+	mkdir -p $(HELPDIR)
+	chmod -f 755 $(HELPDIR)
+
+main.o:
+	$(CC) $(CFLAGS) $(DATAFILES) main.c -o main.o
+
+$(LIBDEST)/check.a:	$(CHECKOBJS)
+	$(AR) $(ARFLAGS) $@ $(CHECKOBJS)
+	cd check ; $(RANLIB) ../$@
+$(LIBDEST)/dbase.a:	$(DBASEOBJS)
+	$(AR) $(ARFLAGS) $@ $(DBASEOBJS)
+	cd dbase ; $(RANLIB) ../$@
+$(LIBDEST)/device.a:	$(DEVICEOBJS)
+	$(AR) $(ARFLAGS) $@ $(DEVICEOBJS)
+	cd device ; $(RANLIB) ../$@
+$(LIBDEST)/diffuse.a:	$(DIFFUSEOBJS)
+	$(AR) $(ARFLAGS) $@ $(DIFFUSEOBJS)
+	cd diffuse ; $(RANLIB) ../$@
+$(LIBDEST)/finel.a:	$(FINELOBJS)
+	$(AR) $(ARFLAGS) $@ $(FINELOBJS)
+	cd finel ; $(RANLIB) ../$@
+$(LIBDEST)/geom.a:	$(GEOMOBJS)
+	$(AR) $(ARFLAGS) $@ $(GEOMOBJS)
+	cd geom ; $(RANLIB) ../$@
+$(LIBDEST)/imagetool.a: $(IMAGETOOLOBJS)
+	$(AR) $(ARFLAGS) $@ $(IMAGETOOLOBJS)
+	cd imagetool ; $(RANLIB) ../$@
+$(LIBDEST)/implant.a:	$(IMPLANTOBJS)
+	$(AR) $(ARFLAGS) $@ $(IMPLANTOBJS)
+	cd implant ; $(RANLIB) ../$@
+$(LIBDEST)/math.a:	$(MATHOBJS)
+	$(AR) $(ARFLAGS) $@ $(MATHOBJS)
+	cd math ; $(RANLIB) ../$@
+$(LIBDEST)/mesh.a:	$(MESHOBJS)
+	$(AR) $(ARFLAGS) $@ $(MESHOBJS)
+	cd mesh ; $(RANLIB) ../$@
+$(LIBDEST)/misc.a:	$(MISCOBJS)
+	$(AR) $(ARFLAGS) $@ $(MISCOBJS)
+	cd misc ; $(RANLIB) ../$@
+$(LIBDEST)/oxide.a:	$(OXIDEOBJS)
+	$(AR) $(ARFLAGS) $@ $(OXIDEOBJS)
+	cd oxide ; $(RANLIB) ../$@
+$(LIBDEST)/plot.a:	$(PLOTOBJS)
+	$(AR) $(ARFLAGS) $@ $(PLOTOBJS)
+	cd plot ; $(RANLIB) ../$@
+$(LIBDEST)/refine.a:	$(REFINEOBJS)
+	$(AR) $(ARFLAGS) $@ $(REFINEOBJS)
+	cd refine ; $(RANLIB) ../$@
+$(LIBDEST)/shell.a:	$(SHELLOBJS)
+	$(AR) $(ARFLAGS) $@ $(SHELLOBJS)
+	cd shell ; $(RANLIB) ../$@
+$(GRARC):		$(GROBJS)
+	$(AR) $(ARFLAGS) $@ $(GROBJS)
+	$(RANLIB) $@
+
+clean   :
+	rm -f $(SUPREM) $(SLIBS) $(MAINOBJS) $(OBJS)
+
+tags    : $(SRCS)
+	ctags $(SRCS)
+
+lint    : $(CSRCS)
+	lint $(CFLAGS) $(CSRCS)
+
+version :
+	prs -d":Dt: :F:\n:C:\n\n" $(SCCS)
+
+# If you're using the ultrix cc then change the -M to -Em
+depend  : $(YSRCS)
+	cat Makefile.proto > Makefile
+	$(CC) -M $(CFLAGS) $(CSRCS)|\
+	(while read TARGET D1 D2 D3 ; do \
+		TGTNAME=`basename $$TARGET .o:`; \
+		TGTNAME=`basename $$TGTNAME .o`; \
+		if test $$D1 = ":"; then \
+			DEPEND=$$D2; \
+		else \
+			DEPEND=$$D1; \
+		fi; \
+		DEPNAME=`basename $$DEPEND .c`; \
+		DEPNAME=`basename $$DEPNAME .r`; \
+		DEPNAME=`basename $$DEPNAME .f`; \
+		if test $$DEPNAME = $$TGTNAME; then \
+			DEPDIR=`dirname $$DEPEND`; \
+		fi; \
+		echo $$DEPDIR/$$TARGET $$D1 $$D2 $$D3; \
+	done) >> Makefile
+
+always:
+
+#----------------------------------------------------------------------
+# DO NOT DELETE THIS LINE -- make depend may depend on it.
+./main.o : ./main.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/signal.h /usr/include/sys/signal.h /usr/include/vm/faultcode.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/setjmp.h /usr/include/machine/setjmp.h include/global.h include/check.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/diffuse.h include/impurity.h include/defect.h include/key.h include/material.h include/matrix.h include/plot.h include/regrid.h include/shell.h include/implant.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/expr.h include/refine.h include/poly.h include/device.h
+check/check.o : check/check.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/check.h
+check/eval.o : check/eval.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /usr/include/ctype.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/expr.h
+check/lexical.o : check/lexical.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /usr/include/ctype.h include/constant.h include/global.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/expr.h include/material.h
+check/parse.o : check/parse.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /usr/include/ctype.h include/global.h include/expr.h
+check/reduce.o : check/reduce.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /usr/include/ctype.h include/global.h include/expr.h
+check/sint.o : check/sint.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /usr/include/ctype.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/expr.h include/plot.h
+check/split.o : check/split.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/global.h include/check.h
+check/vector.o : check/vector.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /usr/include/ctype.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/expr.h include/material.h include/impurity.h include/diffuse.h include/device.h
+check/verify.o : check/verify.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/global.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/check.h include/expr.h
+dbase/alloc.o : dbase/alloc.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/impurity.h include/diffuse.h
+dbase/check.o : dbase/check.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/material.h
+dbase/clktri.o : dbase/clktri.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h
+dbase/couple.o : dbase/couple.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/signal.h /usr/include/sys/signal.h /usr/include/vm/faultcode.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/setjmp.h /usr/include/machine/setjmp.h include/constant.h include/global.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/matrix.h include/impurity.h
+dbase/dimen.o : dbase/dimen.c include/global.h include/constant.h include/impurity.h include/geom.h include/dbaccess.h include/skel.h
+dbase/dispose.o : dbase/dispose.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/diffuse.h include/regrid.h
+dbase/edge.o : dbase/edge.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h
+dbase/element.o : dbase/element.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/material.h
+dbase/flip.o : dbase/flip.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h
+dbase/geom.o : dbase/geom.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/skel.h include/dbaccess.h include/geom.h
+dbase/geometry.o : dbase/geometry.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/matrix.h /eecf/lib/gcc/sparc/2.0/include/assert.h
+dbase/grid_loop.o : dbase/grid_loop.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/regrid.h include/matrix.h
+dbase/grid_upd.o : dbase/grid_upd.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/regrid.h include/matrix.h
+dbase/kill_node.o : dbase/kill_node.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/assert.h include/constant.h include/global.h include/dbaccess.h include/geom.h include/skel.h include/material.h
+dbase/list.o : dbase/list.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h
+dbase/locate.o : dbase/locate.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h
+dbase/make_db.o : dbase/make_db.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h
+dbase/neigh.o : dbase/neigh.c include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h
+dbase/new_layer.o : dbase/new_layer.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/assert.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h
+dbase/node.o : dbase/node.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/diffuse.h
+dbase/point.o : dbase/point.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/diffuse.h
+dbase/region.o : dbase/region.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h
+dbase/remove.o : dbase/remove.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/material.h include/impurity.h
+device/Electron.o : device/Electron.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/material.h include/device.h include/matrix.h include/diffuse.h
+device/Hole.o : device/Hole.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/material.h include/device.h
+device/Psi.o : device/Psi.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/material.h include/matrix.h include/diffuse.h include/device.h
+device/circuit.o : device/circuit.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/device.h include/impurity.h include/matrix.h include/diffuse.h
+device/contact.o : device/contact.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/device.h
+device/dev_blkset.o : device/dev_blkset.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/device.h include/material.h include/diffuse.h include/matrix.h
+device/dev_prep.o : device/dev_prep.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/device.h include/impurity.h include/matrix.h
+device/dev_solve.o : device/dev_solve.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/diffuse.h include/impurity.h include/material.h include/matrix.h include/device.h
+device/device.o : device/device.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/matrix.h include/impurity.h include/diffuse.h include/device.h
+diffuse/Antimony.o : diffuse/Antimony.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Arsenic.o : diffuse/Arsenic.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Beryllium.o : diffuse/Beryllium.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Boron.o : diffuse/Boron.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Carbon.o : diffuse/Carbon.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Cesium.o : diffuse/Cesium.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h
+diffuse/Generic.o : diffuse/Generic.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Germanium.o : diffuse/Germanium.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Gold.o : diffuse/Gold.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h
+diffuse/Interst.o : diffuse/Interst.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/defect.h include/material.h include/diffuse.h include/matrix.h include/plot.h
+diffuse/Magnesium.o : diffuse/Magnesium.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Phosphorus.o : diffuse/Phosphorus.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Selenium.o : diffuse/Selenium.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Silicon.o : diffuse/Silicon.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Tin.o : diffuse/Tin.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/Trap.o : diffuse/Trap.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h include/defect.h
+diffuse/Vacancy.o : diffuse/Vacancy.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/defect.h include/material.h include/diffuse.h include/matrix.h
+diffuse/Zinc.o : diffuse/Zinc.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h
+diffuse/active.o : diffuse/active.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/defect.h include/diffuse.h include/material.h include/plot.h include/device.h
+diffuse/block_set.o : diffuse/block_set.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/defect.h include/material.h include/diffuse.h include/matrix.h
+diffuse/defect.o : diffuse/defect.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/defect.h include/material.h include/matrix.h include/diffuse.h
+diffuse/diff_init.o : diffuse/diff_init.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/impurity.h include/defect.h include/material.h include/diffuse.h include/check.h
+diffuse/diffuse.o : diffuse/diffuse.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/diffuse.h include/defect.h include/matrix.h include/impurity.h include/material.h include/expr.h
+diffuse/movie.o : diffuse/movie.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/shell.h
+diffuse/moving.o : diffuse/moving.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/diffuse.h include/material.h include/impurity.h include/matrix.h
+diffuse/norm.o : diffuse/norm.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h
+diffuse/poly.o : diffuse/poly.c
+diffuse/predep.o : diffuse/predep.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/material.h include/diffuse.h
+diffuse/prepare.o : diffuse/prepare.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/diffuse.h include/impurity.h include/defect.h include/material.h include/expr.h include/matrix.h
+diffuse/setup.o : diffuse/setup.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/diffuse.h include/material.h include/impurity.h include/matrix.h
+diffuse/solve.o : diffuse/solve.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/sys/param.h /usr/include/machine/param.h /usr/include/machine/devaddr.h /usr/include/sys/signal.h /usr/include/vm/faultcode.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /usr/include/sys/sysmacros.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/diffuse.h include/impurity.h include/material.h include/matrix.h include/defect.h
+diffuse/solve_time.o : diffuse/solve_time.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/assert.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/diffuse.h include/impurity.h include/material.h include/matrix.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/device.h include/poly.h include/defect.h include/expr.h
+diffuse/species.o : diffuse/species.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/diffuse.h include/impurity.h include/matrix.h
+diffuse/time.o : diffuse/time.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/diffuse.h include/impurity.h include/matrix.h
+finel/FEassmb.o : finel/FEassmb.c include/constant.h include/FEgeom.h /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h
+finel/FEsolve.o : finel/FEsolve.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/constant.h include/global.h include/FEgeom.h include/FEmath.h
+finel/tomcal.o : finel/tomcal.c include/global.h
+finel/tri6.o : finel/tri6.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h
+finel/tri7.o : finel/tri7.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h
+geom/limits.o : geom/limits.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h
+geom/misc.o : geom/misc.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h
+geom/tnabor.o : geom/tnabor.c include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/regrid.h
+imagetool/fill_grid.o : imagetool/fill_grid.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/string.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h include/constant.h include/global.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/implant.h include/impurity.h include/plot.h include/bound.h
+imagetool/image_write.o : imagetool/image_write.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/global.h include/bound.h
+imagetool/make_grid.o : imagetool/make_grid.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/bound.h
+imagetool/makeframe.o : imagetool/makeframe.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/bound.h
+imagetool/window.o : imagetool/window.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h
+implant/damage.o : implant/damage.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/constant.h include/global.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/implant.h include/impurity.h
+implant/fgtmom.o : implant/fgtmom.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h
+implant/imp_gtprs.o : implant/imp_gtprs.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/implant.h
+implant/imp_lat.o : implant/imp_lat.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/implant.h
+implant/imp_prson.o : implant/imp_prson.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/implant.h
+implant/imp_qeqv.o : implant/imp_qeqv.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/implant.h
+implant/imp_qpgauss.o : implant/imp_qpgauss.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/implant.h
+implant/imp_qpprs.o : implant/imp_qpprs.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/implant.h
+implant/imp_setprs.o : implant/imp_setprs.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/constant.h include/global.h include/impurity.h include/material.h include/implant.h
+implant/imp_vert.o : implant/imp_vert.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/implant.h
+implant/imp_zeqv.o : implant/imp_zeqv.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/implant.h
+implant/implant.o : implant/implant.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/material.h include/implant.h include/matrix.h include/defect.h include/expr.h
+implant/pearson.o : implant/pearson.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/material.h include/implant.h
+implant/surf.o : implant/surf.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/constant.h include/global.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/implant.h include/refine.h
+math/blklu.o : math/blklu.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/assert.h include/global.h include/constant.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/diffuse.h include/impurity.h include/matrix.h
+math/coldata.o : math/coldata.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/assert.h include/global.h include/constant.h include/matrix.h
+math/generate.o : math/generate.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h include/global.h
+math/genrow.o : math/genrow.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/matrix.h
+math/min_fill.o : math/min_fill.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h
+math/mxv.o : math/mxv.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/impurity.h include/matrix.h
+math/solblk.o : math/solblk.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/diffuse.h include/impurity.h include/matrix.h
+math/symb.o : math/symb.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/diffuse.h include/impurity.h include/material.h include/matrix.h include/FEmath.h include/poly.h
+mesh/check_active.o : mesh/check_active.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/global.h include/constant.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/impurity.h
+mesh/ig2_meshio.o : mesh/ig2_meshio.c include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/material.h include/impurity.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/expr.h
+mesh/initialize.o : mesh/initialize.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/impurity.h include/material.h
+mesh/newbackside.o : mesh/newbackside.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/shell.h include/implant.h
+mesh/pi_meshio.o : mesh/pi_meshio.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/material.h include/impurity.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/diffuse.h include/regrid.h include/expr.h include/plot.h
+mesh/profile.o : mesh/profile.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/impurity.h include/material.h include/defect.h include/expr.h
+mesh/rect.o : mesh/rect.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/material.h include/global.h
+mesh/save_simpl.o : mesh/save_simpl.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/string.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h include/constant.h mesh/simpl-dix.h mesh/simpl.h include/global.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/implant.h include/plot.h include/bound.h
+mesh/structure.o : mesh/structure.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/string.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/impurity.h include/dbaccess.h include/geom.h include/skel.h
+misc/bsd.o : misc/bsd.c /eecf/lib/gcc/sparc/2.0/include/stdio.h
+misc/cpu.o : misc/cpu.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/shell.h
+misc/echo.o : misc/echo.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/global.h include/expr.h
+misc/get.o : misc/get.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/check.h
+misc/man.o : misc/man.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h
+misc/pa.o : misc/pa.c /eecf/lib/gcc/sparc/2.0/include/stdio.h
+misc/panic.o : misc/panic.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/diffuse.h include/shell.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h
+misc/print_time.o : misc/print_time.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/sys/param.h /usr/include/machine/param.h /usr/include/machine/devaddr.h /usr/include/sys/signal.h /usr/include/vm/faultcode.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /usr/include/sys/sysmacros.h include/global.h include/shell.h
+misc/read.o : misc/read.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/shell.h include/check.h
+misc/reader.o : misc/reader.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h /usr/include/fcntl.h /usr/include/sys/fcntlcom.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/stat.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /usr/include/sys/sysmacros.h include/global.h include/check.h include/key.h
+misc/sint.o : misc/sint.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /usr/include/ctype.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/expr.h include/plot.h
+oxide/FEbc.o : oxide/FEbc.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/FEgeom.h include/material.h
+oxide/FEconvert.o : oxide/FEconvert.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/constant.h include/global.h include/geom.h include/dbaccess.h include/skel.h include/FEgeom.h include/material.h include/impurity.h include/diffuse.h
+oxide/Oxidant.o : oxide/Oxidant.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/matrix.h include/material.h include/diffuse.h include/FEgeom.h include/FEmath.h
+oxide/coeffox.o : oxide/coeffox.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/material.h include/diffuse.h
+oxide/elast.o : oxide/elast.c include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/material.h /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h
+oxide/erfit.o : oxide/erfit.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h
+oxide/mater.o : oxide/mater.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h
+oxide/oxgrow.o : oxide/oxgrow.c include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/matrix.h
+oxide/oxide_vel.o : oxide/oxide_vel.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/assert.h include/global.h include/constant.h include/material.h include/impurity.h include/diffuse.h include/geom.h include/dbaccess.h include/skel.h include/FEgeom.h
+oxide/oxrate.o : oxide/oxrate.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h
+oxide/triox.o : oxide/triox.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/FEgeom.h include/FEmath.h include/material.h
+oxide/vert.o : oxide/vert.c include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/diffuse.h
+oxide/viscous.o : oxide/viscous.c include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/FEgeom.h include/material.h include/FEmath.h /eecf/lib/gcc/sparc/2.0/include/assert.h /eecf/lib/gcc/sparc/2.0/include/stdio.h
+plot/contour.o : plot/contour.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/string.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/plot.h include/material.h
+plot/do_1d.o : plot/do_1d.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/plot.h include/material.h
+plot/intersect.o : plot/intersect.c include/global.h include/constant.h
+plot/label.o : plot/label.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /icl/include/gplot.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/plot.h include/material.h
+plot/matedge.o : plot/matedge.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h
+plot/material.o : plot/material.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h
+plot/option.o : plot/option.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h
+plot/plot.o : plot/plot.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/skel.h include/dbaccess.h include/geom.h include/plot.h
+plot/plot_1d.o : plot/plot_1d.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/plot.h include/material.h
+plot/plot_2d.o : plot/plot_2d.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/impurity.h include/material.h include/geom.h include/dbaccess.h include/skel.h include/regrid.h include/plot.h
+plot/print_1d.o : plot/print_1d.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/plot.h include/material.h
+plot/select.o : plot/select.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/constant.h include/material.h include/plot.h include/expr.h include/dbaccess.h include/geom.h include/skel.h
+refine/bfill.o : refine/bfill.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h
+refine/dbase.o : refine/dbase.c include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/material.h include/regrid.h
+refine/deloop.o : refine/deloop.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/refine.h
+refine/deposit.o : refine/deposit.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/regrid.h include/refine.h include/poly.h
+refine/etch.o : refine/etch.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/regrid.h include/material.h include/impurity.h include/refine.h
+refine/grid.o : refine/grid.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h
+refine/hinit.o : refine/hinit.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/skel.h include/dbaccess.h include/geom.h
+refine/interp.o : refine/interp.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/regrid.h include/material.h include/impurity.h include/refine.h
+refine/offset.o : refine/offset.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/regrid.h include/refine.h
+refine/rate.o : refine/rate.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/regrid.h include/refine.h
+refine/rect_tri.o : refine/rect_tri.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h
+refine/skel.o : refine/skel.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/regrid.h include/material.h include/impurity.h include/refine.h
+refine/sp_edge.o : refine/sp_edge.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/impurity.h include/material.h
+refine/string_etch.o : refine/string_etch.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/constant.h include/material.h include/refine.h include/global.h
+refine/string_off.o : refine/string_off.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/refine.h
+refine/surface.o : refine/surface.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/stdio.h /eecf/lib/gcc/sparc/2.0/include/assert.h include/global.h include/constant.h include/geom.h include/dbaccess.h include/skel.h include/material.h include/impurity.h include/regrid.h include/refine.h
+refine/triang.o : refine/triang.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h
+refine/tridata.o : refine/tridata.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h
+refine/triheur.o : refine/triheur.c /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/dbaccess.h include/geom.h include/skel.h
+shell/do_action.o : shell/do_action.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/setjmp.h /usr/include/machine/setjmp.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/shell.h include/check.h include/global.h
+shell/help.o : shell/help.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/global.h include/check.h include/shell.h
+shell/input.o : shell/input.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/shell.h
+shell/lex.o : shell/lex.c /usr/include/ctype.h /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/constant.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h shell/parser.h include/shell.h
+shell/list.o : shell/list.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/global.h
+shell/macro.o : shell/macro.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/global.h include/shell.h include/expr.h
+shell/parser.o : shell/parser.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/shell.h
+shell/parser_boot.o : shell/parser_boot.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/check.h include/constant.h include/dbaccess.h include/geom.h include/skel.h include/global.h include/key.h include/shell.h include/sysdep.h /usr/include/sys/file.h /eecf/lib/gcc/sparc/2.0/include/sys/types.h /eecf/lib/gcc/sparc/2.0/include/sys/stdtypes.h /usr/include/sys/sysmacros.h /usr/include/sys/fcntlcom.h /usr/include/sys/stat.h include/expr.h
+shell/proc.o : shell/proc.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/shell.h
+shell/set.o : shell/set.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/ctype.h include/global.h include/shell.h
+shell/smisc.o : shell/smisc.c /eecf/lib/gcc/sparc/2.0/include/stdio.h include/global.h include/expr.h include/shell.h
+gpsup/gpcover.o : gpsup/gpcover.c /eecf/lib/gcc/sparc/2.0/include/stdio.h /usr/include/math.h /usr/include/floatingpoint.h /eecf/lib/gcc/sparc/2.0/include/sys/ieeefp.h /icl/include/gplot.h

@@ -1,0 +1,75 @@
+h64286
+s 00016/00021/00004
+d D 2.1 93/02/04 13:20:53 suprem45 2 1
+c Initial IV.GS release
+e
+s 00025/00000/00000
+d D 1.1 93/02/03 15:45:26 suprem45 1 0
+c date and time created 93/02/03 15:45:26 by suprem45
+e
+u
+U
+f e 0
+t
+T
+I 2
+To compile the SUPREM-IV.GS code and install the files, several changes
+to the Makefile may be required.  The Makefile is documented to help
+you decide what changes to make where. 
+E 2
+I 1
+
+D 2
+This tape contains the source code and data files for SUPREM-IV.  To compile
+the code, several changes to the Makefile may be required.
+E 2
+I 2
+Additional changes may be required to the file src/include/sysdep.h.
+E 2
+
+D 2
+1) The SYS variable should be changed to reflect the appropriate system
+type.  BSD and SYSV are the most common.  There are several changes that
+may also be appropriate on vector hardware.
+E 2
+I 2
+Please note that in addition to C a few routines are written in FORTRAN
+so you will need a FORTRAN compiler as well as C.
+E 2
+
+D 2
+2) The Makefile variables MANDIR, KEYFILE, MODELFILE, and IMPFILE should
+be changed to be the correct path to these data files.  They can all be
+overridden with an environment variable if desired.
+E 2
+I 2
+A Bourne shell script called suprem4gs has been included in this
+distribution.  I would suggest that the actual program and data
+files be stored under a non-system directory available to the
+person will be responsible for the program and that the suprem4gs
+file be edited to point to that directory.  If suprem4gs is then
+placed in a bin directory in most user's PATH (i.e. /usr/local/bin)
+updates and modifications become much simpler.
+E 2
+
+D 2
+3) One of three graphics options is supported and must be chosen at 
+compile time.  First are two X windows tools, one for R4 and one for R3.
+Both packages support postscript, hpgl, and idraw for hardcopy.  The third
+package is for gplot, the graphics package from Stanford which supports
+a wide variety of terminals and harcopy devices. 
+
+Additional changes may be required to the file include/sysdep.h.
+
+Also please be careful in the finel directory.  There is a mix of fortran
+and C used, and you have to make sure the names are mapped correctly.
+
+Please address any questions to:
+law@tcad.ee.ufl.edu
+E 2
+I 2
+Stephen Hansen
+Stanford University
+February 4, 1993
+E 2
+E 1

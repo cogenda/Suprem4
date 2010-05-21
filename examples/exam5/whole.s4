@@ -1,0 +1,75 @@
+set echo
+cpu log
+#
+phos poly /gas Trn.0=0.0
+bor poly /gas Trn.0=0.0
+phos oxide /gas Trn.0=0.0
+bor oxide /gas Trn.0=0.0
+#change the phosphorus diffusivity like this
+#phos  silicon Dix.0=0.0 Dim.0=0.0 Dimm.0=0.0 
+#
+line x loc=0.0 tag=lft spacing=0.25
+line x loc=0.45        spacing=0.03
+line x loc=0.75        spacing=0.03
+line x loc=1.4         spacing=0.25
+line x loc=1.5 tag=rht spacing=0.25
+
+line y loc=0.0 tag=top spacing=0.01
+line y loc=0.1 	       spacing=0.01
+line y loc=0.25         spacing=0.05
+line y loc=3.0 tag=bot 
+
+region silicon xlo=lft xhi=rht ylo=top yhi=bot
+
+bound exposed xlo=lft xhi=rht ylo=top yhi=top
+bound backside xlo=lft xhi=rht ylo=bot yhi=bot
+
+init boron conc=1.0e16
+
+#deposit the gate oxide
+deposit oxide thick=0.025
+
+#channel implant
+implant boron dose=1.0e12 energy=15.0
+
+#deposit the gate poly
+deposit poly thick=0.500 div=10 phos conc=1.0e19
+
+#anneal the beast
+diff time=10 temp=1000
+
+#etch the poly away
+etch poly right p1.x=0.55 p1.y=-0.020 p2.x=0.45 p2.y=-0.55
+
+#anneal this step
+diffuse time=30.0 temp=950
+
+struct outf=poly.str
+
+#do the phosphorus implant
+implant phos dose=1.0e13 energy=50.0
+
+#deposit the oxide spacer
+deposit oxide thick=0.400 spac=0.05
+
+#etch the spacer back
+etch dry oxide thick=0.420 
+
+struct outf=imp2.str
+#after etch anneal
+method vert fermi grid.ox=0.0
+diffuse time=30 temp=950 dry
+
+#implant the arsenic
+implant ars dose=5.0e15 energy=80.0
+
+#deposit a cap oxide
+deposit oxide thick=0.15 space=0.03
+
+struct outf=imp4.str
+
+#do the final anneal
+diffuse time=20 temp=950
+
+struct outf=ldd.str
+

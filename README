@@ -1,0 +1,20 @@
+To compile the SUPREM-IV.GS code and install the files, several changes
+to the Makefile may be required.  The Makefile is documented to help
+you decide what changes to make where. 
+
+Additional changes may be required to the file src/include/sysdep.h.
+
+Please note that in addition to C a few routines are written in FORTRAN
+so you will need a FORTRAN compiler as well as C.
+
+A Bourne shell script called suprem4gs has been included in this
+distribution.  I would suggest that the actual program and data
+files be stored under a non-system directory available to the
+person will be responsible for the program and that the suprem4gs
+file be edited to point to that directory.  If suprem4gs is then
+placed in a bin directory in most user's PATH (i.e. /usr/local/bin)
+updates and modifications become much simpler.
+
+Stephen Hansen
+Stanford University
+February 4, 1993

@@ -1,0 +1,32 @@
+# --LOCOS cross section with stress effects
+
+opt     chat
+
+# --Substrate mesh definition--
+line x loc=-1 spac=0.2 tag=l
+line x loc=0  spac=0.05 tag=c
+line x loc=1  spac=0.2 tag=r
+
+line y loc=0 tag=t
+line y loc=1 tag=b
+
+region silicon xlo=l xhi=r ylo=t yhi=b
+bound  expo    xlo=l xhi=r ylo=t yhi=t
+
+init ori=100
+
+# --Pad oxide and nitride mask--
+deposit oxide thick=0.02 div=1
+deposit nitride thick=0.15 div=1
+etch    nitride left p1.x=0
+
+#----------Field oxidation
+oxide   Vc=300 Vr=30  Vd=25 stress.dep=t
+
+meth   viscous oxide.rel=1e-2
+
+plot.2 bound y.mi=-0.3 x.mi=-0.3 x.ma=0.3
+
+diffuse tim=90 tem=1000 weto2  movie="plot.2 bound cl=f ax=f line.b=1"
+
+stru outf=sdep15.str

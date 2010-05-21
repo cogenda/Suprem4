@@ -1,0 +1,19 @@
+h28465
+s 00000/00000/00003
+d D 2.1 93/02/04 13:20:55 suprem45 2 1
+c Initial IV.GS release
+e
+s 00003/00000/00000
+d D 1.1 93/02/03 15:45:26 suprem45 1 0
+c date and time created 93/02/03 15:45:26 by suprem45
+e
+u
+U
+f e 0
+t
+T
+I 1
+When you are using the gplot code, if you specify axis=f on the
+first plot_1d in a run then the program hangs when plotting.
+No boundaries are set in this case.
+E 1
