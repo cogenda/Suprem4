@@ -46,13 +46,13 @@ struct LLedge * chop (r, must)
     }
     else {
 	angM = PI/2;	/* Consider acute triangles only. */
-	mgeo = mgeom;   
+	mgeo = mgeom;
     }
 
     /*...Start with smallest angles in region and work upwards. */
     mina = r->maxa->gt;
     for (f=1,bp = mina; (bp != mina) || f; bp = bp->gt, f=0) {
-	if (bp->ang > angM) break;	
+	if (bp->ang > angM) break;
 
 	/*...Is the triangle worth anything? */
 	i = nB(bp->prev); j = nB(bp); k = nB(bp->next);
@@ -126,16 +126,16 @@ struct LLedge **lep1,**lep2;
 
   /*...Try every combination of large angles. */
     maxa = r->maxa;
-    for (f1=1, bp1=maxa;   ((bp1 != maxa) || f1) && bp1->ang > piby2; 
+    for (f1=1, bp1=maxa;   ((bp1 != maxa) || f1) && bp1->ang > piby2;
 	 					bp1=bp1->lt, f1=0) {
 
-	for (f2=1, bp2=maxa; ((bp2 != maxa) || f2) && bp2->ang > piby2; 
+	for (f2=1, bp2=maxa; ((bp2 != maxa) || f2) && bp2->ang > piby2;
 						bp2=bp2->lt, f2=0) {
 
 	    if (bp2==bp1 || bp1==bp2->next || bp2==bp1->next) continue;
-	
-	  /* 
-	   * Check dividing line is inside the region, and 
+
+	  /*
+	   * Check dividing line is inside the region, and
 	   * angles are not too small.
 	   */
 	    ang1 = intang (nB(bp1->prev), nB(bp1), nB(bp2));
@@ -173,27 +173,26 @@ int rect; 		/*flag for rectangular checking*/
     double sign,lej,near,h1,h2,hmax,ratio,first;
     double inter;
     int nnew;
-    extern void d_perp();
 
 
-    split.nd[0] = nB(lp1); 	
-    split.nd[1] = nB(lp2); 	
+    split.nd[0] = nB(lp1);
+    split.nd[1] = nB(lp2);
     lej = ndist (nB(lp1), nB(lp2));
-    dvpram (get_space(pt_nd(nB(lp1))), get_space(pt_nd(nB(lp2))), 
+    dvpram (get_space(pt_nd(nB(lp1))), get_space(pt_nd(nB(lp2))),
 		     lej, &nnew, &ratio, &first);
     near = MAXFLOAT;
 
     pval[0] = 0.5;	pval[1] = 1;
     end = lp1;
     for (sign=1, bp=lp1->next; bp != end ; bp=bp->next) {
-	
+
 	if (bp==lp2) {		/* Change sign crossing the equator. */
-	    pval[0] = 0.5; pval[1] = sign = -1; 
+	    pval[0] = 0.5; pval[1] = sign = -1;
 	    continue;
 	}
 	if ( rect && ( sign == 1.0 ) ) continue;
 
-	d_perp (&split, pt_nd(nB(bp)), alph);	
+	d_perp (&split, pt_nd(nB(bp)), alph);
 
       /*...We have a crossing if previous y * this y < 0 */
 	if (pval[1] * alph[1] < 0) {	/* Then check it intersects inside */
@@ -205,7 +204,7 @@ int rect; 		/*flag for rectangular checking*/
       /*...Now do a check to see if the node is too close to the split. */
 	if (sign*alph[1] < 0) continue;		   /* Skip wraparound points. */
 	if (alph[0] < -EPS || alph[0] > 1+EPS) continue; /* Not between ends. */
-	if (rect && (alph[0] < EPS || alph[0] > 1-EPS) ) continue; 
+	if (rect && (alph[0] < EPS || alph[0] > 1-EPS) ) continue;
 	h1 = get_space(pt_nd(nB(bp))) / lej;	      /* Local spacing at bp. */
 	h2 = first + (ratio-1)*alph[0];		      /* l.s. along split.    */
 	hmax = dmax(h1,h2);
@@ -253,7 +252,7 @@ struct sreg_str *rg;	/* Region to split */
     f2 *= fabs(len * alph[1]);
 
     /*use the largest*/
-    if ( f1 > f2 ) 
+    if ( f1 > f2 )
 	return(rg->bnd);
     else
 	return(rg->bnd->next);

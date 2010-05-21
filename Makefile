@@ -45,7 +45,7 @@ DATADIR = $(HERE)/data
 #CC	= cc
 CC	= gcc
 #FC	= f77
-FC	= fort77
+FC	= gfortran
 
 #.. What optimization level for the compilers?
 #COPT	= -O3
@@ -61,15 +61,15 @@ FOPT	= -g
 #.. including X windows and Sunview.
 
 #.. If you want the X11 plotting uncomment the following.
-#GRLIBS	= -lXaw -lXmu -lXt -lXext -lX11
-#GRINC	= 
-#GRARC	= $$(LIBDEST)/xsupr4.a
-#GRSRCS	= xsupr4/Graph.c xsupr4/app1.c xsupr4/draw.c xsupr4/help.c \
-#	xsupr4/hpgl.c xsupr4/idraw.c xsupr4/interface.c xsupr4/ps.c \
-#	xsupr4/xgX.c
-#GROBJS	= xsupr4/Graph.o xsupr4/app1.o xsupr4/draw.o xsupr4/help.o \
-#	xsupr4/hpgl.o xsupr4/idraw.o xsupr4/interface.o xsupr4/ps.o \
-#	xsupr4/xgX.o
+GRLIBS	= -lXaw -lXmu -lXt -lXext -lX11
+GRINC	=
+GRARC	= $$(LIBDEST)/xsupr4.a
+GRSRCS	= xsupr4/Graph.c xsupr4/app1.c xsupr4/draw.c xsupr4/help.c \
+	xsupr4/hpgl.c xsupr4/idraw.c xsupr4/interface.c xsupr4/ps.c \
+	xsupr4/xgX.c
+GROBJS	= xsupr4/Graph.o xsupr4/app1.o xsupr4/draw.o xsupr4/help.o \
+	xsupr4/hpgl.o xsupr4/idraw.o xsupr4/interface.o xsupr4/ps.o \
+	xsupr4/xgX.o
 
 
 #.. Otherwise if you want the gplot plotting package then use this.
@@ -77,21 +77,21 @@ FOPT	= -g
 #.. package include and archive files are.
 #GRLIBS	= -L/icl/lib -lgplot -lhigh2
 #GRINC	= -I/icl/include
-GRLIBS        = -L$(PISCES_HOME)/icl/lib -lgplot -lhigh2
-GRINC = -I$(PISCES_HOME)/icl/include
+#GRLIBS        = -L$(PISCES_HOME)/icl/lib -lgplot -lhigh2
+#GRINC = -I$(PISCES_HOME)/icl/include
 
-GRARC	= $$(LIBDEST)/gpsup.a
-GRSRCS	= gpsup/gpcover.c
-GROBJS	= gpsup/gpcover.o
+#GRARC	= $$(LIBDEST)/gpsup.a
+#GRSRCS	= gpsup/gpcover.c
+#GROBJS	= gpsup/gpcover.o
 
 # SysV uses termlib
 #LIBS	= $(GRLIBS) -ly -ll -lm -ltermlib
 # BSD uses termcap
 #LIBS	= $(GRLIBS) -ly -ll -lm -ltermcap
-LIBS  = $(GRLIBS) -lfl -lm -ltermcap
+LIBS  = $(GRLIBS) -lm -ltermcap
 
 
-#.. SysV users take note!  In src/Makefile.proto, down where the 
+#.. SysV users take note!  In src/Makefile.proto, down where the
 #.. archive files are ranlib'd, is some real crufty stuff.  This is to
 #.. get around a bug in ranlib that shows up mainly when running gmake
 #.. with the multi-job flag.

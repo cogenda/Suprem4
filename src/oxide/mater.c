@@ -10,6 +10,7 @@
 /*   Last Modification : 7/3/91  10:52:32 */
 
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -139,7 +140,7 @@ float temp;
 {
     register int i;
 
-    for(i = 0; i < MAXMAT; i++) 
+    for(i = 0; i < MAXMAT; i++)
 	Ni(i) = Ni0(i) * exp( log(temp) * NiP(i) ) * exp( -NiE(i) / (kb * temp) );
     Ni( GAS ) = 1.0;
 
@@ -175,11 +176,11 @@ set_crystal()
 	      xcrystal[1][X] = 1; xcrystal[1][Y] = 0; xcrystal[1][Z] = 0;
 	      break;
 	  }
-    
+
     /* Here it is assumed that mask edges are on <011_>, normally the case*/
     xcrystal[0][X] = 0; xcrystal[0][Y] = 1; xcrystal[0][Z] = -1;
 
-    /* Check orthognality (currently redundant) */ 
+    /* Check orthognality (currently redundant) */
     ortho = dot3( xcrystal[0], xcrystal[1]);
     if (ortho < -1e-6 || ortho > 1e-6) {
 	fprintf( stderr, "Warning: orientation is not orthognal to <011>!\n");
@@ -213,7 +214,7 @@ SupToXtal( normal, vec3)
      double *normal, *vec3;
 {
     double vec2[2], nlen;
-    
+
     if ( mode == TWOD ) {
 	/* Use the normal if given unless told otherwise */
 	if (normal && ornt_dep && (nlen = hypot(normal[0], normal[1]))>1e-30) {
@@ -239,7 +240,7 @@ SupToXtal( normal, vec3)
 }
 
 
-
+
 /*-----------------DoOriDep---------------------------------------------
  * Calculate orientation dependence of some variable.
  * Algorithm is to calculate a function of 3-d orientation, then
@@ -265,10 +266,10 @@ float DoOriDep( dir, valOri)
 
     /* Normalize */
     xsq /= len; ysq /= len; zsq /= len;
-    
+
     /* Calculate a symmetric function */
     func = sqrt( xsq*xsq + ysq*ysq + zsq*zsq );
-    
+
     /* Interpolate between known values */
     i = -1;
     if (func >= fval[0]) return( valOri[0]);

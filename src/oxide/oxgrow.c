@@ -15,7 +15,7 @@
  *************************************************************************/
 /*   oxgrow.c                Version 5.1     */
 /*   Last Modification : 7/3/91 10:52:33 */
-
+#include <stdio.h>
 #include <global.h>
 #include <constant.h>
 #include <geom.h>
@@ -36,7 +36,7 @@ oxgrow (temp, ornt, oxhow, dt )
 {
     extern double total;	/* Total diffusion time */
     int before[4], after[4]; times(before);
-    
+
     /* Compute the velocity vector using whatever oxide growth model */
     oxide_vel (temp, ornt, oxhow, *dt);
 
@@ -51,16 +51,16 @@ oxgrow (temp, ornt, oxhow, dt )
 
     /* Make a pointwise velocity list: do this AFTER np has been bumped */
     point_vel( );
-    
+
     /*cut the time step back */
     back_pedal( dt );
 
     /* Mark nodes for later removal */
     ChooseKillNodes( *dt);
-    
+
     /* some barfola statistics */
     times(after); print_time("Time for oxidation step", before, after);
-    
+
     return;
 }
 
@@ -78,8 +78,8 @@ point_vel()
 
     /* Move the points */
     for (ip = 0; ip < np; ip++) {
-	
-	/* 
+
+	/*
 	 * Well, displacement is a function of node and there are
 	 * several nodes at a point, so we have to make a decision.
 	 * For now we let the point move with its 0th node and
@@ -88,11 +88,11 @@ point_vel()
 	 * we make sure to go with it. This means the silicon/oxide
 	 * boundary moves into silicon, as wanted.
 	 */
-	if ( (nx = node_mat( nd_pt(ip,0), Si ) ) == -1 ) 
-	    if ( (nx = node_mat( nd_pt(ip,0), Poly ) ) == -1 ) 
+	if ( (nx = node_mat( nd_pt(ip,0), Si ) ) == -1 )
+	    if ( (nx = node_mat( nd_pt(ip,0), Poly ) ) == -1 )
 		    nx = nd_pt(ip, 0);
 
-	for(ix = 0; ix < mode; ix++) 
+	for(ix = 0; ix < mode; ix++)
 	    pt[ip]->vel[ix] = nd[nx]->sol[arr[ix]];
     }
 }
@@ -104,9 +104,9 @@ move_point( dt )
      double dt;
 {
     register int ip, ix;
-    
+
     for (ip = 0; ip < np; ip++) {
-	for( ix = 0; ix < mode; ix++ ) 
+	for( ix = 0; ix < mode; ix++ )
 	    pt[ ip]->cord[ ix] += pt[ip]->vel[ix] * dt;
     }
 }
@@ -127,10 +127,10 @@ double *oar, *nar;
 	olda[ nd[i]->mater ] += 1e8*oar[i];
     }
 
-    if ( newa[Si] != olda[Si] ) 
+    if ( newa[Si] != olda[Si] )
     printf("Silicon consumed %10.5f oxide grown %10.5f (%5.3f)\n", olda[Si] - newa[Si],
 	   newa[SiO2] - olda[SiO2], (newa[SiO2] - olda[SiO2])/(olda[Si] - newa[Si]));
-    
+
     for (i = 0; i < MAXMAT; i++) {
 	if (olda[i] != 0){
 	    delta = (newa[i] - olda[i])/olda[i];
@@ -174,4 +174,4 @@ ClockTri( FixEm)
     }
     return( (nzero+nclock) * (nzero? -1 : 1));
 }
-    
+

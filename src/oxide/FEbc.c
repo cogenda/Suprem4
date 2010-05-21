@@ -11,6 +11,8 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include <math.h>
 #include "constant.h"
@@ -72,7 +74,7 @@ FEsilbc()
 
     /* Go away and solve it */
 }
-    
+
 
 
 /*-----------------FEbc-------------------------------------------------
@@ -87,7 +89,7 @@ FEbc( temp, par, param)
     FEdirichlet( par, param);
     refl_disp();
 }
-
+
 /*-----------------REFL_DISP------------------------------------------*
  * Set normal velocities to zero at reflecting boundaries
  *--------------------------------------------------------------------*/
@@ -115,7 +117,7 @@ refl_disp()
 	    fnp = fnode;
 	    orig = FEnd[ glob[ *fnp]]-> cord;
 	    dirs[ X] = dirs[ Y] = 1;
-	    
+
 	    /* By comparing each of the nodes coordinates to the first one */
 	    for ( fnp++ ; fnp < fnode + 3; fnp++) {
 		other = FEnd[ glob[ *fnp]]->cord;
@@ -127,12 +129,12 @@ refl_disp()
 	    if( dirs[ X] + dirs[ Y] != 1 && nbj < BC_OFFSET+1) {
 		fprintf(stderr, "Warning: this neumann face is not parallel to one coordinate axis!");
 		fprintf(stderr, "(%g , %g) <--> (%g , %g)\n",
-		    orig[0], orig[1], 
+		    orig[0], orig[1],
 		    FEnd[ glob[ *(fnode+2)]]->cord[0],
 		    FEnd[ glob[ *(fnode+2)]]->cord[1]);
 		continue;
 	    }
-		
+
 	    /* Ok, now for each node on the face, set its dir velocity to 0*/
 	    for( fnp = fnode; fnp < fnode+3; fnp++) {
 		for (dir = X; dir <= Y; dir++)
@@ -145,7 +147,7 @@ refl_disp()
 	}
     }
 }
-
+
 /*-----------------FEdirichlet------------------------------------------
  * I want to do standard problems as test cases.
  *----------------------------------------------------------------------*/
@@ -157,7 +159,7 @@ FEdirichlet( par, param)
     FEelt_typ *ae; FEnd_typ *an;
     float string_to_real();
     char *s, *ubc[10], *vbc[10], name[256], *get_string();
-    
+
     for (i = 3; i < 10; i++) {
 	ubc[i] = vbc[i] = 0;
 	sprintf( name, "ubc%d",i);
@@ -179,7 +181,7 @@ FEdirichlet( par, param)
      */
     for( c = 3; c< 10; c++) {
 	if( !ubc[c] && !vbc[c]) continue;
-	
+
 	for (ie = 0; ie < FEne; ie++) {
 	    ae = FEelt[ ie];
 	    for( j = 0; j < 3; j++) {
@@ -188,7 +190,7 @@ FEdirichlet( par, param)
 		 */
 		if (ae->face[j] == BC_OFFSET+c) {
 		    face_ache(ae, j);
-		    
+
 		    /*
 		     * For each node on the face
 		     */
@@ -236,7 +238,7 @@ face_ache( ae, j)
 {
     int ip1, ip2, ip; double vlen;
     int in;
-		
+
     /* Get local normal at either end and average for center*/
     ip1 = ae->nd[ (j+1)%3];
     in = node_mat( pt[ip1]->nd[0], ae->mat);
@@ -254,11 +256,11 @@ face_ache( ae, j)
     vlen = hypot( FEnd[ip]->garbage[X], FEnd[ip]->garbage[Y]);
     FEnd[ ip]->garbage[X] /= vlen;
     FEnd[ ip]->garbage[Y] /= vlen;
-}		    
+}
 
 
 
-
+
 /*-----------------GAS_FIXITIES-----------------------------------------
  * Put the gas concentration into the boundary nodes.
  * Wonder how long this lasts, until we need a stress dependence here too?
@@ -267,7 +269,7 @@ gas_fixities()
 {
     static int tface[3][3] = {{1,2,3},{2,0,4},{0,1,5}};
     int ie, j, *k, *kk; FEnd_typ *an; FEelt_typ *ae; float Oss();
-    
+
     for (ie = 0; ie < FEne; ie++) {
 	ae = FEelt[ ie];
 	for (j = 0; j < 3; j++) {
@@ -298,7 +300,7 @@ sil_face()
     for (ie = 0; ie < FEne; ie++) {
 	ae = FEelt[ ie];
 	if (ae->mat != SiO2) continue;
-	
+
 	for (j = 0; j < 3; j++) {
 	    nbr = ae->face[ j];
 	    if (nbr < 0 || FEelt[ nbr]->mat != Si) continue;
@@ -306,7 +308,7 @@ sil_face()
 	    /*Set the fixities to 4*/
 	    /*rememember to overwrite dummy_sil's 1's for diffusivity*/
 	    an1 = FEnd[ ae->nd[ (j+1)%3]];
-	    an2 = FEnd[ ae->nd[ (j+2)%3]]; 
+	    an2 = FEnd[ ae->nd[ (j+2)%3]];
 	    an3 = FEnd[ ae->nd[  j+3   ]];
 	    an1->fixity[ X] = 4; an1->fixity[ Y] = 4;	an1->fixity[ D] = 0;
 	    an2->fixity[ X] = 4; an2->fixity[ Y] = 4;	an2->fixity[ D] = 0;
@@ -327,22 +329,22 @@ sil_face()
 	    (void)dlocal_normal( iox, Si, FEnd[ ip]->garbage+X);
 	}
     }
-    
+
     /*
      * For midside nodes, try the perpendicular
      */
     for (ie = 0; ie < FEne; ie++) {
 	ae = FEelt[ ie];
 	if (ae->mat != SiO2) continue;
-	
+
 	for (j = 0; j < 3; j++) {
 	    nbr = ae->face[ j];
 	    if (nbr < 0 || FEelt[ nbr]->mat != Si) continue;
 
 	    an1 = FEnd[ ae->nd[ (j+1)%3]];
-	    an2 = FEnd[ ae->nd[ (j+2)%3]]; 
+	    an2 = FEnd[ ae->nd[ (j+2)%3]];
 	    an3 = FEnd[ ae->nd[  j+3   ]];
-#ifdef average	    
+#ifdef average
 	    an3->garbage[X] = 0.5*(an1->garbage[X] + an2->garbage[X]);
 	    an3->garbage[Y] = 0.5*(an1->garbage[Y] + an2->garbage[Y]);
 #else
@@ -354,8 +356,8 @@ sil_face()
 	    an3->garbage[Y] /= vlen;
 	}
     }
-	
-	    
+
+
 }
 
 
@@ -368,7 +370,7 @@ SilOxLoad()
 {
     static int tface[3][3] = {{1,2,3},{2,0,4},{0,1,5}};
     int ie, j, *k, *kk; FEnd_typ *an; FEelt_typ *ae;
-    
+
     /* Find interfaces */
     for (ie = 0; ie < FEne; ie++) {
 	ae = FEelt[ ie];
@@ -409,10 +411,10 @@ clear_bc()
 	for (j = an->bc,  jj=j+FEdf; j < jj; ) *j++ = 0;
 	for (k = an->fixity, kk=k+FEdf; k < kk; )  *k++ = 0;
     }
-    
+
 }
-	        
 
 
 
-    
+
+

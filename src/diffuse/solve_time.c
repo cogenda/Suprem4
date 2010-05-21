@@ -124,12 +124,12 @@ int cont;
 	/* But if given a formula, take that instead */
 	if( timemeth == FORM)
 	    del_df = time_form( methdata.dtform, total, del_df);
-	
+
 	if( verbose >= V_NORMAL)
 	    printf("    new timestep is %g increase %g [Ktd %.2e Kto %.2e]\n", del_df, del_df/last_ddf, Ktd/last_ddf, Kto/last_ddf);
 
 	/* if there is polylayer, calculate grain size */
-	if (n_poly>0) 
+	if (n_poly>0)
 	    for (i=0;i<n_poly;i++){
 		poly_gs(i,temp,last_ddf);
 		grain_gs(i,temp,last_ddf);
@@ -356,7 +356,7 @@ float time_form( expr, total, dt)
 	    return( dt);
 	}
     }
-	
+
     /*Calculate a timestep as an expression using the total time and gdt */
     fmacro( "t", total, "%e");
     fmacro( "dt", dt, "%e");
@@ -457,7 +457,7 @@ int cont;
     for(del = 1e37, i = 0; i < tm_nsol; i++) {
 	is = tm_sol[i];
 	for(j = 0; j < nn; j++) {
-	    
+
 	    if ( newb[is][j] != 0.0 ) {
 		tmp = 0.5 * old[is][j] * oarea[j] / newb[is][j];
 
@@ -482,7 +482,7 @@ double grid_dt()
     int ix, iy, i, in;
     int reg1,reg2;
     double vel, maxVel, spacing;
-		    
+
     /*
      * Figure the fastest moving point
      */
@@ -494,10 +494,10 @@ double grid_dt()
 		maxVel = vel;
 	}
     }
-    
+
     if( maxVel == 0) return(MAXFLOAT);
 
-    
+
     /*
      * Figure the perpendicular spacing. Usually this is given
      * but sometimes we have to actually figure it out.
@@ -521,7 +521,7 @@ double grid_dt()
 	for( i = 0; i < nn; i++)
 	    if( nd[ i]->mater == SiO2)
 		if( ( in = node_mat( i, Si)) >= 0) {
-		    float SilToOx[2], d, rough_perp();
+		    float SilToOx[2], d;
 		    assert( 0 == local_normal( in, SiO2, SilToOx));
 		    d = rough_perp( nd[ i]->pt, SiO2, SilToOx);
 		    if( d > spacing)
@@ -561,15 +561,15 @@ int_dose()
     for(j = 0; j < n_imp; j++) dose[j] = 0.0;
 
     for(ie = 0; ie < ne; ie++) {
-	
+
 	for(i = 0; i < 3; i++) {
 	    n = tri[ie]->nd[i];
 
-	    for(j = 0; j < n_imp; j++) 
+	    for(j = 0; j < n_imp; j++)
 		dose[j] += nd[n]->sol[j] * tri[ie]->earea[i];
 	}
     }
 
-    for(j = 0; j < n_imp; j++) 
+    for(j = 0; j < n_imp; j++)
 	printf("integrated dose of imp %d is %e\n", soltoimp[j], dose[j]);
 }

@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 10:49:43 */
 
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -113,7 +114,7 @@ double **rhs;		/*the current right hand side*/
 
     /*if we are solving for vacancies*/
     if ( (vs != -1)  ) {
-	
+
 	/*for each node, compute the recombination*/
 	for(i = 0; i < nn; i++) {
 
@@ -122,7 +123,7 @@ double **rhs;		/*the current right hand side*/
 
 	    /*compute the coupling terms*/
 	    cpl = Kr(I,mat) * area[i];
-    
+
 	    /*calculate left hand side terms*/
 	    a[is][is][i] += cpl * new[vs][i];
 	    a[is][vs][i] += cpl * new[is][i];
@@ -204,15 +205,15 @@ struct bound_str *bval;
     /*do the surface recombination terms*/
     if ( model(I,mat0, mat1) & RECOM ) {
 	/*get the velocity power*/
-	if ( vloc != 0.0 ) 
+	if ( vloc != 0.0 )
 	    vpow = pow( vloc / vmax, Kpow(I,mat0,mat1) );
 	else
 	    vpow = 0.0;
 
 	/*if we have a formula...*/
-	if ( recstr(I,mat0,mat1) != NULL ) 
+	if ( recstr(I,mat0,mat1) != NULL )
 	    K = form_eval( recstr(I,mat0,mat1), total+bval->delta, bval->cord );
-	else 
+	else
 	    /*compute the surface recombination velocity*/
 	    K = Ksurf(I,mat0,mat1) * ( Krat(I,mat0,mat1) * vpow + 1.0 );
 
@@ -245,7 +246,7 @@ struct bound_str *bval;
 	if ( injstr(I,mat0,mat1) != NULL )
 	    tpow = form_eval( injstr(I,mat0,mat1), total+bval->delta, bval->cord );
 	else
-	    tpow = A(I,mat0,mat1) * 
+	    tpow = A(I,mat0,mat1) *
 		   pow( t0(I,mat0,mat1)+total+bval->delta, Tpow(I,mat0,mat1));
 	tmp = bval->cpl * tpow;
 	right_side(row, sol, bval->rhs, tmp);
@@ -306,7 +307,7 @@ struct call_str *cs;
 	for(i = 0; i < nn; i++) rhs[is][i] = newb[is][i];
 	return;
     }
-	
+
     /*compute the number of dopants*/
     for( ndop = j = 0; j < n_imp; j++) {
 	switch( soltoimp[j] ) {
@@ -397,7 +398,7 @@ struct call_str *cs;
 	    rhs[is][i] = newb[is][i] + oldb[is][i];
 
 	    /*the time terms*/
-	    rhs[is][i] -= cpl * ( cs->nco[i] * cs->newa[is][i] 
+	    rhs[is][i] -= cpl * ( cs->nco[i] * cs->newa[is][i]
 			      -   cs->oco[i] * cs->olda[is][i] );
 
 	}
@@ -406,7 +407,7 @@ struct call_str *cs;
 
 	    /*right hand side terms*/
 	    rhs[is][i] = newb[is][i];
-	    rhs[is][i] -=   cs->nco[i] * cpl * cs->newa[is][i] 
+	    rhs[is][i] -=   cs->nco[i] * cpl * cs->newa[is][i]
 			  - cs->mco[i] * t2  * cs->mida[is][i]
 			  + cs->oco[i] * t3  * cs->olda[is][i];
 
@@ -442,7 +443,7 @@ struct call_str *cs;
 		jac = cpl * cs->nco[i] * Ttot(mat);
 		a[is][is][i] -= jac * dnda * kt;
 		a[is][ps][i] -= jac * (dndb + dnda) * kt * es * dequ[is][i];
-		rhs[is][i] += Ttot(mat) * (cs->nco[i] * cpl * cs->new[ts][i] 
+		rhs[is][i] += Ttot(mat) * (cs->nco[i] * cpl * cs->new[ts][i]
 			      - cs->mco[i] * t2  * cs->mid[ts][i]
 			      + cs->oco[i] * t3  * cs->old[ts][i]);
 	    }
@@ -491,7 +492,7 @@ double *ar1, *ar2;
 interstitial( par, param )
 char *par;
 int param;
-{ 
+{
     int mat, mat2 = -1;
     int imp = -1;
     char *tmp;
@@ -529,7 +530,7 @@ int param;
     /*if no second material listed, no interfce parameters can be*/
     if ( mat2 != -1 ) {
 
-	/*work with the model specifiers*/ 
+	/*work with the model specifiers*/
 	if ( is_specified(param, "time.inj") ) {
 	    if ( get_bool(param, "time.inj") )
 		model(I,mat, mat2) = model(I,mat, mat2) | TIME;
@@ -753,7 +754,7 @@ float temp;
 	    /*growth model for injection*/
 	    theta(I,mat1,mat2) = theta0(I,mat1,mat2) * exp( - thetaE(I,mat1,mat2) / Vt );
 	    Gpow(I,mat1,mat2) = Gpow0(I,mat1,mat2) * exp( - GpowE(I,mat1,mat2) / Vt );
-	    
+
 	    /*time dependent injection model*/
 	    A(I,mat1,mat2) = A0(I,mat1,mat2) * exp( - AE(I,mat1,mat2) / Vt );
 	    t0(I,mat1,mat2) = t00(I,mat1,mat2) * exp( - t0E(I,mat1,mat2) / Vt );

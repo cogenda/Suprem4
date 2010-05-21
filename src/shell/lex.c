@@ -14,6 +14,7 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#include <string.h>
 #include "global.h"
 #undef FOR
 #include "constant.h"
@@ -66,7 +67,7 @@ int per;
 {
     char c;
     int i;
-   
+
     /*this routine is very simple, just return character in the buffer*/
     c = *( buffer + bufptr++ );
 
@@ -131,14 +132,14 @@ yylex()
 			    if ( strlen( yylval.sval ) != 0 )
 				return( PARAMETER );
 			    break;
-	
+
 	case READ_STATE :    /*read until the end of a line*/
 			    yylval.sval = (char *)read_until( "\n\001" );
 			    ylstate = C_STATE;
 			    if ( strlen( yylval.sval ) != 0 )
 				return( PARAMETER );
 			    break;
-	
+
 	case FOR_STATE  :    /*if for state is false, we just got here*/
 			    if ( ! for_spot ) {
 				/*skip leading white space*/
@@ -179,7 +180,7 @@ yylex()
 				    *(yylval.sval + len) = s;
 				    *(yylval.sval + len + 1) = '\0';
 				}
-				
+
 				for_spot = FALSE;
 				ylstate = C_STATE;
 				if ( strlen(yylval.sval) != 0 ) {
@@ -193,7 +194,7 @@ yylex()
 	}
     }
 }
-			    
+
 
 
 
@@ -319,11 +320,11 @@ lex_command()
 	}
     return(-1);
 }
-	
 
 
-		
-		    
+
+
+
 
 
 
@@ -366,7 +367,7 @@ char *str;
 
     return( (int) s0 );
 }
-		    
+
 
 
 
@@ -415,7 +416,7 @@ char *str;
 		    s = s0 + cnt;
 		}
 	    }
-	    if ( *s != quote ) { 
+	    if ( *s != quote ) {
 		pushc( *s );
 		s--;
 	    }
@@ -447,8 +448,8 @@ char *str;
  ************************************************************************/
 do_echo()
 {
-    
-    if ( *(echo_buffer + echo_bufptr-1) != '\n' ) 
+
+    if ( *(echo_buffer + echo_bufptr-1) != '\n' )
 	*(echo_buffer + echo_bufptr++) = '\n';
 
     if ( echo_bufptr == echo_buflen ) {

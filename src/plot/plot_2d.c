@@ -66,7 +66,7 @@ int param;
 	fprintf( stderr, "plot.2d is illegal in one dimension\n" );
 	return ( -1 );
     }
-    
+
     /*get the card parameters*/
     boundary = get_bool(param, "boundary");
     grid     = get_bool(param, "grid");
@@ -98,7 +98,7 @@ int param;
 	tymin     = get_float(param, "y.min") * 1e-4;
     if ( is_specified( param, "y.max" ) )
 	tymax     = get_float(param, "y.max") * 1e-4;
-	
+
     /* have a heart */
     if (txmin > txmax) {float swap = txmin; txmin = txmax; txmax = swap;}
     if (tymin > tymax) {float swap = tymin; tymin = tymax; tymax = swap;}
@@ -106,9 +106,9 @@ int param;
     if (clear) xgClear();
 
     if (!fill) {
-	
+
 	/* Center the requested area in the window */
-	
+
 	float dx = txmax-txmin, dy=tymax-tymin, cenwin;
 	if (dx > dy) {
 	    cenwin = 0.5*(tymin+tymax);
@@ -137,7 +137,7 @@ int param;
     xgAxisLabels("x in microns", "y in microns", title);
 
     if (grid) {
-	xgNewSetLT(line_grid);
+	/*xgNewSetLT(line_grid);*/
 	xgSetName("grid");
 	for(i = 0; i < ned; i++) edge_pl(i);
     }
@@ -159,7 +159,7 @@ int param;
 
     if( get_bool( param, "flow"))
 	draw_flow( vleng, vmax, line_com);
-    
+
     /*clean up plotting and post it out*/
     xgUpdate(0);
     pl_debug = deb;
@@ -186,18 +186,18 @@ draw_vornoi()
 
 	xgNewSet();
 	xgSetName("vornoi");
-	for (ie=0; ie < ne; ie++) 
+	for (ie=0; ie < ne; ie++)
 	{
 	    if (!leaf (tri[ie])) continue;
 	    if (ccentre (nop(0,ie), nop(1,ie), nop(2,ie), ci, &ri) == NULL ) {
-		for (j=0; j < 3; j++) 
+		for (j=0; j < 3; j++)
 		{
 		    nj = ngh (j, ie);
 		    if (nj < 0) {
 			j1 = (j+1)%3;
 			j2 = (j+2)%3;
 			xgNewGroup();
-			xgPoint ( 0.5*(lx(j1,ie)+lx(j2,ie)) , 
+			xgPoint ( 0.5*(lx(j1,ie)+lx(j2,ie)) ,
 				0.5*(ly(j1,ie)+ly(j2,ie)) );
 			xgPoint (ci[0], ci[1]);
 		    }
@@ -225,9 +225,9 @@ draw_points (delt)
 	xgNewGroup();
 	xgPoint (pt[ip]->cord[0], pt[ip]->cord[1]);
     }
-	
+
 }
-
+
 /*-----------------DRAW_STRESS------------------------------------------
  *----------------------------------------------------------------------*/
 draw_stress ( vleng, smax, ccol, tcol)
@@ -263,7 +263,7 @@ draw_stress ( vleng, smax, ccol, tcol)
 	}
     }
     if (smax == 0) return;
-    
+
     /* Repeat and scale */
     for (in = 0; in < nn; in++) {
 	sxx = nd[in]->sol[ imptosol[Sxx]];
@@ -288,8 +288,8 @@ draw_stress ( vleng, smax, ccol, tcol)
 	xgPoint (cx - dy * p2/smax, cy + dx *p2/smax);
 	xgPoint (cx + dy * p2/smax, cy - dx *p2/smax);
     }
-    
-    
+
+
 }
 
 /*-----------------DRAW_FLOW--------------------------------------------
@@ -322,13 +322,13 @@ draw_flow( vleng, vmax, col)
 	}
     }
     if (vmax == 0) return;
-    
+
     /* Repeat and scale */
     for (in = 0; in < nn; in++) {
 
 	/* Silicon nodes are confusing to the viewer*/
 	if(nd[ in]->mater == Si) continue;
-	
+
 	vx = nd[ in]->sol[ imptosol[XVEL]];
 	vy = nd[ in]->sol[ imptosol[YVEL]];
 	vel = hypot( vx, vy);
@@ -346,7 +346,7 @@ draw_flow( vleng, vmax, col)
 	xgNewGroup();
 	xgPoint( cx + dx , cy + dy );
 	xgPoint( cx + dx + (-dy-dx)/5, cy + dy + (-dy+dx)/5);
-	
+
     }
-    
+
 }

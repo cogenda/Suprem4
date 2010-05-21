@@ -43,7 +43,7 @@
 %token <dval> RCONST
 %token <sval> STRING
 %token <ival> INTEGER NUMB
-%token <sval> NAME UNITS ERR_MSG 
+%token <sval> NAME UNITS ERR_MSG
 %token <sval> COMMENT PARNAME
 
 %type <bval> boolean term bexp
@@ -71,7 +71,7 @@ parameter
 	    /*everything has parsed okey-dokey, bump the pointer*/
 	    current++;
 	}
-    |	COMMENT 
+    |	COMMENT
 	{
 	    /*ignore the sucker*/
 	}
@@ -98,7 +98,7 @@ parameter
 
 
 identifier
-    :	id NAME deflt 
+    :	id NAME deflt
 	{
 	    if (strlen($2) >= 12)
 		*($<sval>2 + 11) = '\0';
@@ -143,8 +143,8 @@ id
 	    $$ = $1;
 	}
     ;
-	    
-	    
+
+
 deflt
     :	'='  RCONST
 	{
@@ -158,14 +158,14 @@ deflt
 	{
 	    current[0]->def.ival = $2;
 	}
-    |	/*empty case, zero everything*/ 
-	{ 
-	    current[0]->def.ival = 0; 
-	} 
-    ; 
-    
-    
-err_msg 
+    |	/*empty case, zero everything*/
+	{
+	    current[0]->def.ival = 0;
+	}
+    ;
+
+
+err_msg
     :	ERR_MSG
 	{
 	    current[0]->err_msg = $1;
@@ -176,7 +176,7 @@ err_msg
 	}
     ;
 
-boolean 
+boolean
     :	BOOLSTART bexp
 	{
 	    $$ = $2;
@@ -314,3 +314,9 @@ struct bool_exp *left, *right;
     t->right = right;
     return(t);
 }
+
+int yyerror()
+{ return 1; }
+
+int yywrap()
+{ return -1; }

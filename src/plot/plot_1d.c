@@ -65,7 +65,7 @@ int param;
     data = salloc( struct d_str, 2*ne );
     deb = pl_debug;
     pl_debug = FALSE;
-    
+
     /*
      * --- Read parameters --------------------
      */
@@ -146,7 +146,7 @@ int param;
      */
    if (clear) xgClear();
 
-	
+
     yflip = FALSE;
     /*set the labels*/
     xgAxisLabels( xlab, label, title );
@@ -167,11 +167,11 @@ int param;
     /*
      * --- Do some drawing at last --------------------
      */
-    xgNewSetLT(line_type);
+    /*xgNewSetLT(line_type);*/
     xgSetName(label);
     if ( symb != -1 ) xgSetMark(symb);
 
-    for(i = 0; i < count; i++) 
+    for(i = 0; i < count; i++)
 	xgPoint(data[i].x, data[i].y);
 
     xgUpdate(0);

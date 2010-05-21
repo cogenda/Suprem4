@@ -11,6 +11,7 @@
 /*   global.h                Version 5.1     */
 /*   Last Modification : 7/3/91  08:55:06 */
 
+
 #ifdef STATIC_ALLOCATION_TIME
 #define EXTERN
 #else
@@ -44,9 +45,9 @@ EXTERN int verbose;
 
 extern panic();
 EXTERN char *MallocResult;
-#define salloc(O,N) (O *) ((MallocResult =  (char *)malloc((unsigned)((N)*sizeof(O)))) ? MallocResult : (char *)panic("Out of memory"))
-#define scalloc(O,N) (O *) ((MallocResult =  (char *)calloc((unsigned)(N),(unsigned)(sizeof(O)))) ? MallocResult : (char *)panic("Out of memory"))
-#define sralloc(O,N,P) (O *) ((MallocResult = (char *)realloc((char *)P, (unsigned)((N)*sizeof(O)))) ? MallocResult : (char *)panic("Out of memory"))
+#define salloc(O,N)  ((O *)malloc((unsigned)((N)*sizeof(O))))
+#define scalloc(O,N) ((O *)calloc((unsigned)(N),(unsigned)(sizeof(O))))
+#define sralloc(O,N,P) ((O *)realloc((char *)P, (unsigned)((N)*sizeof(O))))
 
 #define sfree(P) free((char *)P)
 

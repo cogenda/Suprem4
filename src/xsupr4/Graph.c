@@ -12,6 +12,7 @@
 #include <X11/StringDefs.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <pwd.h>
 
 #include "GraphP.h"
@@ -158,7 +159,7 @@ static char defaultTranslations[] =
 static XtActionsRec actions[] = {
 	{"DrawCell", DrawCell},
 };
-
+static void tildeExpand(char *, char *);
 
 /* these Core methods not needed by Graph:
  *
@@ -218,7 +219,7 @@ GraphClassRec graphClassRec = {
 WidgetClass graphWidgetClass = (WidgetClass) & graphClassRec;
 
 
-extern char *malloc();
+
 
 
 void associate(gw, wi)
@@ -325,7 +326,7 @@ if (A.sty < A.cry) { \
 else { \
     B.y = A.cry; \
     B.height = A.sty - A.cry; \
-} 
+}
 
 #define TRANX(xval) \
 (((double) ((xval) - wi->XOrgX)) * wi->XUnitsPerPixel + wi->UsrOrgX)
@@ -391,7 +392,7 @@ XEvent *event;
 
 
 /* ARGSUSED */
-void 
+void
 unzoom(widget, client_data, call_data)
 Widget widget;
 XtPointer client_data;   /* cast to graph widget */
@@ -488,7 +489,7 @@ XtPointer call_data;	/* unused */
 	    do_error(sprintf(err, "Unable to issue command:\n  %s\n", buf));
 	    return;
 	}
-    } 
+    }
     else if (dev1 == FILEN) {
 	tildeExpand(tilde, value);
 	out_stream = fopen(tilde, "w");
@@ -511,9 +512,9 @@ XtPointer call_data;	/* unused */
     ierr[0] = '\0';
     flags = 0;
     if (hd[type].dev_docu && inc) flags |= D_DOCU;
-    if (hd[type].dev_init(out_stream, final_w, final_h, 
+    if (hd[type].dev_init(out_stream, final_w, final_h,
 			hd[type].dev_title_font, hd[type].dev_title_size,
-		        hd[type].dev_axis_font, hd[type].dev_axis_size, 
+		        hd[type].dev_axis_font, hd[type].dev_axis_size,
 			flags, &(thisWin.dev_info), &userinfo, ierr)) {
 	do_redraw(userinfo, &thisWin);
 	if (thisWin.dev_info.xg_end) {
@@ -530,7 +531,7 @@ XtPointer call_data;	/* unused */
 
 }
 
-static tildeExpand(out, in)
+static void tildeExpand(out, in)
 char *out;			/* Output space for expanded file name */
 char *in;			/* Filename with tilde                 */
 /*

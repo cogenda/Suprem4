@@ -23,7 +23,7 @@
 #include "shell.h"
 #include "check.h"
 #include "global.h"
- 
+
 /************************************************************************
  *									*
  *	do_source(file, redir, back) - this routine handles the 	*
@@ -140,7 +140,7 @@ int back;	/*flag for backgorund execution*/
     /*if background job, handle it*/
     if (back) {
 	if (fork() == 0) {
-	    
+
 	    /*make sure there is enough space*/
 	    if ( (len = (strlen( instr ) + 3) ) > supbln ) {
 		supbln = len;
@@ -220,7 +220,7 @@ int intr;	/*the interactive flag*/
 char *file;	/*the filename for redirect, NULL if no redirect*/
 int back;	/*the flag for background of the command*/
 {
-    
+
     FILE tout, *t1;
     int index;
 
@@ -229,7 +229,7 @@ int back;	/*the flag for background of the command*/
 
     /*if command is -1, an illegal input was typed*/
     if (index != -1) {
-    
+
 	tout = *stdout;
 	if (file != NULL)  {
 	    t1 = file_parse(file, "a");
@@ -247,7 +247,7 @@ int back;	/*the flag for background of the command*/
 	else
 	    do_exec( param, intr, index, noexecute );
 
-	
+
 	if (file != NULL) {
 	    fclose(stdout);
 	    *stdout = tout;
@@ -257,9 +257,8 @@ int back;	/*the flag for background of the command*/
 	char *sh = (char *)getenv("SHELL");
 	char *str;
 	int pid, w;
-	extern errno;
 	int status;
-	
+
 	if (file != NULL)
 	    if (param != NULL)
 		str = malloc( strlen(file)+strlen(name)+strlen(param)+20 );
@@ -275,20 +274,20 @@ int back;	/*the flag for background of the command*/
 
 	strcpy(str, name);
 	if (param != NULL) strcat(str, param);
-	    
+
 	/*if a redirect add that on*/
 	if (file != NULL) {
 	    strcat(str, ">");
 	    strcat(str, file);
 	}
-	    
+
 	/*add background on*/
 	if (back) strcat(str, "&");
 
 	/*exec a shell to handle the request*/
 	if ((pid = vfork()) == 0) {
 	    if (execl(sh, sh, "-c", str, 0) == -1)
-		printf("error number %d\n", errno);
+		printf("error number %d\n", 127);
 	    _exit(127);
 	}
 
@@ -323,7 +322,7 @@ int no_exec;
 	return;
     }
     else if ( no_exec )
-	fprintf(stderr, "no error in %s command input\n", 
+	fprintf(stderr, "no error in %s command input\n",
 						   command[index].name);
 
     if ( intr )

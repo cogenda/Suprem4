@@ -11,6 +11,7 @@
 
 
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -119,7 +120,7 @@ coeffox (par, param)
      * The chlorine dependent model
      */
     fetch( "hcl.pc", ClPct, 1, 0);
-    
+
     if( given("hclT")) {
 	nclt= -1; cldt=0;
 	get_array( param, "hclT", &cldt, &nclt);
@@ -157,7 +158,7 @@ coeffox (par, param)
 	}
 	else fprintf( stderr, "When specifying alpha you must also specify materials 1 and 2\n");
     }
-	    
+
     /* find out what orientation */
     if (given("orient"))
 	switch (ornt = get_int (param, "orient")) {
@@ -197,7 +198,7 @@ coeffox (par, param)
     if (get_bool (param, "dry")) {dw = 0; spes = O2;}	/* maybe :-) */
     if (get_bool (param, "wet")) {dw = 1; spes = H2O;}
 
-    /* ------------------------------------------------------------ * 
+    /* ------------------------------------------------------------ *
      * The basic B and B/A definitions
      * ------------------------------------------------------------ */
 
@@ -257,7 +258,7 @@ coeffox (par, param)
     return(0);
 }
 
-
+
 /*-----------------get_array--------------------------------------------
  * Read an array of floats from a string.
  *----------------------------------------------------------------------*/
@@ -295,7 +296,7 @@ parse_array( input, Pfla, nfla)
 
     /* Walk along the list, parsing. */
     for(walk = strtok( input, sep); walk; walk = strtok( NULL, sep)) {
-	
+
 	/* find some storage for the value */
 	if( *nfla >= mfla) {
 	    if( !fla) {
@@ -308,12 +309,12 @@ parse_array( input, Pfla, nfla)
 	/* store it */
 	fla[ (*nfla)++] = atof( walk);
     }
-    
-    *Pfla = fla;
-}	
-	
 
-    
+    *Pfla = fla;
+}
+
+
+
 mono_array( fla, nfla, name)
     float *fla;
     int nfla;
@@ -327,4 +328,4 @@ mono_array( fla, nfla, name)
 	}
     return(1);
 }
-	    
+

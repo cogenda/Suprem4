@@ -17,6 +17,8 @@
 /*   Last Modification : 2/3/93 14:02:27 */
 
 #include <stdio.h>
+#include <string.h>
+
 #include <signal.h>
 #include <setjmp.h>
 #define STATIC_ALLOCATION_TIME
@@ -64,32 +66,32 @@ extern beryllium(), magnesium(), selenium(), silicon(), tin();
 extern germanium(), zinc(), carbon(), generic();
 
 struct command_table command[NUMCMD] = {
-    "echo", echo, NULL,			"man", man, NULL, 
-    "initialize", initialize, NULL,	"cpulog", cpu, NULL,
-    "plot.2d", plot_2d, NULL, 		"option", option, NULL,
-    "method", method, NULL,		"diffuse", diffuse, NULL,
-    "implant", implant, NULL, 		"select", sel_var, NULL,
-    "contour", contour, NULL,		"plot.1d", plot_1d, NULL,
-    "print.1d", print_1d, NULL,		"vacancy", vacancy, NULL,
-    "interstitial", interstitial, NULL, "antimony", antimony, NULL,
-    "arsenic", arsenic, NULL, 		"boron", boron, NULL,
-    "oxide", coeffox, NULL,
-    "phosphorus", phosphorus, NULL, 	"region", rregion, NULL,
-    "boundary", redge, NULL,		"line", rline, NULL,
-    "structure", structure, NULL,	"deposit", user_deposit, NULL,
-    "etch", user_etch, NULL,		"gold", gold, NULL,
-    "stress", stress_analysis, NULL,	"material", c_mater, NULL,
-    "cesium", cesium, NULL,		"pause", uPause, NULL,
-    "trap", trap, NULL,			"printf", user_print, NULL,
-    "profile", profile, NULL,		"mode", mode_cmd, NULL,	
-    "device", device, NULL,		"beryllium", beryllium, NULL,
-    "magnesium", magnesium, NULL,	"selenium", selenium, NULL,
-    "isilicon", silicon, NULL,		"tin", tin, NULL,
-    "germanium", germanium, NULL,	"zinc", zinc, NULL,
-    "carbon", carbon, NULL,		"generic", generic, NULL,
-    "", NULL, 45,			"", NULL, 46,			
-    "", NULL, 47,			"", NULL, 48,			
-    "", NULL, 49};			
+    "echo", echo, 0,			"man", man, 0,
+    "initialize", initialize, 0,	"cpulog", cpu, 0,
+    "plot.2d", plot_2d, 0, 		"option", option, 0,
+    "method", method, 0,		"diffuse", diffuse, 0,
+    "implant", implant, 0, 		"select", sel_var, 0,
+    "contour", contour, 0,		"plot.1d", plot_1d, 0,
+    "print.1d", print_1d, 0,		"vacancy", vacancy, 0,
+    "interstitial", interstitial, 0,    "antimony", antimony, 0,
+    "arsenic", arsenic, 0, 		"boron", boron, 0,
+    "oxide", coeffox, 0,
+    "phosphorus", phosphorus, 0, 	"region", rregion, 0,
+    "boundary", redge, 0,		"line", rline, 0,
+    "structure", structure, 0,	        "deposit", user_deposit, 0,
+    "etch", user_etch, 0,		"gold", gold, 0,
+    "stress", stress_analysis, 0,	"material", c_mater, 0,
+    "cesium", cesium, 0,		"pause", uPause, 0,
+    "trap", trap, 0,			"printf", user_print, 0,
+    "profile", profile, 0,		"mode", mode_cmd, 0,
+    "device", device, 0,		"beryllium", beryllium, 0,
+    "magnesium", magnesium, 0,	        "selenium", selenium, 0,
+    "isilicon", silicon, 0,		"tin", tin, 0,
+    "germanium", germanium, 0,	        "zinc", zinc, 0,
+    "carbon", carbon, 0,		"generic", generic, 0,
+    "", NULL, 45,			"", NULL, 46,
+    "", NULL, 47,			"", NULL, 48,
+    "", NULL, 49};
 
 main(argc, argv)
 int argc;
@@ -112,22 +114,22 @@ char **argv;
 #endif
 
     /*initialize the file pointers, which are defined on the compile line*/
-    if (t = (char *)getenv("SUP4MANDIR")) 
+    if (t = (char *)getenv("SUP4MANDIR"))
 	MANDIR = t;
     else
 	MANDIR = MANLOC;
 
-    if (t = (char *)getenv("SUP4KEYFILE")) 
+    if (t = (char *)getenv("SUP4KEYFILE"))
 	KEYFILE = t;
     else
 	KEYFILE = KEYLOC;
 
-    if (t = (char *)getenv("SUP4MODELRC")) 
+    if (t = (char *)getenv("SUP4MODELRC"))
 	MODELFILE = t;
     else
 	MODELFILE = MODELLOC;
 
-    if (t = (char *)getenv("SUP4IMPDATA")) 
+    if (t = (char *)getenv("SUP4IMPDATA"))
 	IMP_FILE = t;
     else
 	IMP_FILE = IMPLOC;
@@ -212,7 +214,7 @@ int param;
     if( CHOSEN("two.dim")) {
        set_dim( 2 );
     }
-    
+
     return(0);
 }
 

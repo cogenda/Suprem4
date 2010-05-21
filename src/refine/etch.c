@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 #include <global.h>
 #include <constant.h>
 #include <geom.h>
@@ -29,7 +30,7 @@
 
 /*some useful macros for getting at the parameters*/
 #define CHOSEN(A) (is_specified( param, A) && get_bool( param, A))
-#define FETCH(N,V,S) V = S*get_float( param, N) 
+#define FETCH(N,V,S) V = S*get_float( param, N)
 #define FETCHD(N,V,S,D) if(is_specified(param,N)) V = S*get_float( param, N);\
 			else V = D;
 
@@ -96,7 +97,7 @@ user_etch( par, param)
 
 	/* 1-D dosen't have this option */
         if ( mode != ONED ) {
-	 
+
 	    p[0] = salloc(float, 4);
 	    p[1] = salloc(float, 4);
 	    p[3] = salloc(float, 4);
@@ -113,7 +114,7 @@ user_etch( par, param)
 		x = 2.0 * xmi - xma;
 	    else if ( get_bool( param, "right" ) )
 		x = 2.0 * xma - xmi;
-	
+
 	    /*set up the final sides*/
 	    p[0][2] = x;
 	    p[1][2] = p[1][1];
@@ -196,7 +197,7 @@ user_etch( par, param)
         if ( mode != ONED ) {
 
 	    if ( nump >= maxp ) {
-		maxp += 500;
+                maxp += 500;
 		p[0] = sralloc( float, maxp, p[0] );
 		p[1] = sralloc( float, maxp, p[1] );
 		p[3] = sralloc( float, maxp, p[1] );
@@ -304,7 +305,7 @@ int mater;
 
 	    /*make a point and a node*/
 	    ip = mk_pt( 2, c );
-	    if ( p[3] != NULL && (p[3][i] > 0.0) ) 
+	    if ( p[3] != NULL && (p[3][i] > 0.0) )
 		set_space(ip, p[3][i]);
 	    else
 		set_space(ip, MAXFLOAT);
@@ -365,7 +366,7 @@ int mater;
 	for(i = 0; i < ne; i++) clr( tri[i], NEIGHB );
 
 	/*mark as dead all the points in the skeleton*/
-	for(i = 1, bp = sreg[ir]->bnd; 
+	for(i = 1, bp = sreg[ir]->bnd;
 	    i || bp != sreg[ir]->bnd; i = 0, bp = bp->next) {
 	    if (num_tri_nd(nB(bp)) == 0) rem_1nd(nB(bp));
 	}

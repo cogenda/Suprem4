@@ -72,7 +72,7 @@ int param;
     }
     else symb = -1;
 
-    xgNewSetLT(line_type);
+    /*xgNewSetLT(line_type);*/
     if (sel_log)
 	xgSetValue(exp(log(10.0)*value));
     else
@@ -82,7 +82,7 @@ int param;
     /*repeat for all the triangles*/
     for( t = 0; t < ne; t++ ) {
 	if (!leaf (tri[t])) continue;
-	
+
 	/*repeat for each triangle vertex*/
 	for( i = 0; i < 3; i++ ) {
 	    nx = tri[t]->nd[i];
@@ -92,7 +92,7 @@ int param;
 	    arr[i][1] = pt[ nd[nx]->pt ]->cord[1];
 
 	    /*get the z coordinate*/
-	    arr[i][2] = z[ nx ];	
+	    arr[i][2] = z[ nx ];
 	}
 
 	/*now that we have all that done, calculate the line*/

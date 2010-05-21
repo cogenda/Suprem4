@@ -1,7 +1,7 @@
 # Makefile for the SupremIV formatted key file reader.
 #
 # Makefile 3.1 9/14/87 10:43:51
-# modified: Mon Feb  1 11:36:39 PST 1993, Stephen E. Hansen 
+# modified: Mon Feb  1 11:36:39 PST 1993, Stephen E. Hansen
 #
 
 SYS     = BSD
@@ -9,12 +9,12 @@ LOCDEFS = -D$(SYS)
 INCLUDE = -I../include
 CFLAGS  = -c $(COPT) $(LOCDEFS) $(INCLUDE)
 
-HFILES  = 
+HFILES  =
 SCCS	= s.expand.c s.lexical.l s.main.c s.parser.y s.write.c
 SRCS	= expand.c lexical.l main.c parser.y write.c
 CSRCS	= expand.c lexical.c main.c parser.c write.c
 OBJS	= expand.o main.o parser.o write.o
-LIBS	= -ly -ll -lm
+LIBS	= -lm
 SLIB	= ../misc/bsd.o
 
 keyread : $(OBJS)
@@ -26,10 +26,10 @@ tags    : $(SRCS)
 lint    : $(CSRCS)
 	lint $(CFLAGS) $(CSRCS)
 
-clean   : 
-	rm -f $(OBJS) 
+clean   :
+	rm -f $(OBJS)
 
-version : 
+version :
 	prs -d":Dt: :F:\n:C:\n\n" $(SCCS)
 
 # change the default actions

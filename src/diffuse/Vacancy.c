@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 10:49:51 */
 
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -112,7 +113,7 @@ double **rhs;		/*the current right hand side*/
 
     /*if we are solving for vacancies*/
     if ( (is != -1)  ) {
-	
+
 	/*for each node, compute the recombination*/
 	for(i = 0; i < nn; i++) {
 
@@ -121,7 +122,7 @@ double **rhs;		/*the current right hand side*/
 
 	    /*compute the coupling terms*/
 	    cpl = Kr(V,mat) * area[i];
-    
+
 	    /*calculate left hand side terms*/
 	    a[vs][is][i] += cpl * new[vs][i];
 	    a[vs][vs][i] += cpl * new[is][i];
@@ -234,7 +235,7 @@ struct bound_str *bval;
 	if ( injstr(V,mat0,mat1) != NULL )
 	    tpow = form_eval( injstr(V,mat0,mat1), total+bval->delta, bval->cord );
 	else
-	    tpow = A(V,mat0,mat1) * 
+	    tpow = A(V,mat0,mat1) *
 		   pow( t0(V,mat0,mat1)+total+bval->delta, Tpow(V,mat0,mat1));
 	tmp = bval->cpl * tpow;
 	right_side(row, sol, bval->rhs, tmp);
@@ -270,7 +271,7 @@ struct call_str *cs;
 	for(i = 0; i < nn; i++) rhs[vs][i] = newb[vs][i];
 	return;
     }
-	
+
 
     /*compute the number of dopants*/
     for( ndop = j = 0; j < n_imp; j++) {
@@ -352,7 +353,7 @@ struct call_str *cs;
 	    rhs[vs][i] = newb[vs][i] + oldb[vs][i];
 
 	    /*the time terms*/
-	    rhs[vs][i] -= cpl * ( cs->nco[i] * cs->newa[vs][i] 
+	    rhs[vs][i] -= cpl * ( cs->nco[i] * cs->newa[vs][i]
 			      -   cs->oco[i] * cs->olda[vs][i] );
 
 	}
@@ -361,7 +362,7 @@ struct call_str *cs;
 
 	    /*right hand side terms*/
 	    rhs[vs][i] = newb[vs][i];
-	    rhs[vs][i] -=   cs->nco[i] * cpl * cs->newa[vs][i] 
+	    rhs[vs][i] -=   cs->nco[i] * cpl * cs->newa[vs][i]
 			  - cs->mco[i] * t2  * cs->mida[vs][i]
 			  + cs->oco[i] * t3  * cs->olda[vs][i];
 
@@ -421,7 +422,7 @@ struct call_str *cs;
 vacancy( par, param )
 char *par;
 int param;
-{ 
+{
     int mat, mat2 = -1;
     int imp = -1;
     char *tmp;
@@ -459,7 +460,7 @@ int param;
     /*if no second material listed, no interfce parameters can be*/
     if ( mat2 != -1 ) {
 
-	/*work with the model specifiers*/ 
+	/*work with the model specifiers*/
 	if ( is_specified(param, "time.inj") ) {
 	    if ( get_bool(param, "time.inj") )
 		model(V,mat, mat2) = model(V,mat, mat2) | TIME;
@@ -672,7 +673,7 @@ float temp;
 	    /*growth model for injection*/
 	    theta(V,mat1,mat2) = theta0(V,mat1,mat2) * exp( - thetaE(V,mat1,mat2) / Vt );
 	    Gpow(V,mat1,mat2) = Gpow0(V,mat1,mat2) * exp( - GpowE(V,mat1,mat2) / Vt );
-	    
+
 	    /*time dependent injection model*/
 	    A(V,mat1,mat2) = A0(V,mat1,mat2) * exp( - AE(V,mat1,mat2) / Vt );
 	    t0(V,mat1,mat2) = t00(V,mat1,mat2) * exp( - t0E(V,mat1,mat2) / Vt );

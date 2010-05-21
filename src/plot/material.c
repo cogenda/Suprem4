@@ -38,7 +38,7 @@ material(line_bound)
     register int sr;
 
 
-    xgNewSetLT(line_bound);
+    /*xgNewSetLT(line_bound);*/
     xgSetName("Materials");
     for(ir = 0; ir < nreg; ir++) {
 	sr = skel_reg(ir);

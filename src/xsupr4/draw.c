@@ -21,6 +21,10 @@ static char *defColors[] = {
     "cyan", "sienna", "orange", "coral"
 };
 
+
+static int rdFindMax(GraphWin *wi);
+
+
 do_redraw(userdata, wi)
 char *userdata;
 GraphWin *wi;
@@ -87,12 +91,12 @@ GraphWin *wi;
     wi->dev_info.xg_text(w,
 			 wi->dev_info.bdr_pad, Yspot, YUnitText,
 			 T_UPPERLEFT, T_AXIS);
-	
+
     startX = wi->dev_info.area_w - wi->dev_info.bdr_pad;
     wi->dev_info.xg_text(w,
 			 startX, wi->XOppY, XUnitText, T_RIGHT, T_AXIS);
 
-    /* 
+    /*
      * First,  the grid line labels
      */
     Yincr = (wi->dev_info.axis_pad + wi->dev_info.axis_height) * wi->YUnitsPerPixel;
@@ -272,7 +276,7 @@ double stepGrid()
     }
     return(gridBase + gridJuke[gridCurJuke]);
 }
-
+
 double RoundUp(val)
 double val;			/* Value */
 /*
@@ -308,7 +312,7 @@ double val;			/* Value */
     }
     return val;
 }
-	    
+
 #define LEFT_CODE	0x01
 #define RIGHT_CODE	0x02
 #define BOTTOM_CODE	0x04
@@ -399,7 +403,7 @@ GraphWin *wi;
 		/* Draw markers if requested and they are in drawing region */
 		if (markFlag && mark_inside) {
 		    /* Distinctive markers */
-		    wi->dev_info.xg_dot(w, wi->Xsegs[X_idx-1].x1, 
+		    wi->dev_info.xg_dot(w, wi->Xsegs[X_idx-1].x1,
 					wi->Xsegs[X_idx-1].y1, P_MARK, idx,
 					idx);
 		}
@@ -454,7 +458,7 @@ GraphWin *wi;
 
     for(spot = wi->Label; spot; spot = spot->next) {
 	C_CODE(spot->x, spot->y, code1);
-	if (!code1) 
+	if (!code1)
 	    wi->dev_info.xg_text(gw,
 				 SCREENX(wi, spot->x),
 				 SCREENY(wi, spot->y),
@@ -487,7 +491,7 @@ GraphWin *wi;
 		/* Meets the criteria */
 		oneLen = strlen(temp->setName);
 		if (oneLen > lineLen) lineLen = oneLen;
-		wi->dev_info.xg_text(gw, 
+		wi->dev_info.xg_text(gw,
 				     wi->XOppX + wi->dev_info.bdr_pad,
 				     spot+wi->dev_info.bdr_pad,
 				     temp->setName,
@@ -513,11 +517,11 @@ GraphWin *wi;
 	markFlag = temp->marker;
 	if ((temp->list) && (spot + wi->dev_info.axis_height + 2 < wi->XOppY)) {
 	    leg_line.y1 = leg_line.y2 = spot - wi->dev_info.legend_pad;
-	    wi->dev_info.xg_seg(gw, 
+	    wi->dev_info.xg_seg(gw,
 				  1, &leg_line, 1, L_VAR,
 				  cnt, cnt);
 	    if (markFlag) {
-		wi->dev_info.xg_dot(gw, 
+		wi->dev_info.xg_dot(gw,
 				      leg_line.x1, leg_line.y1,
 				      P_MARK, cnt, cnt);
 	    }
@@ -558,7 +562,7 @@ GraphWin *wi;			/* Window information          */
     /*
      * Now we find the lower right corner.  Below the space we
      * have the X axis grid labels.  To the right of the space we
-     * have the X axis unit label and the legend.  We assume the 
+     * have the X axis unit label and the legend.  We assume the
      * worst case size for the unit label.
      */
 
@@ -578,7 +582,7 @@ GraphWin *wi;			/* Window information          */
     leftWidth = (strlen(wi->XUnitText)) * wi->dev_info.axis_width;
     if ((maxName*wi->dev_info.axis_width)+wi->dev_info.bdr_pad > leftWidth)
       leftWidth = maxName * wi->dev_info.axis_width + wi->dev_info.bdr_pad;
-    
+
     wi->XOppX = wi->dev_info.area_w - wi->dev_info.bdr_pad - leftWidth;
     wi->XOppY = wi->dev_info.area_h - wi->dev_info.bdr_pad
       - wi->dev_info.axis_height - wi->dev_info.bdr_pad;
@@ -588,7 +592,7 @@ GraphWin *wi;			/* Window information          */
 	return 0;
     }
 
-    /* 
+    /*
      * We now have a bounding box for the drawing region.
      * Figure out the units per pixel using the data set bounding box.
      */

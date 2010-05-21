@@ -29,9 +29,10 @@
  ************************************************************************/
 
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 #include "sysdep.h"
-extern int errno;
+
 
 static char *tp[10];
 static int te[10];
@@ -42,7 +43,7 @@ static int te[10];
 
 #include "shell.h"
 
-#define YYRETURN(A)        { free(yys); free(yyv); return(A); }
+#define YYRETURN(A)        { return(A); }
 
 %}
 
@@ -66,7 +67,7 @@ static int te[10];
 %%
 
 
-line	
+line
     :	COMMAND parameter rdir endline
 	{
 	    char *cmd = $1, *par = $2, *red = $3;
@@ -78,9 +79,9 @@ line
 	    if (depth == -1) {
 		/*call the command setup routine*/
 		if ((par == NULL) || (interactive))
-		    do_command(cmd, par, TRUE, red, (back & BACKGROUND) ); 
+		    do_command(cmd, par, TRUE, red, (back & BACKGROUND) );
 		else
-		    do_command(cmd, par, FALSE, red, (back & BACKGROUND) ); 
+		    do_command(cmd, par, FALSE, red, (back & BACKGROUND) );
 		}
 
 	    /*free the used malloc space*/
@@ -183,7 +184,7 @@ line
 	    int back = $4;
 	    char str[160];
 	    int status, pid, w;
-		    
+
 	    do_echo();
 
 	    str[0] = '\0';
@@ -197,13 +198,13 @@ line
 		    strcpy(str, par);
 		    free(par);
 		    }
-		    
+
 		/*if a redirect add that on*/
 		if (red != NULL) {
 		    strcat(str, red);
 		    free(red);
 		    }
-		    
+
 		/*add background on*/
 		if (back & BACKGROUND)
 		    strcat(str, " & ");
@@ -211,7 +212,7 @@ line
 		/*exec a shell to handle the request*/
 		if ((pid = vfork()) == 0) {
 		    if (execl("/bin/sh", "sh", "-c", str, 0) == -1)
-			printf("error number %d\n", errno);
+			printf("error number %d\n", 127);
 		    _exit(127);
 		}
 
@@ -267,7 +268,7 @@ line
 
 		/*remove the entry from the macro table*/
 		(void)undef_macro(name, &macro);
-		
+
 		if (body != NULL) free(body);
 		if (list != NULL) free(list);
 		if (name != NULL) free(name);
@@ -295,7 +296,7 @@ line
 	    depth--;
 	    /*do no take the action if storing*/
 	    if (depth == -1)  {
-		s = body;		
+		s = body;
 
 		/*strip off the trailing }*/
 		for(i = strlen(s)-1; s[i] != '}'; i--);
@@ -328,7 +329,7 @@ line
 	    do_echo();
 
 	    /*do no take the action if storing*/
-	    if (depth == -1) 
+	    if (depth == -1)
 		do_set(par, TRUE);
 	    /*free up the wasted space*/
 	    if (par != NULL) free(par);
@@ -342,7 +343,7 @@ line
 	    do_echo();
 
 	    /*do no take the action if storing*/
-	    if (depth == -1) 
+	    if (depth == -1)
 		do_set(par, FALSE);
 	    /*free up the wasted space*/
 	    if (par != NULL) free(par);
@@ -390,7 +391,7 @@ line
 	    if (depth == -1)
 		YYRETURN(-1);
 	}
-    |	QUIT 
+    |	QUIT
 	{
 	    do_echo();
 
@@ -414,7 +415,7 @@ commands
     ;
 
 
-endline	
+endline
     :	EOL
 	{  $$ = ~BACKGROUND & PROMPT; }
     |	BACK EOL
@@ -425,7 +426,7 @@ endline
 	{  $$ = BACKGROUND; }
     ;
 
-rdir	
+rdir
     :	REDIRECT
 	{
 	    fprintf(stderr, "no file for redirection!\n");
@@ -441,7 +442,7 @@ rdir
 	}
     ;
 
-parameter 
+parameter
     :	PARAMETER
 	{
 	    $$ = $1;
@@ -453,7 +454,7 @@ parameter
     ;
 
 
-act1	
+act1
     : 	/* empty for immediate reduce*/
 	/*this is used for grouping startup and loop startup*/
 	{
@@ -488,7 +489,7 @@ act2
 	    s = (char *)malloc( strlen( store[depth] ) + 1 );
 	    strcpy(s, store[depth]);
 
-	    $$ = s; 
+	    $$ = s;
 	}
     ;
 
@@ -496,3 +497,5 @@ act2
 %%
 
 
+int yyerror()
+{ return 1; }
