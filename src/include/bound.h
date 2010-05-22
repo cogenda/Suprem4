@@ -24,9 +24,12 @@
 #ifndef GlobalH
 /* Already defined in include/global.h - DClark 19Oct98 */
 #ifdef STATIC_ALLOCATION_TIME
-#define EXTERN
+  #ifdef EXTERN
+  #undef EXTERN
+  #endif
+  #define EXTERN
 #else
-#define EXTERN extern
+  #define EXTERN extern
 #endif /* STATIC_ALLOCATION_TIME */
 #endif /* GlobalH */
 

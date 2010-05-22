@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 10:50:10 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -45,7 +46,7 @@ init_diffuse()
 {
     double *area;
     int i, vx, vy;
-    
+
     vx = imptosol[XVEL];
     vy = imptosol[YVEL];
 
@@ -101,7 +102,7 @@ int min_ok;
 	    /*perform the minimum fill reorder*/
 	    aoff = 10*np;
 	    Alloc( ia, int, aoff);
-	    if(generate( nn, 1, 1, get_connect, &ia, &aoff) < 0) 
+	    if(generate( nn, 1, 1, get_connect, &ia, &aoff) < 0)
 		panic("out of memory");
 
 	    /* do it */
@@ -186,7 +187,7 @@ upd_matrix()
 
     for(lnsol = i = 0; i < tm_nsol; i++)
 	if (!tm_elim[i]) lsol[ lnsol++ ] = tm_sol[i];
-    
+
     /*step over the blocks and decide what to factor*/
     for(i = 0; i < lnsol; i++) {
 	if ( methdata.fill == FULL )
@@ -195,7 +196,7 @@ upd_matrix()
 	    for(j = 0; j < lnsol; j++) facblk[lsol[i]][lsol[j]] = FALSE;
 	facblk[lsol[i]][lsol[i]] = TRUE;
     }
- 
+
     /*prepare symbolic entries and solution arrays for the time dependents*/
     do_symb(lnsol, lsol, &(tm_il), &(tm_l), &(tm_loff));
 }
@@ -246,7 +247,7 @@ ia_calc( )
     /*allocate space for the old matrix connectivity*/
     aoff = 10 * np;
     Alloc( ia, int, aoff);
-    if ( generate( nn, 1, 0, get_connect, &ia, &aoff ) < 0 ) 
+    if ( generate( nn, 1, 0, get_connect, &ia, &aoff ) < 0 )
 	panic("out of memory");
     aoff = ia[nn] - ia[0];
 
@@ -375,13 +376,13 @@ diff_blocks()
 			    blktype[i][j] = blck;
 		    }
 		    break;
-	
+
 	case T  :   for(j = 0; j < n_imp; j++) {
 			imp2 = soltoimp[j];
 			switch( imp2 ) {
 			case T   :
 			case I   :
-			case Psi :  
+			case Psi :
 			case V   :  blktype[i][j] = B_DIAG;
 				    break;
 			default  :  blktype[i][j] = B_NONE;
@@ -390,7 +391,7 @@ diff_blocks()
 			if (i == j) blktype[i][j] = B_DIAG;
 		    }
 		    break;
-	
+
 	case Psi :  for(j = 0; j < n_imp; j++) {
 			imp2 = soltoimp[j];
 			switch( imp2 ) {
@@ -473,7 +474,7 @@ diff_blocks()
 	    tstelm = tstelm && ((blktype[si][sj]==B_DIAG)||(blktype[si][sj]==B_NONE));
 	}
 
-	if ( tstelm ) 
+	if ( tstelm )
 	    tm_elim[i] = TRUE;
 	else {
 	    tm_elim[i] = FALSE;
@@ -601,7 +602,7 @@ assem_map( )
 
     for(i = 0; i < nn; i++) {
 	for(j = ia[i]; j < ia[i+1]; j++) {
-	    
+
 	    if ( nd[i]->pt == nd[ia[j]]->pt ) {
 		/*generate a boudary condition entry*/
 		/*make material one be silicon*/

@@ -7,7 +7,7 @@
  */
 
 #include <stdio.h>
-
+#include <stdlib.h>
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
 
@@ -75,7 +75,7 @@ static double PS_scale;		/* devs/micron */
 
 static void psScale(), psFonts(), psMarks(), psText(), psSeg(), psDot(), psEnd();
 
-
+
 /*
  * Local structures
  */
@@ -95,7 +95,7 @@ struct userInfo {
     int flags;
 };
 
-
+
 
 int rd(dbl)
 double dbl;
@@ -183,7 +183,7 @@ char *errmsg;			/* Returned error message */
 }
 
 
-
+
 
 static void psHeader(psFile, docu_flag)
 FILE *psFile;
@@ -205,7 +205,7 @@ int docu_flag;
     PS("%%\n");
 }
 
-
+
 static void psScale(psFile, width, height, flags)
 FILE *psFile;			/* Output stream */
 int width;			/* Output width  */
@@ -298,7 +298,7 @@ int flags;			/* Output options */
     OUT(psFile, "%lg %lg scale\n", factor, factor);
 }
 
-
+
 
 static void psFonts(psFile)
 FILE *psFile;			/* Output stream                */
@@ -375,7 +375,7 @@ FILE *psFile;			/* Output stream                */
     PS("%%\n");
 }
 
-
+
 
 static void psMarks(psFile)
 FILE *psFile;
@@ -388,12 +388,12 @@ FILE *psFile;
     PS("newpath x size sub y size sub moveto\n");
     PS("size size add 0 rlineto 0 size size add rlineto\n");
     PS("0 size size add sub 0 rlineto closepath fill} def\n");
-    
+
     PS("/mark1 {/size exch def /y exch def /x exch def\n");
     PS("newpath x size sub y size sub moveto\n");
     PS("size size add 0 rlineto 0 size size add rlineto\n");
     PS("0 size size add sub 0 rlineto closepath stroke} def\n");
-    
+
     PS("/mark2 {/size exch def /y exch def /x exch def\n");
     PS("newpath x y moveto x y size 0 360 arc stroke} def\n");
 
@@ -405,11 +405,11 @@ FILE *psFile;
     PS("newpath x size sub y moveto x y size add lineto\n");
     PS("x size add y lineto x y size sub lineto\n");
     PS("closepath stroke} def\n");
-    
+
     PS("/mark5 {/size exch def /y exch def /x exch def\n");
     PS("x y size mark1\n");
     PS("newpath x size sub y moveto size size add 0 rlineto stroke} def\n");
-    
+
     PS("/mark6 {/size exch def /y exch def /x exch def\n");
     PS("newpath x y moveto x y size 0 360 arc fill} def\n");
 
@@ -420,7 +420,7 @@ FILE *psFile;
     PS("x size sub y size add lineto closepath fill} def\n");
 }
 
-
+
 
 static void psText(state, x, y, text, just, style)
 char *state;			/* Really (struct userInfo *) */
@@ -451,7 +451,7 @@ int style;			/* Style                      */
     OUT(ui->psFile, "(%s) %d %d %d just-string\n", text, x, IY(y), just);
 }
 
-
+
 
 /*ARGSUSED*/
 static void psSeg(state, ns, seglist, width, style, lappr, color)
@@ -511,7 +511,7 @@ int color;			/* Zero to seven              */
     PSU("stroke\n");
 }
 
-
+
 
 /*ARGSUSED*/
 static void psDot(state, x, y, style, type, color)
@@ -534,7 +534,7 @@ int color;  		/* color of dot */
 	ui->currentWidth = PS_ZERO_WBASE * ui->baseWidth;
 	OUT(ui->psFile, "%d setlinewidth ", ui->currentWidth);
     }
-    
+
     switch (style) {
     case P_PIXEL:
 	OUT(ui->psFile, "newpath %d %d moveto %d %d %d 0 360 arc fill\n",

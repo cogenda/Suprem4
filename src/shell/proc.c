@@ -12,6 +12,7 @@
 /*   Last Modification : 7/3/91  08:28:16 */
 
 #include <stdio.h>
+#include <string.h>
 #include "shell.h"
 
 /*here be stuff that should live in .h some day*/
@@ -36,7 +37,7 @@ char *name;
     int best;
     int length;
     int ambig;
-    
+
     length = strlen(name);
 
     /*compare all the names in the command table to this name*/
@@ -53,11 +54,11 @@ char *name;
 	    ambig = FALSE;
 	    }
 	}
-    
+
     /*now use the best fit as the executable command*/
     if (best == -1)
 	return(-1);
-    else 
+    else
 	if (ambig) {
 	    fprintf(stderr, "the command is ambiguous\n");
 	    return(-1);
@@ -116,7 +117,7 @@ char *type;
 	for(end_str-- ; (*end_str == ' ') || (*end_str == '\t'); end_str--);
 	*(end_str + 1) = '\0';
     }
-    
+
     /*open the file and return*/
     return( fopen(name, type) );
 }

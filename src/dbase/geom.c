@@ -15,7 +15,7 @@
  *************************************************************************/
 /*   geom.c                Version 5.1     */
 /*   Last Modification : 7/3/91 08:20:48 */
-
+#include <stdio.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -32,7 +32,7 @@
 
 /*-----------------GEOM-------------------------------------------------
  * Returns a value representing the goodness of a triangle, in [-1...+1].
- * Negative values are for clockwise triangles. 
+ * Negative values are for clockwise triangles.
  *----------------------------------------------------------------------*/
 double good_tri(i,j,k)
 int i,j,k;
@@ -46,7 +46,7 @@ int i,j,k;
     y2 = YCP(j) - YCP(i);
     x3 = XCP(i) - XCP(k);
     y3 = YCP(i) - YCP(k);
-    det = x2*y1-x1*y2; 
+    det = x2*y1-x1*y2;
     dd = x1*x1 + y1*y1 + x2*x2 + y2*y2 + x3*x3 + y3*y3;
     return (det*NORM/dd);
 }

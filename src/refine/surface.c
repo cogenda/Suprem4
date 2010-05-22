@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "global.h"
 #include "constant.h"
@@ -81,12 +82,12 @@ struct line **pp;		/*the point numbers*/
 		ln = n2;
 	    }
 
-	    if ( ns == 0 ) { 
+	    if ( ns == 0 ) {
 		p[0].p = left;  p[0].x = XC(left);  p[0].y = YC(left);
 		p[1].p = right; p[1].x = XC(right); p[1].y = YC(right);
 		leftnode = ln;
 		e1 = i;
-		ns = 2; 
+		ns = 2;
 	    }
 	    else if ( XC(left) < p[0].x ) {
 		p[0].p = left;  p[0].x = XC(left);  p[0].y = YC(left);
@@ -143,25 +144,25 @@ struct line **pp;		/*the point numbers*/
 	    done = !found;
 	}
     break;
- 
+
  case ONED :
-    /* 1-D need surface point only */ 
+    /* 1-D need surface point only */
     for (i=0; i<ne; i++) {
 
 	/* find out nd[0] or nd[1] to be surface point? */
 	/* really have to check both nodes? yes!        */
         if (tri[i]->nb[0] == BC_OFFSET+2) {
-            p[0].p = nd[tri[i]->nd[1]]->pt; 
+            p[0].p = nd[tri[i]->nd[1]]->pt;
 	    p[0].x = XC(p[0].p);
         }
         else if (tri[i]->nb[1] == BC_OFFSET+2) {
-            p[0].p = nd[tri[i]->nd[0]]->pt; 
+            p[0].p = nd[tri[i]->nd[0]]->pt;
 	    p[0].x = XC(p[0].p);
 
         /* Be alert! p[0].p associate to point not node */
         }
     }
-    ns=1;  
+    ns=1;
     break;
  }
 

@@ -8,6 +8,8 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <X11/Xlib.h>
 #include "DataRec.h"
 
@@ -41,16 +43,16 @@ char	*idraw_prologue[ ] = {
  *
  * Major differences from first version:
  *   Four new parameters are passed to the device initialization routine:
- *   title_family, title_size, axis_family, and axis_size.  See the 
+ *   title_family, title_size, axis_family, and axis_size.  See the
  *   description of xg_init() for details.
- *   
+ *
  *   Clipping is done automatically by xgraph.  The xg_clip() routine
  *   is obsolete.
  *
  *   The xg_line() routine has become the xg_seg() routine.  It now
- *   draws segments rather than a series of lines.  
- * 
- *   A new field (max_segs) in the device structure now specifies 
+ *   draws segments rather than a series of lines.
+ *
+ *   A new field (max_segs) in the device structure now specifies
  *   the maximum number of segments the device can handle in a group.
  */
 
@@ -104,31 +106,31 @@ int idrawInit(strm, width, height, title_family, title_size,
  *	can be integrated into documents with less effort.  For example,
  *	the Postscript output routines produce bounding box information
  *	when this flag is set.
- * The routine should fill in all of the fields of `out_info' with 
+ * The routine should fill in all of the fields of `out_info' with
  * appropriate values.  The values are described below:
- *  area_w, area_h:  
+ *  area_w, area_h:
  * 	Size of the drawing space in device coordinates.
  *	This should take in account the requested area
  *	given by `width', and `height'.
- *  bdr_pad:  
+ *  bdr_pad:
  * 	Xgraph will leave this number of device coordinates around
  *	all of the outer edges of the graph.
- *  axis_pad: 
+ *  axis_pad:
  *	Additional space around axis labels (in devcoords)
  *	so that the labels do not appear crowded.
  *  legend_pad:
  *	Space (in devcoords) from the top of legend text to
  *	the representative line drawn above the legend text.
- *  tick_len:    
+ *  tick_len:
  *	Size of a tick mark placed on axis (in devcoords)
- *  axis_width:  
+ *  axis_width:
  *	An estimate of the width of a large character in
  *      the axis font (in devcoords).  This can be an overestimate.  An
  *      underestimate may produce bad results.
- *  axis_height: 
+ *  axis_height:
  *	An estimate of the height of a large character in
  *      the axis labeling font (in devcoords).
- *  title_width, title_height:  
+ *  title_width, title_height:
  *	Same as above except for the title font.
  *  max_segs:
  *	Due to buffering constraints,  some devices may not be able to
@@ -168,14 +170,14 @@ int idrawInit(strm, width, height, title_family, title_size,
 	out_info -> axis_pad = 2.0 * axis_size;
 	out_info -> legend_pad = 0;
 
-	out_info -> area_w = width * 0.00283; /* pts per micron */ 
+	out_info -> area_w = width * 0.00283; /* pts per micron */
 	out_info -> area_h = height * 0.00283;
 
 	out_info -> tick_len = axis_size;
 	out_info -> axis_height = axis_size;
 	out_info -> title_height = title_size;
 	out_info -> axis_width = (axis_size*5.0) / 12.0;
-	out_info -> title_width = (title_size*5.0) / 12.0; 
+	out_info -> title_width = (title_size*5.0) / 12.0;
 	out_info -> xg_text = idrawText;
 	out_info -> xg_seg = idrawSeg;
 	out_info -> xg_dot = idrawDot;
@@ -257,7 +259,7 @@ int len;			/* Number of chars */
 	break;
     }
 
-    /* 
+    /*
      * Also, idraw seems to put a space above all text it draws.
      * The computation below compensates for this.
      */
@@ -325,7 +327,7 @@ int color;			/* Line color (if any)  */
  * and drawn in style `style'.  If `style' is L_VAR,  the parameters
  * `color' and `lappr' should be used to draw the line.  Both
  * parameters vary from 0 to 7.  If the device is capable of
- * color,  `color' varies faster than `style'.  If the device 
+ * color,  `color' varies faster than `style'.  If the device
  * has no color,  `style' will vary faster than `color' and
  * `color' can be safely ignored.  However,  if the
  * the device has more than 8 line appearences,  the two can

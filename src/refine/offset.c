@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "global.h"
 #include "constant.h"
@@ -65,7 +66,7 @@ double space;		/*size of the spacing*/
 	op[0].map = 0;
 	nop       = 1;
 	return( nop );
-    } 
+    }
 
     /* if TWOD! */
 
@@ -93,7 +94,7 @@ double space;		/*size of the spacing*/
 
     /*process these guys on a pair by pair basis*/
     for( i = 1; i < nump-1; i++) {
-	
+
 	/*compute the normal to this line segment*/
 	ny = p[i].x - p[i+1].x;
 	nx = p[i+1].y - p[i].y;
@@ -108,7 +109,7 @@ double space;		/*size of the spacing*/
 	/*compute the distance between the two points*/
 	d = sqrt( (op[nop-1].x-x1) * (op[nop-1].x-x1) +
 		  (op[nop-1].y-y1) * (op[nop-1].y-y1) );
-	    
+
 	/*if these two points are real close, just add the new one*/
 	if ( d < err ) {
 	    op[nop].x = x2;
@@ -148,7 +149,7 @@ double space;		/*size of the spacing*/
 		    op = *pop;
 		}
 
-		d = sqrt( ( op[nop-1].x-x1 ) * ( op[nop-1].x-x1 ) + 
+		d = sqrt( ( op[nop-1].x-x1 ) * ( op[nop-1].x-x1 ) +
 			  ( op[nop-1].y-y1 ) * ( op[nop-1].y-y1 ) );
 
 	    } while( d > 1.5 * space );
@@ -198,7 +199,7 @@ double space;		/*size of the spacing*/
     return(nop);
 }
 
-		
+
 
 add_toline( nop, op, x, y, m, err )
 int *nop;

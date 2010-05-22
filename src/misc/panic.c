@@ -12,6 +12,7 @@ static char sccsid[]="panic.c 5.1  7/3/91 08:41:10";
  *---------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
@@ -27,7 +28,7 @@ panic (s)
     fprintf(stderr,"suprem4 panic: %s\n",s);
     if( (!strcmp( s, "nocore")) || (!strcmp( s, "Out of memory")))
 	goto outtahere;
-    
+
     fprintf( stderr, "Writing structure to panic.str..."); fflush(stderr);
     if( (ig2_write("panic.str", 0, 1.0)) < 0)
 	fprintf(stderr, "Failed\n");
@@ -44,21 +45,21 @@ panic (s)
 	    *t = '#';
     sprintf( cmdbuf, "mail -s 'suprem4 panic: %s\nExecuting command: %s\nTotal time: %e' %s %s&",
 	    s, buffer, total, SUPPORT, (ier<0)? "</dev/null": "<panic.str");
-    
+
     if(system( cmdbuf))
 	fprintf( stderr, "Failed\n");
     else
 	fprintf( stderr, "Succeeded\n");
 #endif
     outtahere:
-    
+
     fprintf(stderr, "Better luck next time.\n");
     fflush(stdout);
     fflush(stderr);
     abort();
 }
 
-		
+
 /*-----------------GridSave---------------------------------------------
  * Store a valid grid before anything bad happens.
  *----------------------------------------------------------------------*/

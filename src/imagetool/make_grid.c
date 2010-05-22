@@ -6,10 +6,11 @@
 /*	Last Modification:	12/11/89 13:44:31		*/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "bound.h"
 
 
-make_grid(xsize, ysize, xd, yd, win_xmin, win_xmax, win_ymin, win_ymax, 
+make_grid(xsize, ysize, xd, yd, win_xmin, win_xmax, win_ymin, win_ymax,
     win_xmin_index, win_xmax_index, win_ymin_index, win_ymax_index)
 int xsize;
 int ysize;
@@ -35,7 +36,7 @@ int *win_ymax_index;
     extern shiftwindow();
     extern float Fmax();
     extern float Fmin();
-    
+
     if ((xdata = (float *)malloc((xsize + 3) * sizeof(float))) == NULL)  {
 	fprintf(stderr, "unable to allocate memory\n");
 	exit(ERROR);
@@ -49,7 +50,7 @@ int *win_ymax_index;
 
     /* for the case where the window coordinates are outside the
      *   current device dimensions, we need to redefine the spacing
-     *   to be max( (max_x - min_x)/xsize , 
+     *   to be max( (max_x - min_x)/xsize ,
      *		(max(win_xmax, max_x) - min(win_xmin, min_x))/xsize )
      */
     spacing = Fmax( (max_x - min_x) / xsize,
@@ -57,17 +58,17 @@ int *win_ymax_index;
     ptr = xdata;
     for (index = 0, loc = Fmin(win_xmin, min_x); index < xsize + 3; index++)  {
 	*ptr++ = loc;
-	loc += spacing;	
+	loc += spacing;
     }
     /* adjust last point to coincide with edge */
     xdata[xsize] = Fmax(max_x, win_xmax);
-    
+
     spacing = Fmax( (max_y - min_y) / ysize,
 	(Fmax(win_ymax, max_y) - Fmin(win_ymin, min_y)) / ysize );
     ptr = ydata;
     for (index = 0, loc = Fmin(win_ymin, min_y); index < ysize + 3; index++)  {
 	*ptr++ = loc;
-	loc += spacing;	
+	loc += spacing;
     }
     /* adjust last point to coincide with edge */
     ydata[ysize] = Fmax(max_y, win_ymax);
@@ -118,7 +119,7 @@ int *win_ymax_index;
     *yd = ydata;
 
     return(0);
-}    
+}
 
 
 shiftwindow( array, size, min, max, min_index, max_index )

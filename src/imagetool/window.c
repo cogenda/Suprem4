@@ -23,7 +23,7 @@ main()
 	xarray[i] = 0.01 * (float)i;
 	yarray[i] = 0.01 * (float)i;
     }
-   
+
     printf("enter values :  ");
     scanf("%f %f", &xkey, &ykey);
     fflush(stdout);
@@ -31,7 +31,7 @@ main()
 
     printf("xlo=%d, xhi=%d, ylo=%d, yhi=%d\n", xlo, xhi, ylo, yhi);
 }
-#endif WDEBUG
+#endif /*WDEBUG*/
 
 
 static char SccsID[] = "@(#)window.c	1.4\t6/1/89";

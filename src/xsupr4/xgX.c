@@ -18,7 +18,7 @@
 #include <X11/Xutil.h>
 
 #include <stdio.h>
-
+#include <stdlib.h>
 #include "GraphP.h"
 
 static unsigned char dashlist[MAXCOL][2] = {
@@ -75,7 +75,7 @@ int l_len;                      /* Length of spec   */
 
 void set_X(new)
 Widget new;
-/* 
+/*
  * Sets some of the common parameters for the X output device.
  */
 {
@@ -91,11 +91,11 @@ Widget new;
     wi->dev_info.tick_len = TICKLENGTH;
 
     wi->dev_info.axis_width = XTextWidth(gw->graph.labelFont, "8", 1);
-    wi->dev_info.axis_height = gw->graph.labelFont->max_bounds.ascent + 
+    wi->dev_info.axis_height = gw->graph.labelFont->max_bounds.ascent +
 		    gw->graph.labelFont->max_bounds.descent;
 
     wi->dev_info.title_width = XTextWidth(gw->graph.titleFont, "8", 1);
-    wi->dev_info.title_height = gw->graph.labelFont->max_bounds.ascent + 
+    wi->dev_info.title_height = gw->graph.labelFont->max_bounds.ascent +
 				gw->graph.labelFont->max_bounds.descent;
     wi->max_segs = 100;
     wi->Xsegs = (XSegment *)malloc(100 * sizeof(XSegment));
@@ -155,7 +155,7 @@ int style;			/* Text style (above)     */
     XTextExtents(font, text, len, &dir, &ascent, &descent, &bb);
     width = bb.rbearing - bb.lbearing;
     height = bb.ascent + bb.descent;
-    
+
     switch (just) {
     case T_CENTER:
 	rx = x - (width/2);
@@ -194,8 +194,8 @@ int style;			/* Text style (above)     */
 	ry = y - height;
 	break;
     }
-    XDrawString(XtDisplay(gw), XtWindow(gw), 
-		loc_gc, 
+    XDrawString(XtDisplay(gw), XtWindow(gw),
+		loc_gc,
 		rx, ry + bb.ascent, text, len);
 }
 
@@ -215,7 +215,7 @@ int color;			/* Line color (if any)  */
  * and drawn in style `style'.  If `style' is L_VAR,  the parameters
  * `color' and `lappr' should be used to draw the line.  Both
  * parameters vary from 0 to 7.  If the device is capable of
- * color,  `color' varies faster than `style'.  If the device 
+ * color,  `color' varies faster than `style'.  If the device
  * has no color,  `style' will vary faster than `color' and
  * `color' can be safely ignored.  However,  if the
  * the device has more than 8 line appearences,  the two can
@@ -231,18 +231,18 @@ int color;			/* Line color (if any)  */
 	dash_list[0] = 1;
 	dash_list[1] = 1;
 	segGC(w, gw->graph.gridColor, LineOnOffDash, 0, dash_list, 2);
-    } 
+    }
     else if (style == L_ZERO) {
 	segGC(w, gw->graph.zeroColor, LineSolid, 0, (char *) 0, 0);
-    } 
+    }
     else {
 	/* Color and line style vary */
 	lappr = (int)lappr/MAXCOL;
 	if (lappr == 0) {
 	    segGC(w, gw->graph.pix[color%MAXCOL], LineSolid, width, (char *) 0, 0);
-	} 
+	}
 	else {
-	    segGC(w, gw->graph.pix[color%MAXCOL], LineOnOffDash, width, 
+	    segGC(w, gw->graph.pix[color%MAXCOL], LineOnOffDash, width,
 		       dashlist[lappr], 2);
 	}
     }
@@ -326,28 +326,28 @@ Widget w;
 {
     GraphWidget gw = (GraphWidget) w;
 
-    gw->graph.marker[0] = XCreateBitmapFromData(XtDisplay(gw), 
+    gw->graph.marker[0] = XCreateBitmapFromData(XtDisplay(gw),
 	RootWindowOfScreen(XtScreen(gw)), mark1_bits, mark_w, mark_h);
 
-    gw->graph.marker[1] = XCreateBitmapFromData(XtDisplay(gw), 
+    gw->graph.marker[1] = XCreateBitmapFromData(XtDisplay(gw),
 	RootWindowOfScreen(XtScreen(gw)), mark2_bits, mark_w, mark_h);
 
-    gw->graph.marker[2] = XCreateBitmapFromData(XtDisplay(gw), 
+    gw->graph.marker[2] = XCreateBitmapFromData(XtDisplay(gw),
 	RootWindowOfScreen(XtScreen(gw)), mark3_bits, mark_w, mark_h);
 
-    gw->graph.marker[3] = XCreateBitmapFromData(XtDisplay(gw), 
+    gw->graph.marker[3] = XCreateBitmapFromData(XtDisplay(gw),
 	RootWindowOfScreen(XtScreen(gw)), mark4_bits, mark_w, mark_h);
 
-    gw->graph.marker[4] = XCreateBitmapFromData(XtDisplay(gw), 
+    gw->graph.marker[4] = XCreateBitmapFromData(XtDisplay(gw),
 	RootWindowOfScreen(XtScreen(gw)), mark5_bits, mark_w, mark_h);
 
-    gw->graph.marker[5] = XCreateBitmapFromData(XtDisplay(gw), 
+    gw->graph.marker[5] = XCreateBitmapFromData(XtDisplay(gw),
 	RootWindowOfScreen(XtScreen(gw)), mark6_bits, mark_w, mark_h);
 
-    gw->graph.marker[6] = XCreateBitmapFromData(XtDisplay(gw), 
+    gw->graph.marker[6] = XCreateBitmapFromData(XtDisplay(gw),
 	RootWindowOfScreen(XtScreen(gw)), mark7_bits, mark_w, mark_h);
 
-    gw->graph.marker[7] = XCreateBitmapFromData(XtDisplay(gw), 
+    gw->graph.marker[7] = XCreateBitmapFromData(XtDisplay(gw),
 	RootWindowOfScreen(XtScreen(gw)), mark8_bits, mark_w, mark_h);
 
 }
@@ -381,9 +381,9 @@ int color;			/* Marker color (if any)   */
     gcmask = GCForeground | GCClipMask | GCClipXOrigin | GCClipYOrigin;
 
     if (gw->graph.dot_gc == (GC) 0) {
-	gw->graph.dot_gc = XCreateGC(XtDisplay(gw), XtWindow(gw), 
+	gw->graph.dot_gc = XCreateGC(XtDisplay(gw), XtWindow(gw),
 				    gcmask, &gcvals);
-    } 
+    }
     else {
 	XChangeGC(XtDisplay(gw), gw->graph.dot_gc, gcmask, &gcvals);
     }

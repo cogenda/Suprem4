@@ -100,7 +100,7 @@ RANLIB  = ranlib
 #.. SysV folks who don't have ranlib should to do this.
 #RANLIB  = \#
 
-MAKE	= gmake -j4
+MAKE	= make
 #MAKE	= gmake
 
 #--- You shouldn't need to mess with anything below here ---

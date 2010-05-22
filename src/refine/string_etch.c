@@ -11,11 +11,12 @@
 **----------------------------------------------------------------------
 **/
 
-/*	string_etch.c	
+/*	string_etch.c
  *	goodwin chin
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "constant.h"
 #include "material.h"
 #include "refine.h"
@@ -27,7 +28,6 @@ char *infile;
 int material;
 {
     extern etch();
-    extern char *malloc();
     char *buffer;
     int start_index;
     int stop_index;
@@ -35,13 +35,13 @@ int material;
     float xcord;
     float ycord;
     float *p[MAXDIM];
-  
+
     FILE *inf;
-  
+
     if ((buffer = malloc(BUFFERSIZE)) == NULL)
 	panic("can't malloc buffer in string_etch\n");
- 
-    if ((inf = fopen(infile, "r")) == NULL)  
+
+    if ((inf = fopen(infile, "r")) == NULL)
 	panic("can't open for read in string_etch\n");
     else  {
 	start_index = 0;

@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 10:44:19 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #ifdef convexvc
 #include <fastmath.h>
 #else
@@ -200,7 +201,7 @@ double *tmp;
 
 	if ( blktype[si][sk] == B_NONE) continue;
 
-	if (sk == si) 
+	if (sk == si)
 	    dzero( ajk, tia[nv] + tao );
 	else {
 	    switch( blktype[sj][si] ) {
@@ -304,9 +305,9 @@ int initial;
     /*compute ap*/
     bigmxv( nsol, sol, nv, p[0], ap[0] );
 
-    count=str=curr=0; 
+    count=str=curr=0;
     while ( count < methdata.blkitlim ) {
-    
+
 	/*figure out which backing vector we are calculating*/
 	str = curr + 1;
 	if ( str == methdata.back ) str = 0;
@@ -337,11 +338,11 @@ int initial;
 	}
 	maxnorm = sqrt(maxnorm);
 
-	if ( verbose >= V_BARF) 
+	if ( verbose >= V_BARF)
 	    printf("iteration %d error %e\n", count, maxnorm);
 
-	if ( (maxnorm < (nm2*1.0e-8)) || (maxnorm < 1.0e-4)) return; 
-	
+	if ( (maxnorm < (nm2*1.0e-8)) || (maxnorm < 1.0e-4)) return;
+
 	/*compute qinvr*/
 	app_inv( nv, nsol, sol, il, loff, l, qinvr, aqinvr );
 
@@ -359,7 +360,7 @@ int initial;
 	/*update the current direction vectors*/
 	for(i = 0; i < nsol; i++) {
 	    si = sol[i];
-	    upd_p( nv, p[str][si], p[curr][si], qinvr[si], 
+	    upd_p( nv, p[str][si], p[curr][si], qinvr[si],
 		       ap[str][si], ap[curr][si], aqinvr[si],  beta[curr] );
 	}
 

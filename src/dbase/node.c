@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:21:08 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <global.h>
 #include <constant.h>
 #include <geom.h>
@@ -100,7 +101,7 @@ char *alloc_nd()
 /*
  * make a node at a point with the given material
  */
-mk_nd( p, m ) 
+mk_nd( p, m )
 int p, m;
 {
     char *err;
@@ -194,7 +195,7 @@ make_nodes()
     /*pass 2*/
     for( nn = p = 0; p < np; p++ ) {
 	/*for each material marked true, add a node*/
-	for(pt[p]->nn = i = 0; i < MAXMAT; i++) 
+	for(pt[p]->nn = i = 0; i < MAXMAT; i++)
 	    if ( pt[p]->nd[i] ) (void)mk_nd(p, i);
     }
 

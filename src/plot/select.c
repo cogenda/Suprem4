@@ -17,6 +17,8 @@
 /*   Last Modification : 7/3/91 08:39:07 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "global.h"
 #include "sysdep.h"
@@ -51,7 +53,7 @@ int param;
     if ( is_specified( param, "label" ) ) {
 	if ( label != NULL ) free( label );
 	tmp = get_string( param, "label" );
-	label = (char *)malloc( strlen(tmp) + 1 );	
+	label = (char *)malloc( strlen(tmp) + 1 );
 	strcpy( label, tmp );
     }
     else {

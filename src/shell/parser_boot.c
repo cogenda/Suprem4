@@ -12,6 +12,9 @@
 /*   Last Modification : 7/3/91  08:28:14 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "check.h"
 #include "constant.h"
 #include "dbaccess.h"

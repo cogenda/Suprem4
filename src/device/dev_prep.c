@@ -11,6 +11,7 @@
 /*   Last Modification : 7/3/91 15:44:19  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -209,7 +210,7 @@ ckt_ia_bld( )
     /*build the list of circuit to voltage node connections*/
     ij = ia_cn[0] = nn+1;
     for(i = 0; i < n_con; i++)  {
-	
+
 	row = 2 * i;
 
 	/*build the list of the neighbors to this node*/
@@ -227,7 +228,7 @@ ckt_ia_bld( )
 	}
 	for(j = 0; j < contacts[i].np; j++) {
 	    p = contacts[i].pt[j];
-	    for(k = 0; k < pt[p]->nn; k++) 
+	    for(k = 0; k < pt[p]->nn; k++)
 		taken[num++] = pt[p]->nd[k];
 	}
 

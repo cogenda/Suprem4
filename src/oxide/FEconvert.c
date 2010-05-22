@@ -11,6 +11,7 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <math.h>
 #include "constant.h"
@@ -102,7 +103,7 @@ FEconvert( element, dof)
     for (in = 0; in < FEnn; in++) {
 	FEnd[ in]->cord[ 0] = pt[ in]->cord[0];
 	FEnd[ in]->cord[ 1] = pt[ in]->cord[1];
-	
+
 	stash_noniC( in, (double *)FEnd[ in]->user);
     }
 
@@ -120,10 +121,10 @@ FEconvert( element, dof)
     /*generate extra nodes*/
     for (ie = 0; ie < FEne; ie++) {
 	nl = FEelt[ ie]->nd;
-	
+
 	/*midside nodes*/
 	for (j = 0; j < 3; j++) {
-	    
+
 	    /* Nothing to do if another triangle already fixed us up */
 	    if (nl[ 3+j] != -1) continue;
 
@@ -149,7 +150,7 @@ FEconvert( element, dof)
 		    FEnd[ FEnn]->cord[1] *= rad/myr;
 		}
 	    }
-		
+
 
 	    /* and solutions */
 	    dp = (double *) FEnd[ FEnn]->user;
@@ -172,10 +173,10 @@ FEconvert( element, dof)
 	    /*fix the corresponding node in the new grid*/
 	    FEelt[ nbj]->nd[ 3+jnbj] = FEelt[ ie]->nd[ 3+j];
 	}
-	
+
 	/*bubble node*/
 	if( FEdesc[ element].nel < 7) continue;
-	
+
 	FEelt[ ie]->nd[ 6] = FEnn;
 	FEnd[ FEnn]->cord[0] = (FEnd[nl[0]]->cord[0] + FEnd[nl[1]]->cord[0] + FEnd[nl[2]]->cord[0])/3;
 	FEnd[ FEnn]->cord[1] = (FEnd[nl[0]]->cord[1] + FEnd[nl[1]]->cord[1] + FEnd[nl[2]]->cord[1])/3;
@@ -186,7 +187,7 @@ FEconvert( element, dof)
 
     return(0);
 }
-
+
 /*-----------------DUMMY_SIL--------------------------------------------
  * Dummy up the silicon elements during oxidation,
  * or the oxide elements in subsequent postprocessing.
@@ -218,11 +219,11 @@ dummy_sil( doSil)
 	}
     }
 }
-		      
 
-	
 
-
+
+
+
 /************************************************************************
  *									*
  *	FE2S4()	- Store computed displacements in Suprem-4		*
@@ -251,16 +252,16 @@ FE2s4( SavWhat)
     for (in = 0; in < nn; in++)
 	for (i = 0; i < 5; i++) nd[ in]->sol[ imptosol[ imps[i]]] = 0;
 
-    
+
     /* Walk over the points */
     for (ip = 0; ip < np; ip++) {
 	an = FEnd[ ip];
 	ap = pt[ ip];
-	
+
 	/* for all the nodes at this point... */
 	for (j = 0; j < ap->nn; j++) {
 	    ja = nd[ ap->nd[ j]];
-	    
+
 	    /* Update velocities of all nodes associated with this point*/
 	    /* Oxidation problems: silicon nodes go opposite ways */
 	    if (ja->mater == Si && SavWhat == SavNoSil)
@@ -303,7 +304,7 @@ FEfree()
 valencies()
 {
     int i, ie, nel, *j, *jj; FEelt_typ *ae;
-    
+
     for (i = 0; i < FEnn; i++) FEnd[ i]->valence = 0;
 
     for (ie = 0; ie < FEne; ie++) {
@@ -316,7 +317,7 @@ valencies()
 	    FEnd[ *j]->valence++;
     }
 }
-	
+
 
 extern float proc_temp;
 

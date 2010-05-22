@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:20:44 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <global.h>
 #include <constant.h>
 #include <dbaccess.h>
@@ -133,9 +134,9 @@ build_edg()
 	    next_tri(ie);
 	}
 	break;
-    
+
     case TWOD :
-	ie = 0; 
+	ie = 0;
 	while( done_tri(ie) ) {
 	    nnb = num_face(ie);
 	    for(i = 0; i < nnb; i++) {

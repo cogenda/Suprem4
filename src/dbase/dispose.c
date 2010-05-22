@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:20:42 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <global.h>
 #include <constant.h>
 #include <geom.h>
@@ -67,9 +68,9 @@ int waste()
     new_edg = salloc( int, ned );
     new_reg = salloc( int, nreg );
 
-    /* 
+    /*
      * Remove dead wood - all removal is done here.
-     * First we actually remove the objects, then fix pointers to them. 
+     * First we actually remove the objects, then fix pointers to them.
      * EVERYTHING THAT IS INDEXED BY NODE POINT OR TRIANGLE CHANGES
      * HERE
      */
@@ -107,8 +108,8 @@ int waste()
 	    }
 	else {
 	    new_reg[ir] = nreg;
-	    rswap = reg[ ir]; 
-	    reg[ ir] = NULL; 
+	    rswap = reg[ ir];
+	    reg[ ir] = NULL;
 	    reg[nreg++] = rswap;
 	    }
 
@@ -122,7 +123,7 @@ int waste()
 	}
 	neigh_dirty = TRUE;
 	for(j = 0; j < num_face(ie); j++) {
-	    if ( tri[ie]->nb[j] > 0 ) 
+	    if ( tri[ie]->nb[j] > 0 )
 		if ((tri[ie]->nb[j] = new_tri[ tri[ie]->nb[j] ]) < 0)
 		    clr( tri[ie], NEIGHB );
 	}
@@ -138,8 +139,8 @@ int waste()
 	if ((nd[in]->pt = new_pt[ nd[in]->pt ]) < 0)
 	    panic("pointer to zombie point");
     }
-	    
-    
+
+
     /*fix up the point structure*/
     for (ip = 0; ip < np; ip++) {
 	/*nodes*/
@@ -161,7 +162,7 @@ lose_impurity( imp)
      int imp;
 {
     int i, j, sol = imptosol[ imp ];
-    
+
     if( sol != -1 ) {
 	for( j = sol; j < n_imp-1; j++) {
 	    for (i = 0; i < nn; i++)
@@ -175,7 +176,7 @@ lose_impurity( imp)
     }
 }
 
-
+
 /*-----------------MeshValid--------------------------------------------
  * Try not to crash due to absence of mesh.
  *----------------------------------------------------------------------*/

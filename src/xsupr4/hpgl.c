@@ -5,16 +5,17 @@
  * hpgl.c 1.2
  */
 
-#define MAPX(state,x) ( (x) + P1X + state->clipminX ) 
+#define MAPX(state,x) ( (x) + P1X + state->clipminX )
 #define MAPY(state,y) ( MAXY - (y) + P1Y - state->clipminY)
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <X11/Xlib.h>
 #include "DataRec.h"
 #include "plotter.h"
 #define MIN(A,B) (A<B)?A:B
-char *malloc();
+
 
 static void hpglText();
 static void hpglSeg();
@@ -71,7 +72,7 @@ hpglInit(stream,width,height,title_family, title_size,
 	mydata *myInfo;
 
 	myInfo = (mydata*)malloc(sizeof(mydata));
-	if(myInfo == NULL) return(NULL);
+	if(myInfo == NULL) return(0);
     *outInfo = hpglInfo;
 	outInfo->area_w = MIN(MAXX,width/25);
 	outInfo->area_h = MIN(MAXY,height/25);
@@ -107,14 +108,14 @@ hpglInit(stream,width,height,title_family, title_size,
     return(1);
 }
 
-static void 
+static void
 hpglText(userState,x,y,text,just,style)
     mydata *userState;    /* my state information  */
     int x,y;    /* coords of text origin */
     char *text; /* what to put there */
     int just;   /* how to justify */
     /* where the origin is relative to where the text should go
-     * as a function of the various values of just 
+     * as a function of the various values of just
 
     T_UPPERLEFT     T_TOP       T_UPPERRIGHT
     T_LEFT          T_CENTER    T_RIGHT
@@ -177,12 +178,12 @@ hpglText(userState,x,y,text,just,style)
 
 
 static int penselect[8] = { PEN1, PEN2, PEN3, PEN4, PEN5, PEN6, PEN7, PEN8};
-static int lineselect[8] = { LINE1, LINE2, LINE3, LINE4, LINE5, LINE6, 
+static int lineselect[8] = { LINE1, LINE2, LINE3, LINE4, LINE5, LINE6,
         LINE7, LINE8};
 
 
 
-static void 
+static void
 hpglSeg(userState,ns,segs,width,style,lappr,color)
     mydata *userState;    /* my state information (not used) */
     int ns;         /* number of segments */
@@ -262,10 +263,10 @@ hpglSeg(userState,ns,segs,width,style,lappr,color)
 	fprintf(userState->plotterFile,"PU;");
 }
 
-static char *markselect[8] = { MARK1, MARK2, MARK3, MARK4, MARK5, MARK6, 
+static char *markselect[8] = { MARK1, MARK2, MARK3, MARK4, MARK5, MARK6,
         MARK7, MARK8};
 
-static void 
+static void
 hpglDot(userState,x,y,style,type,color)
     mydata *userState;    /* my state information (not used) */
     int x,y;    /* coord of dot */
@@ -297,7 +298,7 @@ hpglDot(userState,x,y,style,type,color)
     }
 }
 
-static void 
+static void
 hpglEnd(userState)
     mydata *userState;    /* my state information (not used) */
 

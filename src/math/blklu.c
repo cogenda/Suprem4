@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 10:44:09 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #ifdef ALLIANT
 #include <cncall.h>
@@ -326,7 +327,7 @@ int *loff;
 		    j = aj - icol;
 
 		    il[ ilkp1++ ] = j;
-		    
+
 		    if (ilkp1 >= ilmax-10) {
 			/* Ooops. Sure hope the caller malloc'ed il... */
 			ilmax *= 1.5;
@@ -390,7 +391,7 @@ double rhs[];	/*the right hand side vector*/
 	    rhs[il[j]] -= l[j] * a;
 	}
     }
-    
+
     /*$dir no_recurrence*/
 #pragma ivdep
     for(i = 0; i < n; i++) rhs[i] *= l[i];
@@ -400,7 +401,7 @@ double rhs[];	/*the right hand side vector*/
 	/*$dir no_recurrence*/
 	endloop = il[i+1];
 	a = rhs[i];
-	for(j = il[i]; j < endloop; j++) { 
+	for(j = il[i]; j < endloop; j++) {
 	    a -= rhs[il[j]] * l[j+off];
 	}
 	rhs[i] = a;
@@ -414,7 +415,7 @@ dzero( a, n)
     int n;
 {
     int i;
-    
+
     /*$dir no_recurrence*/
     for (i = 0; i < n; i++) a[i] = 0;
 }

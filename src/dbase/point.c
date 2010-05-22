@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:21:10 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <global.h>
 #include <constant.h>
 #include <geom.h>
@@ -70,7 +71,7 @@ char *alloc_pt()
 /*
  *  Create a point out of the minimal information required for it.
  */
-mk_pt( nc, cord ) 
+mk_pt( nc, cord )
 int nc;
 float *cord;
 {
@@ -133,4 +134,4 @@ pt_to_node()
     /*step through the node list and build the pt to node stuff*/
     for(i = 0; i < nn; i++) add_nd_pt( pt_nd(i), i );
 }
-	
+

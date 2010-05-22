@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 15:40:58 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "global.h"
 #include "constant.h"
 #include "dbaccess.h"
@@ -44,8 +45,8 @@ int spflag;
     debug2 = FALSE;
     ck_clock(ir, TRUE);
 
-  /* 
-   * Save values of nreg Storage beyond original 
+  /*
+   * Save values of nreg Storage beyond original
    * limits is used for temporary stack.
    */
     save_nreg = nsreg;
@@ -69,7 +70,7 @@ int spflag;
     /*this routine makes nice grid along the boundary*/
     if ( (sreg[nsreg-1]->len > 5) && bflag ) {
 	nr = nsreg-1;
-	for(f=1, bp=sreg[nr]->bnd; (bp != sreg[nr]->bnd)||f; f=0, bp=bp->next) 
+	for(f=1, bp=sreg[nr]->bnd; (bp != sreg[nr]->bnd)||f; f=0, bp=bp->next)
 	    if ( ask(edg[bp->edge], ESURF ) ) div_edg(bp->edge);
     }
 
@@ -79,7 +80,7 @@ int spflag;
 
 	nr = nsreg - 1;
 	if (debug2) reg_pl(nr);
-	
+
       /*
        * If the next region is a triangle, save it.
        * The triangle gets region number ir.
@@ -90,11 +91,11 @@ int spflag;
 	    free_skel( nr );
 	    split = FALSE;
 	    }
-      
+
       /*...Special-case quadrilaterals */
 	else if (sreg[nr]->len == 4) {
-	    bp = quadsplit(sreg[nr]);	    
-	    if (!bp) 
+	    bp = quadsplit(sreg[nr]);
+	    if (!bp)
 		panic("Error in quadsplit");
 	    ie = sp_reg (bp->prev, bp->next, NULL);
 	    split = TRUE;
@@ -114,12 +115,12 @@ int spflag;
 	    }
 
       /*
-       * Well nothing else worked, so we cut off the least awful 
+       * Well nothing else worked, so we cut off the least awful
        * triangle we can.
        */
 	 else {
-	    bp = chop(sreg[nr],TRUE); 	       
-	    if (!bp) 
+	    bp = chop(sreg[nr],TRUE);
+	    if (!bp)
 		panic("error in chop");
 	    ie = sp_reg (bp->prev, bp->next, NULL);
 	    split = TRUE;
@@ -130,14 +131,14 @@ int spflag;
 	  reg_pl(nr);
       }
     }
-    
+
     return;
 }
 
 
 
 /*-----------------CK_CLOCK---------------------------------------------
- * Initialize and check counter-clockwise structures for region # ir. 
+ * Initialize and check counter-clockwise structures for region # ir.
  *----------------------------------------------------------------------*/
 int ck_clock(ir, fl)
 int ir;
@@ -159,7 +160,7 @@ int fl;
 	n0 = nd_edg(ep->edge,0);
 	enext = edg[ep->next->edge];
 	eprev = edg[ep->prev->edge];
-	if (((n1==enext->nd[1]) || (n1==enext->nd[0])) && 
+	if (((n1==enext->nd[1]) || (n1==enext->nd[0])) &&
 	    ((n0==eprev->nd[1]) || (n0==eprev->nd[0])))
 	   ep->iscc = TRUE;
 
@@ -179,7 +180,7 @@ int fl;
     }
 
     if ( mode == ONED ) {
-	if ( (cnt != 0) && (cnt != 2) ) 
+	if ( (cnt != 0) && (cnt != 2) )
 	    panic("Region discontinuous");
 	else
 	    return;
@@ -188,9 +189,9 @@ int fl;
     if ( !fl ) return;
 
 
-    /* 
+    /*
      * B. Calculate internal angles. Sum of external angles
-     *    should be 2*pi. 
+     *    should be 2*pi.
      */
     tang = 0;
     for(f=1,ep=bnd ; (ep!=bnd) || f; ep=ep->next,f=0) {
@@ -225,7 +226,7 @@ int fl;
     /* C. Sort angles by size. */
     ptrs = salloc( struct LLedge *, ned );
 
-    for (no=0,f=1,ep=bnd; (ep != bnd)|| f; ep=ep->next,f=0) 
+    for (no=0,f=1,ep=bnd; (ep != bnd)|| f; ep=ep->next,f=0)
 	ptrs[no++]=ep;
 
     qsort(ptrs, no, sizeof(struct LLedge *), acomp);
@@ -240,11 +241,11 @@ int fl;
 
     free(ptrs);
     return;
-	
+
 } /* End of ck_clock. */
 
-/* 
- * ACOMP - comparison routine for quicksort. 
+/*
+ * ACOMP - comparison routine for quicksort.
  */
 int acomp (lep1, lep2)
     struct LLedge **lep1,**lep2;
@@ -269,14 +270,14 @@ free_skel( nr )
     /*...And dispose of the region. */
     bnd = sreg[nr]->bnd;
     for (f=1, bp=bnd; (bp != bnd) || f; bp = nbp, f=0) {
-	 nbp = bp->next; 
+	 nbp = bp->next;
 	 sub_skel_edg(bp->edge, nr);
 	 free(bp);
     }
     free(sreg[nr]);
     sreg[nr] = NULL;
 
-    for(i = f = 0; f < nsreg; f++) 
+    for(i = f = 0; f < nsreg; f++)
 	if (sreg[f] != NULL) {
 	    sreg[i] = sreg[f];
 	    new_sreg[f] = i++;

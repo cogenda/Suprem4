@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:39:01 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"

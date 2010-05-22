@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 10:44:14 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -34,7 +35,7 @@
  *									*
  ************************************************************************/
 genrow( ia, aoff, irow, jrow )
-int *ia; 
+int *ia;
 int aoff;
 int *irow;
 int *jrow;
@@ -58,7 +59,7 @@ int *jrow;
     for(row = nn-1; row >= 0; row--) {
 	for(j = ia[row]; j < ia[row+1]; j++) {
 	    col = ia[j];
-	    
+
 	    /*update the links add at beginning*/
 	    links[el] = links[col];
 	    links[col] = el;

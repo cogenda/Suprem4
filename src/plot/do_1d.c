@@ -17,6 +17,8 @@
 /*   Last Modification : 7/3/91 08:38:48 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -68,7 +70,7 @@ int byarc;			/* whether to go by arclength or x */
 	case YSEC : l[0] = 0; l[1] = 2; l[2] = 1; break;
 	case ZSEC : l[0] = 0; l[1] = 1; l[2] = 2; break;
 	}
-	
+
 	/*step through all the triangles*/
 	for( t = 0; t < ne; t++ ) {
 	    if (!leaf (tri[t])) continue;
@@ -96,15 +98,15 @@ int byarc;			/* whether to go by arclength or x */
 	    }
 	}
 
-        /*sort the data*/ 
+        /*sort the data*/
         qsort(data, count, sizeof(struct d_str), d_compar);
-	    
+
 	/*eliminate the duplicates*/
 	sprintf(a, "%16e\t%16e", data[0].x, data[0].y);
 
 	for(vmax = count, i = count = 1; i < vmax; i++) {
 	    sprintf(b, "%16e\t%16e", data[i].x, data[i].y);
-	    
+
 	    if ( (strcmp(a, b) != 0) || (data[count-1].mat != data[i].mat) ) {
 		data[count].x = data[i].x;
 		data[count].y = data[i].y;
@@ -128,7 +130,7 @@ int byarc;			/* whether to go by arclength or x */
 	/*convert regions back into materials*/
 	for(i = 0; i < count; i++) data[i].mat = mat_reg(data[i].mat);
     }
-    
+
     /* Looking for material interfaces */
     else if ( ptype == BND ) {
 	seeds = FindItf( mat1, mat2);
@@ -145,7 +147,7 @@ int byarc;			/* whether to go by arclength or x */
 	    data[ count].y = z[ in];
 	    data[ count].mat = nd[ in]->mater;
 	    count++;
-		
+
 	    /* A heuristic to make both sides of an interface look the same */
 	    sign = 1;
 	    in = tri[ seeds[ i]->ie]->nd[ (seeds[ i]->j+1)%3];
@@ -168,11 +170,11 @@ int byarc;			/* whether to go by arclength or x */
 	}
 	free( seeds);
     }
-	
+
     /*return the number of data points*/
     return( count );
 }
-	
+
 
 d_compar(f1, f2)
 struct d_str *f1, *f2;
@@ -240,8 +242,8 @@ AddItfEdge( ie, j, mat1, mat2, touched)
     /* Is this edge desired? */
     if( ie < 0 || mat_reg(reg_tri(ie)) != mat1) return(0);
     ib = tri[ ie]->nb[ j];
-    if (((ib < 0) && (ib == mat2)) || 
-	((ib >= 0) && (mat_reg(reg_tri(ib)) == mat2))) 
+    if (((ib < 0) && (ib == mat2)) ||
+	((ib >= 0) && (mat_reg(reg_tri(ib)) == mat2)))
     {
 	/* Yes, is it already there? */
 	if (touched[ 3*ie+j])
@@ -258,7 +260,7 @@ AddItfEdge( ie, j, mat1, mat2, touched)
 	new->left = AddItfEdge( oje, 3-k-kk, mat1, mat2, touched);
 	trotate( ie, (j+1)%3, 0, &je, &oje, &k, &kk);
 	new->right = AddItfEdge( oje, 3-k-kk, mat1, mat2, touched);
-	
+
 	return( new);
     }
     else return(0);

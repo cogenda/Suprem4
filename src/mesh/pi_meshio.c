@@ -21,6 +21,8 @@
 /*   Last Modification : 7/3/91 08:30:50  */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
 
@@ -48,7 +50,7 @@ static int corrmat[MAXMAT] =
 {-32767, -1,    -2,  1, -32767, -32767, -32767, -32767, -32767};
 #define RECOG(mater) (corrmat[ mater ] != -32767)
 
-
+
 /*-----------------pi_write---------------------------------------------
  * write a pisces file
  *----------------------------------------------------------------------*/
@@ -63,7 +65,7 @@ pi_write( name, show)
     char *pi_elect(), *pi_dop(), *pi_mat();
     FILE *lu;
 
-    if ( mode != TWOD ) 
+    if ( mode != TWOD )
 	fprintf(stderr,"pi_write:can only export two dimensional structures\n");
 
     /* If the file is stuck it ain't worth a <beep> */
@@ -85,7 +87,7 @@ pi_write( name, show)
     /* Points */
     for( i = 0; i < np; i++)
         if (Ppt[ i] >= 0)
-            fprintf( lu, "%16e %16e %16e %16e\n", 
+            fprintf( lu, "%16e %16e %16e %16e\n",
 		    cordinate(i,0), cordinate(i,1), Pr1[i], Ptconc[i]);
 
     /* Triangles */
@@ -114,12 +116,12 @@ pi_write( name, show)
 
     /* Tell the electrode numbers */
     ShowElect( show, Pnelect, Pnb, Pnbc, Pietype);
-    
+
     free(Pr1); free(Ptconc); free(Pnbc); free(Pietype); free(Ppt);
     return(0);
 }
 
-
+
 /*-----------------PI_ELECT---------------------------------------------
  * make up electrode numbers the way pisces wants them (list vector)
  *----------------------------------------------------------------------*/
@@ -145,10 +147,10 @@ char *pi_elect( nb, nelect, nbc, ietype)
 	    r_to_elec[ i] = -1;
     if (Pnelect+1 > NPE)
 	return("Too many electrodes found");
-    
+
     /* Now list points which face metal, poly or backside */
     Pnelect0 = Pnelect;
-    
+
     /* Each recognized triangle */
     for (i = 0; i < ne; i++) {
 	if (!RECOG(mat_tri(i))) continue;
@@ -169,7 +171,7 @@ char *pi_elect( nb, nelect, nbc, ietype)
 	    if (bcode <= 0) continue;
 
 	    /* Either way: remember nodes on face */
-	    for(k = 0; k < num_nd_fc(i,j); k++) 
+	    for(k = 0; k < num_nd_fc(i,j); k++)
 		tmp[ pt_nd(nd_face_ele(i,j,k)) ] = bcode;
 	}
     }
@@ -188,7 +190,7 @@ char *pi_elect( nb, nelect, nbc, ietype)
     return(0);
 }
 
-
+
 /*-----------------ShowElect--------------------------------------------
  * @ needs to know how the pisces electrodes were numbered
  *----------------------------------------------------------------------*/
@@ -198,7 +200,7 @@ ShowElect(show, Pnelect, Pnb, Pnbc, Pietype)
     double xlo[NPE], xhi[NPE], ylo[NPE], yhi[NPE];
     int i, ie; float *ac, txmin, txmax, tymin, tymax, xslop, yslop;
     static char CommandBuf[ BUFSIZ];
-    
+
     /* Initialize bounds */
     for (ie = 1; ie <= Pnelect; ie++) {
 	xlo[ie] = MAXFLOAT; ylo[ie] = MAXFLOAT;
@@ -210,12 +212,12 @@ ShowElect(show, Pnelect, Pnb, Pnbc, Pietype)
 	dev_lmts(&txmin, &txmax, &tymin, &tymax);
 	txmin *= 1e4; txmax *= 1e4; tymin *= 1e4; tymax *= 1e4;
 	xslop = 0.1*(txmax-txmin);
-	yslop = 0.1*(tymax-tymin); 
+	yslop = 0.1*(tymax-tymin);
 	sprintf( CommandBuf, "plot.2 bound fill x.mi=%f x.ma=%f y.mi=%f y.ma=%f",
 		txmin - xslop, txmax + xslop, tymin - yslop, tymax + yslop);
 	do_str( CommandBuf);
     }
-    
+
     /* Each electrode point */
     for (i = 0; i < Pnb; i++) {
         ac = cord_arr( Pnbc[ i] );
@@ -225,7 +227,7 @@ ShowElect(show, Pnelect, Pnb, Pnbc, Pietype)
 	    sprintf( CommandBuf, "label x=%e y=%e label=%d\n", ac[X]*1e4,ac[Y]*1e4,ie);
 	    do_str(CommandBuf);
 	}
-		
+
 	/* Does it stretch its electrode box? */
 	if (ac[X] < xlo[ ie]) xlo[ ie] = ac[X];
 	if (ac[X] > xhi[ ie]) xhi[ ie] = ac[X];
@@ -238,8 +240,8 @@ ShowElect(show, Pnelect, Pnb, Pnbc, Pietype)
 	printf( "Electrode %d: xmin %8.3f xmax %8.3f ymin %8.3f ymax %8.3f\n",
 	       ie, 1e4*xlo[ ie], 1e4*xhi[ ie], 1e4*ylo[ ie], 1e4*yhi[ ie]);
 }
-    
-
+
+
 /*-----------------PI_DOP-----------------------------------------------
  *----------------------------------------------------------------------*/
 char *pi_dop( r1, tconc)
@@ -276,18 +278,18 @@ char *pi_dop( r1, tconc)
 	if (Ptconc[ i] == 0) Ptconc[ i] = 1.0;
 	if (Pr1   [ i] == 0) Pr1   [ i] = 1.0;
     }
-    
+
     free( tmp);
     return(0);
 }
-
+
 /*-----------------Pi-mat-----------------------------------------------
  *----------------------------------------------------------------------*/
 char *pi_mat( Pnp, Pne, Pnmat, Ppt, Preg)
      int *Pnp, *Pne, *Pnmat, **Ppt, *Preg;
 {
     int i, j;
-    
+
     /* Count the number of regions with reconized materials */
     *Pnmat = 0;
     for (i = 0; i < num_reg; i++)
@@ -305,7 +307,7 @@ char *pi_mat( Pnp, Pne, Pnmat, Ppt, Preg)
 	    for (j = 0; j < num_vert(i); j++)
 		(*Ppt)[ pt_nd(vert_tri(i,j)) ] = 1;
 
-    
+
     /* Assign node and triangle numbers by counting up from 1 */
     for (*Pnp = 0, i = 0; i < np; i++)
 	if ((*Ppt)[ i] > 0) (*Ppt)[ i] = (*Pnp)++;
@@ -315,7 +317,7 @@ char *pi_mat( Pnp, Pne, Pnmat, Ppt, Preg)
     return(0);
 }
 
-
+
 /*-----------------REFLECT----------------------------------------------
  * Reflect a grid around its left or right edge.
  *----------------------------------------------------------------------*/
@@ -393,7 +395,7 @@ reflect_grid( sign, xy)
 	for(j = 0; j < num_vert(i); j++) vl[j] = nodmap[ vert_tri(i,j) ];
 	(void)mk_ele_nd(num_vert(j), vl, reg_tri(i) );
     }
-	    
+
     /* Get rid of the duplicate interface nodes */
     waste();
 

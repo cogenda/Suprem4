@@ -14,6 +14,7 @@
 /*   Last Modification : 3/20/91  09:25:42 */
 
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 #include "check.h"
 #include "key.h"
@@ -54,6 +55,8 @@
 %left EQU NOTEQU
 %left GRT LES GRTE LESE
 %left NOT
+
+
 
 %%
 
@@ -315,8 +318,6 @@ struct bool_exp *left, *right;
     return(t);
 }
 
-int yyerror()
-{ return 1; }
+int yyerror() { return (1); }
 
-int yywrap()
-{ return -1; }
+int yywrap(void) { return (1); }

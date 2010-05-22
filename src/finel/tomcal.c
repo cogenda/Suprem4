@@ -1,9 +1,7 @@
-#include <global.h>
+#include <stdlib.h>
+#include "global.h"
 
-tomcal( ia, reord, lvls)
-    int *ia;
-    int *reord;
-    int *lvls;
+void tomcal( int *ia, int *reord, int *lvls)
 {
     int neq, i, nnb, *adjstk, *check;
 

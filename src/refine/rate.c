@@ -11,6 +11,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
@@ -53,7 +54,7 @@ double time;
 	if ( rate[i] > maxr ) maxr = rate[i];
 	for(j = 0; j < MAXMAT; j++) if ( rate[i] > rate[j] ) prio[i]++;
     }
-	
+
 
     /*get some temporary space*/
     done = salloc( int, nn );
@@ -259,7 +260,7 @@ int *prio;	/*the material priority*/
 	break;
     }
 }
-	
+
 
 /************************************************************************
  *									*
@@ -279,7 +280,7 @@ int t1;
     double dir[MAXDIM];
 
     fj = -1;
-    for(i = 0; i < nedg; i++) 
+    for(i = 0; i < nedg; i++)
 	if ( tri[t1]->nb[i] == t2 ) fj = i;
 
     /*get the points on either end of the shared segment*/

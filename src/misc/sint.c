@@ -10,6 +10,7 @@
 /*   Last Modification : 7/3/91  08:41:17 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 extern double erf(), erfc();
 #include <ctype.h>
@@ -68,32 +69,32 @@ float val2;
 
     /*x and y functions work similarly*/
     if ( (type == X) || (type == Y) ) {
-	
+
 	/*run up the list and find the intersection*/
 	for(i = count-1; ((data[i].y > val2) == (data[i-1].y > val2)) && (i > 1); i--);
 
 	/*interpolate to the answer*/
-	if ( data[i].y == data[i-1].y ) 
+	if ( data[i].y == data[i-1].y )
 	    ret = data[i].x;
 	else
 	    ret = (val2-data[i-1].y) * (data[i].x-data[i-1].x) / (data[i].y-data[i-1].y) +
 	      data[i-1].x;
-	
+
 	ret = ret * 1.0e4;
     }
     else {
 	val2 *= 1.0e-4;
-	
+
 	/*run up the list and find the intersection*/
 	for(i = count-1; ((data[i].x > val2) == (data[i-1].x > val2)) && (i > 1); i--);
 
 	/*interpolate to the answer*/
-	if ( data[i].x == data[i-1].x ) 
+	if ( data[i].x == data[i-1].x )
 	    ret = data[i].x;
 	else
 	    ret = (val2-data[i-1].x) * (data[i].y-data[i-1].y) / (data[i].x-data[i-1].x) +
 	      data[i-1].y;
-	
+
     }
     sfree(data);
     return( ret );
@@ -127,9 +128,9 @@ float loc;
 	data = salloc( struct d_str, 2*ne );
 
     /*get a one dimensional line profile*/
-    if ( mode == TWOD ) 
+    if ( mode == TWOD )
 	count = do_1d( XSEC, loc*1.0e-4, data, -1, -1, 0 );
-    else 
+    else
 	count = do_1d( YSEC, 0.0, data, -1, -1, 0 );
 
     /*split out the material numbers*/

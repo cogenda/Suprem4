@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:20:59 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <global.h>
 #include <constant.h>
 #include <dbaccess.h>
@@ -28,7 +29,7 @@ add_list( l, item )
 struct list_str *l;
 int item;
 {
-	
+
     /*check for space consideration*/
     if ( l->num >= l->all ) {
 	if ( l->all == 0 ) {
@@ -75,9 +76,9 @@ int item;
 
     for(i = 0; (i < l->num) && (l->list[i] != item); i++);
 
-    if ( i == l->num ) 
+    if ( i == l->num )
 	panic("subtracting nonexistant value from list");
-    
+
     for(j = i; j < l->num-1; j++) l->list[j] = l->list[j+1];
 
     l->num--;
@@ -90,9 +91,9 @@ int n, p;
 
     for(i = 0; (i < pt[p]->nn) && (pt[p]->nd[i] != n); i++);
 
-    if ( i == pt[p]->nn ) 
+    if ( i == pt[p]->nn )
 	panic("subtracting nonexistant node from point");
-    
+
     for(j = i; j < pt[p]->nn; j++) pt[p]->nd[j] = pt[p]->nd[j+1];
 
     pt[p]->nn--;

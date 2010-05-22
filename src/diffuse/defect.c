@@ -10,6 +10,7 @@
 /*   Last Modification : 7/3/91 10:49:58 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -128,7 +129,7 @@ double *dequ;
 	/*compute the concentration of these guys*/
 	num  = Dfrac[f][mat][CN]
 		+ ( Dfrac[f][mat][CM] + ( Dfrac[f][mat][CDM]
-			+ Dfrac[f][mat][CTM] * c ) * c ) * c 
+			+ Dfrac[f][mat][CTM] * c ) * c ) * c
 		+ ( Dfrac[f][mat][CP] + ( Dfrac[f][mat][CDP]
 			+ Dfrac[f][mat][CTP] / c ) / c ) / c ;
 	equil[i] = Cstar(f,mat) * num / den;

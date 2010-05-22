@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:20:46 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "math.h"
 #include "global.h"
 #include "constant.h"
@@ -44,13 +45,13 @@ int flip()
 	(done = scalloc(int, 1+ned))
        )) return(-1);
 
-    for (it=0; it < ned; it++) todo[it] = TRUE;	
+    for (it=0; it < ned; it++) todo[it] = TRUE;
 
   /*...Smoothing loop. */
     count = 0;
     do {
 	all_done = TRUE;
-	for (it=0; it < ned; it++) {	
+	for (it=0; it < ned; it++) {
 	    done[it] = !todo[it];
 	    todo[it] = FALSE;
 	    }
@@ -73,9 +74,9 @@ int flip()
 		all_done = FALSE;
 
 		/*mark all neighbor edges as needing checking*/
-		for(j = 0; j < num_edge_nd( nd_edg(it,0) ); j++) 
+		for(j = 0; j < num_edge_nd( nd_edg(it,0) ); j++)
 		    todo[ edge_nd( nd_edg(it,0), j) ] = TRUE;
-		for(j = 0; j < num_edge_nd( nd_edg(it,1) ); j++) 
+		for(j = 0; j < num_edge_nd( nd_edg(it,1) ); j++)
 		    todo[ edge_nd( nd_edg(it,1), j) ] = TRUE;
 	    }
 	}
@@ -156,7 +157,7 @@ int it, tp, tq;
     /*update the neighbors of the triangles*/
     for (tr=tp; tr==tp || tr==tq; tr += tq-tp) { /* for each of tp, tq */
 	if ((fixme = tri[tr]->nb[0]) < 0) continue;
-	for (i = 0; i < 3; i++) 
+	for (i = 0; i < 3; i++)
 	    if (tri[fixme]->nb[i] == tp+tq-tr) tri[fixme]->nb[i] = tr;
     }
 

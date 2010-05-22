@@ -12,11 +12,12 @@
 **----------------------------------------------------------------------
 **/
 
-/*	string_offset.c	
+/*	string_offset.c
  *	goodwin chin
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "global.h"
 #include "constant.h"
 #include "refine.h"
@@ -27,7 +28,6 @@ char *infile;
 struct line **poffset_array;
 {
     extern char *fgets();
-    extern char *malloc();
     char *buffer;
     int nump;
     float xcord;
@@ -35,16 +35,16 @@ struct line **poffset_array;
     struct line *offset_array;
     int maxop;
     FILE *inf;
-  
+
     maxop = 100;
     *poffset_array = salloc( struct line, maxop );
     offset_array = *poffset_array;
 
-  
+
     if ((buffer = malloc(BUFFERSIZE)) == NULL)
 	panic("can't malloc space for buffer\n");
- 
-    if ((inf = fopen(infile, "r")) == NULL)  
+
+    if ((inf = fopen(infile, "r")) == NULL)
 	panic("can't open for read in gen_file_offset\n");
     else  {
 

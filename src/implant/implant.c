@@ -41,15 +41,15 @@
 implant( par, param )
 char *par;
 int param;
-{ 
+{
     register int i, j;
-    int imp, impa, ion, sol; 
+    int imp, impa, ion, sol;
     int isol, vsol;
     int damage;
     double dose, energy;
     int before[4], after[4];
     double ang;
-    
+
     if( InvalidMeshCheck()) return -1;
 
     /*get the impurity number of the place to put the implant*/
@@ -61,9 +61,9 @@ int param;
     energy    = get_float( param, "energy" );
 
     /*get the model type for this implant*/
-    if ( get_bool( param, "pearson" ) ) 
+    if ( get_bool( param, "pearson" ) )
         imp_model = PEARS;
-    else if ( get_bool( param, "gaussian" ) ) 
+    else if ( get_bool( param, "gaussian" ) )
 	imp_model = GAUSS;
 
     /*check for override of the model values*/

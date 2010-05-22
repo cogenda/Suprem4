@@ -13,6 +13,7 @@
 /*   Last Modification : 8/18/89  16:35:37 */
 
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 #include "check.h"
 #include "key.h"
@@ -40,7 +41,7 @@ write_list(param, fd)
 struct par_str **param;
 int fd;
 {
-    
+
     while ( param[0]->name[0] != '\0' ) {
 	/*process this parameter*/
 	if (write_param( param[0], fd ) == -1)
@@ -73,7 +74,7 @@ write_boolean(bexp, fd)
 struct bool_exp *bexp;
 int fd;
 {
-    
+
     /*first write out the current structure*/
     write(fd, &(bexp->type), sizeof(int));
 

@@ -12,6 +12,8 @@
 /*   Last Modification : 7/3/91  08:28:17 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include "global.h"
 #include "shell.h"
@@ -29,9 +31,9 @@ do_set(par, on)
 char *par;
 int on;
 {
-    
+
     char *s;
-    
+
     /*first test for print or set mode*/
     if ( par == NULL ) {
 	if (interactive)
@@ -43,7 +45,7 @@ int on;
 	printf("prompt\t%s\n", prompt);
 	return;
 	}
-    
+
     /*handle the parsing of the others*/
 
     /*skip leading white space*/
@@ -76,5 +78,5 @@ int on;
 	}
     return;
 }
-    
+
 

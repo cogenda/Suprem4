@@ -17,6 +17,8 @@
 /*   Last Modification : 7/3/91 08:12:38 */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include "global.h"
 #include "sysdep.h"
@@ -65,9 +67,9 @@ float *dval;
     }
 
     /*if we do not have either leading digits or decimal digits, error*/
-    if ( ! (leading || decimal) ) 
+    if ( ! (leading || decimal) )
 	return( NULL );
-    
+
     /*if the next char is an e, we have an exponential portion*/
     if ( *s == 'e' ) {
 	s++;	/*skip over the exponent character*/
@@ -101,7 +103,7 @@ char *name;
     int ambig;
 
     for( ; *pars != NULL; pars++ ) {
-	
+
 	/*check the name in this parameter*/
         if (Substring(pars[0]->name, name)) {
 	    if (ret[0] != NULL) {
@@ -124,7 +126,7 @@ char *name;
 	return(0);
 }
 
-	    
+
 
 #include "expr.h"
 
@@ -147,7 +149,7 @@ struct par_str **parloc;
     int err;
     char *s;
     struct vec_str *rexp;
-    
+
     /*split the name into its halves*/
     loc = (char *)index( name, '=' );
     if ( loc != NULL ) {
@@ -167,7 +169,7 @@ struct par_str **parloc;
 	    fprintf(stderr, "parameter %s does not exist for this command\n", par_name);
 	return(-1);
     }
-    
+
     /*make sure the par_value is cool for the type of parameter*/
     switch(parloc[0]->type & ~MASK) {
     case REAL : if ( (s = parse_expr(par_value, &rexp)) != NULL ) {
@@ -249,7 +251,7 @@ struct par_str *par;
     int i;
 
     err_ret = 0;
-    for(i = 0; i < NUMPAR; i++) 
+    for(i = 0; i < NUMPAR; i++)
 	argv[i] = NULL;
 
     /*make sure card can be specified at this point*/
@@ -270,7 +272,7 @@ struct par_str *par;
     /*check out the results with respect to the param list*/
     if ( par->param != NULL ) {
 	for(i = 0; argv[i] != NULL; i++) {
-	    if (verify(argv[i], par->param, &value, &indx) == -1) 
+	    if (verify(argv[i], par->param, &value, &indx) == -1)
 		err_ret = -1;
 	    else  {
 		indx->type = indx->type | SPECIFIED;
@@ -289,13 +291,13 @@ struct par_str *par;
     /*do this for specified parameters first*/
     if ( par->param != NULL )
 	if (error_check(par->param, TRUE) == -1) err_ret = -1;
-    
+
     /*set the top card to zero*/
     if (err_ret == 0) {
 	par->value.ival = TRUE;
 	par->type = par->type & ~ SPECIFIED;
     }
-    for(i = 0; argv[i] != NULL; i++) sfree(argv[i]);     
+    for(i = 0; argv[i] != NULL; i++) sfree(argv[i]);
 
     /*return error status*/
     return( err_ret );
@@ -315,7 +317,7 @@ unspecify( par )
 struct par_str **par;
 {
     for(; par[0] != NULL; par++) {
-	
+
 	par[0]->type = par[0]->type & ~ SPECIFIED;
 
 	/*if sub parameters, recursively handle them*/

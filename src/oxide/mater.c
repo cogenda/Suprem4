@@ -10,6 +10,7 @@
 /*   Last Modification : 7/3/91  10:52:32 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include "global.h"

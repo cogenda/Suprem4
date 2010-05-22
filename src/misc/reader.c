@@ -12,6 +12,8 @@
 /*   Last Modification : 7/3/91  08:41:16 */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <fcntl.h>  /*not neeeded for lib version*/
 #include "global.h"
@@ -44,7 +46,7 @@ FILE *fd;
 {
     static int temp;
     int eof;
-       
+
     while ( TRUE ) {
 	/*begin by reading the level of the next command*/
 	if ( (eof = fread(&temp, sizeof(int),1,fd)) != 1) {
@@ -54,7 +56,7 @@ FILE *fd;
 	    else
 		return( eof );
 	}
-	
+
 	if ( temp == level ) {
 	    /*we are at the same level*/
 	    par++;
@@ -67,7 +69,7 @@ FILE *fd;
 	    /*we are going somewhere, either up or down*/
 	    if ( temp < level )
 		return(1);
-	    
+
 	    /*set it up for a depth move*/
 	    level++;
 	    par[0]->param = (struct par_str **)calloc(NUMPAR+1, sizeof(int *));
@@ -114,7 +116,7 @@ FILE *fd;
     char buffer[1024];
     int eof, i;
     char c;
-    
+
     /*begin by reading all of the fixed length crap*/
     if ( (eof = fread(par->name, 12, 1, fd)) != 1)
 	return( eof );
@@ -192,17 +194,17 @@ FILE *fd;
     char buffer[20];
 
     /*read out the type*/
-    if (( eof = fread(&temp, sizeof(int), 1, fd)) != 1) 
+    if (( eof = fread(&temp, sizeof(int), 1, fd)) != 1)
 	return( eof );
-    
+
     /*check for the expression case*/
     if (temp == 0)
 	return(1);
-    
+
     /*malloc space for the boolean we have*/
     bexp[0] = (struct bool_exp *)calloc(1, sizeof(struct bool_exp) );
     bexp[0]->type = temp;
-    
+
     /*write out the value based on the type of data stored*/
     switch ( bexp[0]->type ) {
     case OPER   : /*write out the four byte descriptor*/

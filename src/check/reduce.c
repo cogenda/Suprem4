@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:12:31 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <ctype.h>
 #include "global.h"
@@ -82,7 +83,7 @@ struct tok_str *a, *b, *c, *d;
 		EQUIVALENCE(tmp, a);
 		tmp->right = b->value.bval;
 		break;
-    case EXPR : 
+    case EXPR :
 		EQUIVALENCE(tmp, b);
 		tmp->left = a->value.bval;
 		tmp->right = c->value.bval;
@@ -134,7 +135,7 @@ reduce()
 		case OP1 :  /*if preceeding operator is an operator - unary*/
 			    if (prev->type & (OP1|OP2|OP3|TOPSTK|FN|VFN|LPAR)) {
 				/*reduce expr | op1 expr */
-				expr_reduce(top, &input_token, NULL, 
+				expr_reduce(top, &input_token, NULL,
 							      &input_token);
 				st_pnt--;
 				return( TRUE );
@@ -162,7 +163,7 @@ reduce()
 		break;
     case EOI  : /*end of input*/
     case OP1  : /*check way back for these guys*/
-		if ((top->type == EXPR ) && ((prev->type == OP1)||(prev->type == OP2)) && 
+		if ((top->type == EXPR ) && ((prev->type == OP1)||(prev->type == OP2)) &&
 					    (old->type == EXPR)) {
 		    expr_reduce(old, prev, top, old);
 		    st_pnt -= 2;
@@ -177,7 +178,7 @@ reduce()
 			return( TRUE );
 		    }
 		    /*go after two valued functions*/
-		    if ( (prev->type==COM)&&(old->type==EXPR)&& 
+		    if ( (prev->type==COM)&&(old->type==EXPR)&&
 			 (old1->type==LPAR)&&((old2->type==FN)||(old2->type==VFN))) {
 			 expr_reduce( old2, old, top, &input_token );
 			 st_pnt -= 5;
@@ -201,4 +202,4 @@ reduce()
     return( FALSE );
 
 }
-		    
+

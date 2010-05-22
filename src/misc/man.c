@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 #include "sysdep.h"
 
 /************************************************************************
@@ -40,7 +41,7 @@ int param;
     /*figure out where to look for the manual directory*/
     if (( dir = (char *)getenv("MANDIR") ) == NULL)
 	dir = MANDIR;
-    
+
     strcpy(filename, dir);
     strcat(filename, "/");
 
@@ -67,9 +68,9 @@ int param;
     /*open up the command more to write to*/
     more = (FILE *)popen( PAGER, "w" );
 
-    while ((c = getc(help)) != EOF) 
+    while ((c = getc(help)) != EOF)
 	putc(c, more);
-    
+
     fclose(help);
     pclose(more);
     return(0);

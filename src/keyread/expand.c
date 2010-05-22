@@ -13,6 +13,8 @@
 /*   Last Modification : 8/18/89  16:35:50 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "check.h"
 #include "key.h"
 
@@ -43,7 +45,7 @@
 expand(param)
 struct par_str **param;
 {
-    
+
     while ( param[0]->name[0] != '\0' ) {
 	/*process this parameter*/
 	if ( param[0]->bexp != NULL )
@@ -81,7 +83,7 @@ struct bool_exp *bexp;
 	if (par_expand( bexp ) == -1) {
 	    fprintf(stderr, "can not expand parameter %s\n", bexp->value.sval);
 	}
-    
+
     /*do the sons and daughters*/
     if ( bexp->left != NULL )
 	bool_expand( bexp->left );
@@ -186,10 +188,10 @@ int recurs;
 {
     int temp;
     static int ambig;
-    
+
     /*loop through all the parameters*/
     for( ; pars[0]->name[0] != '\0'; pars++) {
-    
+
 	temp = compare( s, pars[0]->name );
 	if (temp > *best) {
 	    match[0] = pars[0];
@@ -198,10 +200,10 @@ int recurs;
 	}
 	else if (temp == *best)
 		ambig = TRUE;
-	
+
 	/*does this sucker have sub params?*/
 	if (recurs)
-	    if (pars[0]->param != NULL) 
+	    if (pars[0]->param != NULL)
 		check_list(s, pars[0]->param, best, match, TRUE);
     }
     if ((ambig == TRUE) || (*best == 0))
@@ -225,7 +227,7 @@ int recurs;
 make_depth(param)
 struct par_str **param;
 {
-    
+
     while ( param[0]->name[0] != '\0' ) {
 	/*process this parameter*/
 	param[0]->value.sval = (char *)malloc( 20 );

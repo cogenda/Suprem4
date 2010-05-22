@@ -3,6 +3,7 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "sysdep.h"
 #include "bound.h"
@@ -24,7 +25,7 @@
 
 /*
      input:
-	data = array of data for entire array 
+	data = array of data for entire array
 	nplot= number of frames in conman output file tfile (tfile is default)
 	nx= number of elements in the x direction
 	ny= number of elements in the y direction
@@ -46,12 +47,12 @@ int macfile;
 {
 float min, max,t, u, width;
 int k, ix, iy, iix, iiy, fdd,value;
-int NELX, NELY; 
+int NELX, NELY;
 int fillx, filly;
 float fvalue,value1,value2,value3,value4;
 int iaddr, iaddr2, ixstart, iystart, ixstop, iystop, l, n, p;
 unsigned char *array;
-char *filename; 
+char *filename;
 float OXIDE_VALUE;
 float NITRIDE_VALUE;
 float MAXCOLOR = 240;
@@ -65,7 +66,7 @@ NELY = NY/NYFAC;
 fillx = NX % NXFAC;
 filly = NY % NYFAC;
 array = (unsigned char *) calloc( NX * NY , sizeof(char));
-        
+
 /* Set min and max equal to gmin and gmax for consistency in multiple files */
 	min = gmin;
    	max = gmax;
@@ -75,7 +76,7 @@ array = (unsigned char *) calloc( NX * NY , sizeof(char));
 	    {
 		iaddr=ix+(NELX+1)*iy;
 		value1=data[iaddr] ;
-		if ( (value1 != min_value) && (value1 != OXIDE_VALUE)  
+		if ( (value1 != min_value) && (value1 != OXIDE_VALUE)
 			&& (value1 != NITRIDE_VALUE) )  {
 		    iaddr=ix+1+(NELX+1)*iy;
 		    value2=data[iaddr] ;
@@ -93,46 +94,46 @@ array = (unsigned char *) calloc( NX * NY , sizeof(char));
                             t=((float)iix-(float)ixstart)/(float)NXFAC;
                             u=((float)iiy-(float)iystart)/(float)NYFAC;
 			    iaddr2 = iix + iiy * NX;
-                            fvalue = (1.-t)*(1.-u)*value1 
+                            fvalue = (1.-t)*(1.-u)*value1
                                   + t*(1.-u)     *value2
                                   + t*u          *value3
-                                  + (1.-t)*u     *value4; 
+                                  + (1.-t)*u     *value4;
 			    width = MAXCOLOR - (float)OFFSET;
 			    if (mode)  {
-				if (fabs((double)fvalue) < CLIPVALUE)  
+				if (fabs((double)fvalue) < CLIPVALUE)
 	value = OFFSET + (int)(width/2.0);
 				else  {
-				    if (fvalue < 0)  
+				    if (fvalue < 0)
 	value = OFFSET + (int)(((max-fvalue-28.0)*width)/(max-min-28.0));
 				    else
 	value = OFFSET + (int)(((max-fvalue)*width)/(max-min-28.0));
 				}
 			    }
-			    else  
+			    else
                     value=(int)(OFFSET + ((fvalue-min) * width)/(max - min));
 
 
 			    value=mysmooth(value);
 		    	    array[iaddr2]=(unsigned char)value;
-		        }  
-		} /* if value1 */ 
-		else  {  
+		        }
+		} /* if value1 */
+		else  {
 		    if ( value1 == OXIDE_VALUE )  {
 			if (macfile)
 			    value = MACOXIDE;
-			else	
+			else
 			    value = OXIDE_COLOR;
 		    }
 		    else if (value1 == NITRIDE_VALUE) {
 			if (macfile)
 			    value = MACNITRIDE;
-			else	
+			else
 			    value = NITRIDE_COLOR;
 		    }
 		    else  {
 			if (macfile)
 			    value = MACWHITE;
-			else	
+			else
 		    	    value = WHITE;
 		    }
 	  	    ixstart=ix*NXFAC;
@@ -144,12 +145,12 @@ array = (unsigned char *) calloc( NX * NY , sizeof(char));
 		        {
 			    iaddr2 = iix + iiy * NX;
 		    	    array[iaddr2]=(unsigned char)value;
-		        }  
+		        }
 		}  /* if then else value1 */
 	    } /* for ix */
     /* pad extra x-values with WHITE */
 	    n = iy * NX + NELX * NXFAC;
-	    for (k = 0; k < fillx; k++)  
+	    for (k = 0; k < fillx; k++)
 		if (macfile)
 		    array[n + k] = MACWHITE;
 		else

@@ -18,8 +18,12 @@
 /*   Last Modification : 7/3/91  08:28:04 */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <setjmp.h>
+#include <unistd.h>
 #include <sysdep.h>
+
 #include "shell.h"
 #include "check.h"
 #include "global.h"

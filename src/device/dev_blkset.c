@@ -11,6 +11,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
@@ -54,7 +55,7 @@ double *nu3;		/*not used*/
 
     Vt  = 8.62e-5 * temp;
     Vti = 1.0 / Vt;
-    for(nfoo = j = 0; j < nsol; j++) 
+    for(nfoo = j = 0; j < nsol; j++)
 	if ( blktype[sol][solve[j]] != B_NONE ) foo[nfoo++] = solve[j];
 
     /*charge neutral solution for diffusion*/
@@ -91,7 +92,7 @@ double *nu3;		/*not used*/
 	    cpl = scal[mat_nd(col)] * edg[i]->cpl;
 	    u = edg[i]->u;
 	    l = edg[i]->l;
-	    
+
 	    /*compute the fluxes*/
 	    grad = val[col] - val[row];
 
@@ -108,7 +109,7 @@ double *nu3;		/*not used*/
 	for(col = 0; col < nn; col++) {
 	    /*compute the charge terms*/
 	    b[col] += coeff[col] * net[col];
-	    for(j = 0; j < nfoo; j++) 
+	    for(j = 0; j < nfoo; j++)
 		a[sol][foo[j]][col] -= coeff[col] * dnet[foo[j]][col];
 	}
     }

@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:21:12 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <global.h>
 #include <constant.h>
 #include <geom.h>
@@ -30,7 +31,7 @@ int mat;
     reg[nreg] = (reg_typ *) malloc (sizeof (reg_typ));
     if (!reg[nreg]) panic ("Out of storage in alloc_region");
 
-    reg[nreg]->mater = mat; 
+    reg[nreg]->mater = mat;
 
     reg[nreg]->edg.num = reg[nreg]->edg.all = 0; reg[nreg]->edg.list = NULL;
     reg[nreg]->tri.num = reg[nreg]->tri.all = 0; reg[nreg]->tri.list = NULL;
@@ -79,7 +80,7 @@ int r;
 {
     register int e, t, in, i, nnb, nb;
     int *test;
-    
+
     test = salloc( int, nn );
 
     /*throw away the old stuff*/
@@ -98,7 +99,7 @@ int r;
     clr( reg[r], EXPOS );
 
     /*now build the unordered region boundary description*/
-    t = 0; 
+    t = 0;
     while( done_tri(t) ) {
 	if (reg_tri(t) == r) {
 	    for(i = 0; i < num_vert(t); i++) test[vert_tri(t,i)] = TRUE;

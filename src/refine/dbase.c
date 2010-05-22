@@ -16,6 +16,8 @@
 /*   dbase.c                Version 5.1     */
 /*   Last Modification : 7/3/91 15:40:35 */
 
+#include <stdlib.h>
+
 #include "global.h"
 #include "constant.h"
 #include "dbaccess.h"
@@ -55,7 +57,7 @@ int ir;		/*skeleton region we are using*/
     int nb[3];
     int nt;
 
-    if ( sreg[ir]->len != 3 ) 
+    if ( sreg[ir]->len != 3 )
 	panic("internal error:non-triangle passed to cr_tri");
 
     nv[0] = nB(bnd->prev);
@@ -108,7 +110,7 @@ ad_edge (ir, ie, lep, iscc, pos)
    /*...Include in linked list. */
     if (sreg[ir]->bnd == 0) {     	/* Initialize a region. */
        sreg[ir]->bnd = new->next = new->prev = new;
-       } 
+       }
     else {				/* Insert into existing region */
 	first = (pos==BEFORE)? lep : lep->next;
 	last =  first->prev;
@@ -117,7 +119,7 @@ ad_edge (ir, ie, lep, iscc, pos)
 	new->next  = first;	first->prev = new;
        }
     sreg[ir]->len++;
-    
+
     /*add region to this edges list*/
     add_skel_edg(ie, ir);
 
@@ -166,11 +168,11 @@ int add_ang (r, lep)
     else {			/* Old list. */
       /*...Walk around the region in order of increasing angle. */
 	mina=r->maxa->gt;
-	for (f = 1 , ep = mina; (ep != mina) || f; ep = ep->gt , f = 0) 
+	for (f = 1 , ep = mina; (ep != mina) || f; ep = ep->gt , f = 0)
 	    if (ep->ang >= lep->ang) break;
 
       /*...Link in new value. */
-	greater = ep;		
+	greater = ep;
 	less = ep->lt;
 
 	lep->gt = greater;
@@ -179,14 +181,14 @@ int add_ang (r, lep)
 	greater->lt = lep;
 
       /*...If we got a new maximum, update maxa. */
-	if (lep->ang > r->maxa->ang) 
+	if (lep->ang > r->maxa->ang)
 	    r->maxa = lep;
 
 	}
     return;
 }
-	    
-    
+
+
 
 
 
@@ -270,10 +272,10 @@ int p2;		/*the other point*/
 
     /*find the triangle edge we need to split*/
     for(i = 0; i < nvrt; i++){
-	if ((nd[tri[t]->nd[i]]->pt != p) && 
+	if ((nd[tri[t]->nd[i]]->pt != p) &&
 	    (nd[tri[t]->nd[i]]->pt != p2)) lj = i;
     }
-    
+
     if ( nd[tri[t]->nd[(lj+1)%3]]->pt == p )
 	r = 0.05;
     else
@@ -290,8 +292,8 @@ int p2;		/*the other point*/
 
 
 
-	    
 
 
-	    
+
+
 #endif

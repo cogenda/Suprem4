@@ -9,12 +9,14 @@
  * xbitmap1.c
  */
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
 
 #include "GraphP.h"
 #include "xgraph.h"
-extern char *malloc();
+
 
 #define MAX(A,B) (A>B)?A:B;
 
@@ -312,7 +314,7 @@ void xgClear()
 	free(tl);
     }
     newwin->Label=NULL;
-	
+
     /*clear the scaling factors*/
     newwin->xg_xscl = 1.0;
     newwin->xg_yscl = 1.0;

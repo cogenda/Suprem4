@@ -14,6 +14,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #ifdef CONVEX
 #include <strings.h>
@@ -71,15 +72,15 @@ char *SIMPLheaderfilename;
 /* look for window information.  place in first line of file. if the
  *   line is blank then no information present
  */
-    
+
 
     fgets(buffer, BUFFERSIZE, SIMPLheader);
     while (!feof(SIMPLheader))  {
 	fputs(buffer, SIMPLfile);
 	fgets(buffer, BUFFERSIZE, SIMPLheader);
-    } 
+    }
     fclose(SIMPLheader);
-    
+
 
 /*  need to do something about extraneous stuff on the left side.
  *	Look for only small deviations (<1%).  else assume that
@@ -101,9 +102,9 @@ char *SIMPLheaderfilename;
     /* forced format to 0.001 micron resulution since
      *   that is all the resolution of the layout
      *   is only 0.01 micron. This takes care of some
-     *   possible round-off error 
+     *   possible round-off error
      */
-    fprintf( SIMPLfile, "%.2f\t%.2f\t0.0\t%.2f\n", left, 
+    fprintf( SIMPLfile, "%.2f\t%.2f\t0.0\t%.2f\n", left,
  	    right, bottom + 2.0 );
 
 
@@ -112,13 +113,13 @@ char *SIMPLheaderfilename;
      *   a deep substrate (say > 6.0um) we space non-uniformly based on
      *   tx and ty. else we space uniformly
      */
-    spacing = (right - left)/(float)(local_x_grid_size-1); 
+    spacing = (right - left)/(float)(local_x_grid_size-1);
     for (i = 0; i < local_x_grid_size - 1; i++)
 	xloc[i] = left + i * spacing;
     xloc[local_x_grid_size - 1] = right;
     xlocsize = local_x_grid_size;
 
-    spacing = (bottom - top)/(float)(local_y_grid_size-1); 
+    spacing = (bottom - top)/(float)(local_y_grid_size-1);
     for (i = 0; i < local_y_grid_size - 1; i++)
 	yloc[i] = top + i * spacing;
     yloc[local_y_grid_size - 1] = bottom;
@@ -151,9 +152,9 @@ FILE *SIMPLfile;
     int i = 0;
     int index = 0;
     int topleft = 0;
-    int topright = 0; 
-    int bottomleft = 0; 
-    int bottomright = 0; 
+    int topright = 0;
+    int bottomleft = 0;
+    int bottomright = 0;
     int count = 0;
     int g;
     struct LLedge *bp, *bnd;
@@ -171,7 +172,7 @@ FILE *SIMPLfile;
      *   bottomleft, and bottomright, respectively.
      */
 
-    if ((poly_data = 
+    if ((poly_data =
 	(struct d_str *)malloc(np * sizeof(struct d_str)))
 		== NULL)  {
 	    fprintf(stderr, "can't allocate memory for poly_data\n");
@@ -184,7 +185,7 @@ FILE *SIMPLfile;
 
 	for(g = 1, index = 1, bp = bnd = sreg[reg[ir]->sreg]->bnd;
 	    g || bp != bnd; g=0, index++, bp = bp->next) {
-	    
+
 	    poly_data[index].x = xcord(pt_nd(nB(bp))) * 1.0e4;
 	    poly_data[index].y = ycord(pt_nd(nB(bp))) * 1.0e4;
 	    poly_data[index].mat = mat_reg(ir);
@@ -196,7 +197,7 @@ FILE *SIMPLfile;
 	 *  create another array called poly_array with the
 	 *  points stored in CLOCKWISE order
 	 */
-	if ((poly_array = 
+	if ((poly_array =
 		(struct tmp_str *)malloc(index * sizeof(struct tmp_str)))
 		== NULL)  {
 	    fprintf(stderr, "can't allocate memory for poly_array\n");
@@ -209,7 +210,7 @@ FILE *SIMPLfile;
 		poly_array[i].discard = 1;
 	}
 
-	
+
 	/* walk through array finding points to discard. for the
 	 *  bottom layer (assumed to be SI) we can't have points
 	 *  on the bottom except for the left and right corners.
@@ -218,26 +219,26 @@ FILE *SIMPLfile;
 	 *  edges except for the points at the top and bottom.
 	 */
 	for (i = 0; i < index; i++)  {
-	    topleft = (poly_array[(i+1)%index].x - poly_array[i].x > 0.001) 
-			&& (poly_array[(i - 1 + index)%index].y - 
+	    topleft = (poly_array[(i+1)%index].x - poly_array[i].x > 0.001)
+			&& (poly_array[(i - 1 + index)%index].y -
 			poly_array[i].y > 0.001);
 	    topright = (poly_array[i].x - poly_array[(i - 1 + index)%index].x
 			> 0.001) &&
-			(poly_array[(i + 1)%index].y - 
+			(poly_array[(i + 1)%index].y -
 			poly_array[i].y > 0.001);
 	    bottomleft = (poly_array[(i - 1 + index)%index].x -
 			poly_array[i].x > 0.001) &&
 			(poly_array[i].y
 			- poly_array[(i + 1)%index].y > 0.001);
-	    bottomright = (poly_array[i].x - 
-			poly_array[(i + 1)%index].x > 0.001) && 
+	    bottomright = (poly_array[i].x -
+			poly_array[(i + 1)%index].x > 0.001) &&
 			(poly_array[i].y
 			- poly_array[(i - 1 + index)%index].y > 0.001);
 
 	    /* the magic check for points to delete */
 	    if (! ( ( ((bottom - poly_array[i].y) < 0.001)
 		      && (!bottomleft) && (!bottomright) )
-		  ||(  ((poly_array[i].x - left) < 0.001) 
+		  ||(  ((poly_array[i].x - left) < 0.001)
 		      && ((bottom - poly_array[i].y) > 0.001)
 		      && (!topleft) && (!bottomleft))
 		  ||(  ((right - poly_array[i].x) < 0.001)
@@ -251,7 +252,7 @@ FILE *SIMPLfile;
 	fprintf(SIMPLfile, "%d\n", count);
 
 	/* print information */
-	for (i = 0; i < index; i++)  { 
+	for (i = 0; i < index; i++)  {
 	    if (poly_array[i].discard == 0)
 	        fprintf(SIMPLfile, "%.2f  %.2f\n", poly_array[i].x,
 		    bottom - poly_array[i].y);
@@ -279,7 +280,7 @@ int ylocsize;
     float min_value = MAXFLOAT;
 
 
-    /* the format of this section of the file is as follows. 
+    /* the format of this section of the file is as follows.
      *	line 1 - number of horizontal grid points(nx)
      *  lines 2 to nx+1 - the positions of the horizontal grid points
      *  line nx+2 - the number of vertical grid points(ny)
@@ -299,15 +300,15 @@ int ylocsize;
 	fprintf( SIMPLfile, "%.2f\n", bottom - yloc[iy] );
 
     data = salloc(float, xlocsize * ylocsize);
-    for (ix = 0; ix < nn; ix++)  
-	if ( (z[ix] < min_value) && (nd[ix]->mater == Si) ) 
+    for (ix = 0; ix < nn; ix++)
+	if ( (z[ix] < min_value) && (nd[ix]->mater == Si) )
 	    min_value = z[ix];
-	else  if ( (z[ix] > gmax) && (nd[ix]->mater == Si) ) 
+	else  if ( (z[ix] > gmax) && (nd[ix]->mater == Si) )
 	    gmax = z[ix];
 
     gmin = min_value;
 
-    (void)fill_grid(xlocsize, ylocsize, xloc, yloc, data, z, Si, 
+    (void)fill_grid(xlocsize, ylocsize, xloc, yloc, data, z, Si,
 	0, xlocsize - 1, 0, ylocsize - 1, min_value);
 
     for ( iy = ylocsize - 1; iy >= 0; --iy )

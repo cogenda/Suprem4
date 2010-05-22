@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
@@ -321,7 +322,7 @@ double *nu5;		/*not used*/
  *									*
  ************************************************************************/
 chrg_block_set( ss, sol, df, dprt, val, lval, sqval, dval, pot, spot)
-int ss;			/*the storage location*/		 
+int ss;			/*the storage location*/
 int sol;		/*impurity solution number*/
 double *df;		/*the diffusivity*/
 double *dprt;		/*the diffusivity derivitive*/
@@ -466,7 +467,7 @@ double *nu3;			/*not used*/
 
     /*charge neutral solution for diffusion*/
     if ( IS_PSEUDO( Psi ) ) {
-	for(nfoo = j = 0; j < nsol; j++) 
+	for(nfoo = j = 0; j < nsol; j++)
 	    if ( blktype[sol][solve[j]] == B_DIAG ) foo[nfoo++] = solve[j];
 
 	/*simple analytic function*/
@@ -481,7 +482,7 @@ double *nu3;			/*not used*/
 		tmp = 1.0 / (ni * t1);
 
 		for(j = 0; j < nfoo; j++) a[sol][foo[j]][i] -= tmp * dnet[foo[j]][i];
-		
+
 		b[i] = log( c + t1 ) - val[i] / Vt;
 	    }
 	    else {

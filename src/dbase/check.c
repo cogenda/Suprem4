@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:20:35 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -51,11 +52,11 @@ mtest1(when)
     for (p = 0; p < np; p++)
 	if (!pt[p])
 	    { report("point %d has not been allocated\n", p, 0, 0); continue; }
-    
+
     for (n = 0; n < nn; n++)
 	if (!nd[n])
 	    { report("node %d has not been allocated\n", n, 0, 0); continue; }
-    
+
     for (t = 0; t < ne; t++)
 	if (!tri[t])
 	    { report("element %d has not been allocated\n", t, 0, 0); continue;}
@@ -67,25 +68,25 @@ mtest1(when)
     for (r = 0; r < nreg; r++)
 	if (!reg[r])
 	    { report("region %d has not been allocated\n", r, 0, 0); continue;}
-    
-    
-    
+
+
+
     /*No further processing if we have memory problems*/
     if (err_cnt > 0)
         panic( "after mesh self test");
-    
+
     /*Self-consistency checks*/
     /*Every region must have a valid material number */
     for (i = 0; i < nreg; i++)
 	if( mat_reg(i) != Si   && mat_reg(i) != Poly &&
-	    mat_reg(i) != SiNi && mat_reg(i) != SiO2 && 
+	    mat_reg(i) != SiNi && mat_reg(i) != SiO2 &&
 	    mat_reg(i) != OxNi && mat_reg(i) != PhRs &&
 	    mat_reg(i) != Al   && mat_reg(i) != GaAs)
 	    report("region %d has bad material code %d\n", i, mat_reg(i), 0)
-    
+
     /*Check points*/
     for (p = 0; p < np; p++) {
-	
+
 	/*The node list should not be empty*/
 	if (num_nd(p) == 0)
 	    report("point %d has no associated node\n", p, 0, 0)
@@ -95,7 +96,7 @@ mtest1(when)
 	    n = nd_pt(p,j);
 	    if (n < 0 || n >= nn)
 		report("point %d has a bad node %d at %d\n", p, n, j)
-	    
+
 	    /* and link back*/
 	    else {
 		if (pt_nd(n) != p)
@@ -138,11 +139,11 @@ mtest1(when)
     for (t = 0; t < ne; t++) {
 
 	/*We have problems if two nodes are the same */
-	for(i = 0; i < num_vert(t); i++) 
-	    for(j = i+1; j < num_vert(t); j++) 
+	for(i = 0; i < num_vert(t); i++)
+	    for(j = i+1; j < num_vert(t); j++)
 		if ( vert_tri(t,i) == vert_tri(t,j) )
 		    report("triangle %d has duplicate nodes\n", t, 0, 0)
-	
+
 	/*Every element must have a valid region number*/
 	tmat = reg_tri(t);
 	if (tmat < 0 || tmat >= nreg)
@@ -159,7 +160,7 @@ mtest1(when)
 		n_in_tri[ n] = t;
 		if( mat_nd(n) != tmat)
 		    report("node %d in triangle %d has wrong material %d\n",
-						    n, t, nd[ n ]->mater); 
+						    n, t, nd[ n ]->mater);
 	    }
 	}
     }
@@ -175,7 +176,7 @@ mtest1(when)
 		report("material node %d belongs to no triangles\n", n, 0, 0)
     }
 
-    
+
     free(n_in_tri);
 
     /* That's as much as we can do right now... */
@@ -230,7 +231,7 @@ mtest2( when)
 		    if (t < 0 || t >= ned)
 			report("node %d has a bad edge %d at %d\n", n, t, i)
 		    else {
-			if ( (nd_edg(t,0) != n) && (nd_edg(t,1) != n) ) 
+			if ( (nd_edg(t,0) != n) && (nd_edg(t,1) != n) )
 			  report("broken link edge %d <== node %d\n",t,n,0)
 		    }
 		}
@@ -240,12 +241,12 @@ mtest2( when)
 
     /* Check edges */
     for(e = 0; e < ned; e++) {
-	
+
 	/*make sure nodes point to edge*/
 	for(j = 0; j < 2; j++ ) {
 	    n = nd_edg(e,j);
 	    for (i = 0; (i < num_edge_nd(n)) && (edge_nd(n,i) != e); i++);
-	    if (i == num_edge_nd(n)) 
+	    if (i == num_edge_nd(n))
 		report("broken link node %d <== edge %d\n",n,e,0)
 	}
 
@@ -327,7 +328,7 @@ mtest2( when)
 	    report("exposed point %d lacks an exposed triangle edge\n", p, 0, 0)
     }
     free(is_exposed);
-    
+
 
     /* if we haven't already dropped core :-) */
     if (err_cnt != 0) panic( "after mesh self test");

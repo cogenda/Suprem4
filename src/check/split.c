@@ -17,6 +17,8 @@
 /*   Last Modification : 7/3/91 08:12:34 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include "global.h"
 #include "check.h"
@@ -46,10 +48,10 @@ int parnames;	/*are there leading parameter names*/
 
     /*repeat until we are at end of line*/
     while ( *line != '\0' ) {
-	
+
 	/*allocate space for the pair*/
 	argv[i] = (char *)malloc( strlen(line)+1 );
-	
+
 	/*eat a parameter name - non blanks followed by a blank or =*/
 	if ( parnames ) {
 	    for(s = argv[i]; (*line!='\0')&&(*line!='=')&&(!isspace(*line)); line++)
@@ -58,10 +60,10 @@ int parnames;	/*are there leading parameter names*/
 	else s = argv[i];
 
 	/*handle a possible assignement*/
-	if ( *line == ' ' ) 
+	if ( *line == ' ' )
 	    /*eat any leading white space up*/
 	    while ( isspace( *line ) ) line++;
-	
+
 	if ( (*line == '=') || !parnames ) {
 	    /*add the parameter assignment*/
 	    if (parnames) *s++ = *line++;  /*add the equal sign in*/
@@ -105,7 +107,7 @@ int parnames;	/*are there leading parameter names*/
 			}
 			break;
 	    default  :  /*now eat until a non space*/
-			while ( ( *line != '\0') && ! isspace( *line ) ) 
+			while ( ( *line != '\0') && ! isspace( *line ) )
 			    *s++ = *line++;
 	    }
 	}
@@ -113,7 +115,7 @@ int parnames;	/*are there leading parameter names*/
 	*s = '\0';
 	/*advance the argument pointer*/
 	i++;
-	
+
 	/*eat any white space before the next parameter*/
 	while ( isspace( *line )) line++;
     }

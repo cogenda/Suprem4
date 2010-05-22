@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 15:40:49 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -108,7 +109,7 @@ struct LLedge *t1;
     struct sreg_str *r;
     int ret;
     int nbase;
- 
+
     n = (r1->len > r2->len)?r1->len:r2->len;
     p = salloc(float, MAXDIM * n);
 
@@ -134,15 +135,15 @@ struct LLedge *t1;
 
 #define min2(A,B) ((A)<(B))?(A):(B)
     if (nump != 0) {
-	if ( dist(cord_arr(pt_edg(ie,0)),p) < 
+	if ( dist(cord_arr(pt_edg(ie,0)),p) <
 	     dist(cord_arr(pt_edg(ie,1)),p) )
 	    nbase = nd_edg(ie,1);
 	else
 	    nbase = nd_edg(ie,0);
-	
+
 	for(n = 0; n < nump; n++) {
-	    ied = sp_edge(ie,&(p[n*MAXDIM]),&ip,FALSE); 
-	    if ( (nd_edg(ie,0) != nbase) && (nd_edg(ie,1) != nbase) ) 
+	    ied = sp_edge(ie,&(p[n*MAXDIM]),&ip,FALSE);
+	    if ( (nd_edg(ie,0) != nbase) && (nd_edg(ie,1) != nbase) )
 		ie = ied;
 	}
     }
@@ -161,7 +162,7 @@ int ie;
     struct LLedge *bp1, *bnd;
     float x[MAXDIM], dx[MAXDIM], q[MAXDIM], dq[MAXDIM], alp[MAXDIM];
     int nump, n;
- 
+
     /*if this infinite loops, big trouble*/
     for( bnd = r->bnd; bnd->edge != ie; bnd=bnd->next );
 

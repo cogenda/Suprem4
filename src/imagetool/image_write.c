@@ -23,6 +23,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "constant.h"
 #include "geom.h"
@@ -117,27 +118,27 @@ int param;
 	    max_z = z[i];
     }
 
-    if ( is_specified( param, "x.min")) 
+    if ( is_specified( param, "x.min"))
 	gxmin = get_float( param, "x.min");
     else
 	gxmin = min_x;
-    if ( is_specified( param, "x.max")) 
+    if ( is_specified( param, "x.max"))
 	gxmax = get_float( param, "x.max");
     else
 	gxmax = max_x;
-    if ( is_specified( param, "y.min")) 
+    if ( is_specified( param, "y.min"))
 	gymin = get_float( param, "y.min");
     else
 	gymin = min_y;
-    if ( is_specified( param, "y.max")) 
+    if ( is_specified( param, "y.max"))
 	gymax = get_float( param, "y.max");
     else
 	gymax = max_y;
-    if ( is_specified( param, "z.min")) 
+    if ( is_specified( param, "z.min"))
 	gmin = get_float( param, "z.min");
     else
 	gmin = min_z;
-    if ( is_specified( param, "z.max")) 
+    if ( is_specified( param, "z.max"))
 	gmax = get_float( param, "z.max");
     else
 	gmax = max_z;
@@ -163,16 +164,16 @@ int param;
 	    &win_xmax_index, &win_ymin_index, &win_ymax_index) != 0)  {
 	fprintf(stderr, "error creating index aray\n");
 	return(ERROR);
-    }	
+    }
 
-    if ((mydata = (float *)malloc((win_xmax_index - win_xmin_index + 1) * 
-		(win_ymax_index - win_ymin_index + 1) * sizeof(float))) 
+    if ((mydata = (float *)malloc((win_xmax_index - win_xmin_index + 1) *
+		(win_ymax_index - win_ymin_index + 1) * sizeof(float)))
 		== NULL) {
 	fprintf(stderr, "memory allocation failed\n");
 	return(ERROR);
     }
 
-    for (i = 0; i < (win_xmax_index - win_xmin_index + 1) * 
+    for (i = 0; i < (win_xmax_index - win_xmin_index + 1) *
 	    (win_ymax_index - win_ymin_index + 1); i++)
 	mydata[i] = min_value;
 

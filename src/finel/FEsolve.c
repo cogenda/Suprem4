@@ -12,6 +12,7 @@ static char sccsid[]="FEsolve.c 3.6 9/9/88 23:46:05";
  *---------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <math.h>
 #include "constant.h"
@@ -64,11 +65,11 @@ FEsolve( verbose)
     /*
      * Figure out how big a problem we have.
      */
-#ifndef bobpack    
+#ifndef bobpack
     FEsymb ( &ia, &il, &aoff, &loff, &pv);
 #else
     FEsymb1( &ia, &il, &aoff, &loff, &pv);
-#endif    
+#endif
     a = salloc( double, ia[neq] + aoff); a[0] = 0;
     l = salloc( double, il[neq] + loff);
     rhs=salloc( double, neq);
@@ -82,7 +83,7 @@ FEsolve( verbose)
     FDil = il;
     FDloff = loff;
     FDrhs = rhs;
-#endif    
+#endif
     pv_ext = pv;
 #endif
 
@@ -130,7 +131,7 @@ FEsolve( verbose)
 
     free(ia);if(il!=ia)free(il);free(a);free(l);free(rhs);
 }
-
+
 /*-----------------CONTINUATION-----------------------------------------
  * Three different varieties of continuation.
  *----------------------------------------------------------------------*/
@@ -166,7 +167,7 @@ FEfdiff( ia, aoff, a, il, loff, l, rhs, solo, deln, delo, derr)
 	if (dl < 1.5*odl)
 	    VECTOR2 if (FEnd[i]->fixity[j] != 1)
 		FEnd[i]->sol[j] = solo[k] + dl/odl* delo[k];
-#endif	
+#endif
 
 	/* Force recomputation of Jacobian at each lambda step */
 	noderiv=0;
@@ -212,7 +213,7 @@ FEfdiff( ia, aoff, a, il, loff, l, rhs, solo, deln, delo, derr)
     } while (lambda < 0.999);
 }
 
-
+
 /*-----------------FEstep-----------------------------------------------
  * 2) a heuristic stepping algorithm
  *----------------------------------------------------------------------*/
@@ -340,7 +341,7 @@ FEmilne( ia, aoff, a, il, loff, l, rhs, solo, deln, delm, derr)
 }
 
 
-
+
 /*-----------------FEnewton---------------------------------------------
  * Newton solver with Jacobian recyling, auto damping.
  *----------------------------------------------------------------------*/
@@ -361,7 +362,7 @@ FEnewton( ia, aoff, a, il, loff, l, rhs)
     int        nGrow;		/* number of consecutive Newton increases */
     static int tkDroppedThisLoop;
     double tk=1;
-    
+
     int Before[4], After[4]; times( Before);
 
     sol0 = salloc( double, neq);
@@ -369,7 +370,7 @@ FEnewton( ia, aoff, a, il, loff, l, rhs)
     nupd = salloc( double, neq);
 
     /* If we come in with noderiv, need to get a rhs */
-    if (noderiv) 
+    if (noderiv)
 	{ FEassmb( ia, aoff, a, rhs); TICK( "Viscous RHS assembly"); }
 
     /* The Newton loop. */
@@ -467,7 +468,7 @@ FEnewton( ia, aoff, a, il, loff, l, rhs)
     free( nupd);
     return( converge);
 }
-
+
 /*-----------------FEnorm-----------------------------------------------
  *----------------------------------------------------------------------*/
 double FErhsnorm( a, rhs)
@@ -506,7 +507,7 @@ double FEupdnorm( delta)
 }
 
 
-
+
 /*-----------------FEsymb-----------------------------------------------
  * Generate the matrix maps.
  * Notes:
@@ -538,7 +539,7 @@ FEsymb( Pia, Pil, Paoff, Ploff, Ppv)
 	lvls = salloc( int, FEnn);
 	tomcal(full_ia, reorder, lvls);
 	free(lvls);
-	FEscramble( reorder);	
+	FEscramble( reorder);
 	for( i = 0; i < FEnn; i++) accordn[ i] = reorder[ accord[ i]];
 	for( i = 0; i < FEnn; i++) accord[ i] = accordn[ i];
 	free( reorder);
@@ -588,7 +589,7 @@ FEsymb( Pia, Pil, Paoff, Ploff, Ppv)
 }
 
 #ifdef bobpack
-
+
 /*-----------------FEsymb1----------------------------------------------
  * The all new symbolic stuff for bobpack.
  *----------------------------------------------------------------------*/
@@ -608,7 +609,7 @@ FEsymb1( Pia, Pil, Paoff, Ploff, Ppv)
     reorder = salloc( int, FEnn);
     for( i = 0; i < FEnn; i++)
 	reorder[ i] = i;
-    
+
     /* Point the calling arguments */
     *Pia = ia;
     *Pil = il;
@@ -618,7 +619,7 @@ FEsymb1( Pia, Pil, Paoff, Ploff, Ppv)
 
 }
 #endif
-
+
 /*-----------------BUILD_IA---------------------------------------------
  * This routine generates a list of connections of each node.
  * The result is returned in sparse matrix format without further ado.
@@ -707,7 +708,7 @@ build_ia(pia)
     free(LinkPool);
     free(NodeLink);
 }
-
+
 /*-----------------FEconnect--------------------------------------------
  * This because min_fill wants a subroutine returning the list of
  * connections of each node. Remind me to teach generate about sparse
@@ -766,7 +767,7 @@ FEscramble( reorder)
 }
 
 
-
+
 /*-----------------FlopCount--------------------------------------------
  * How many factorization flops?
  *----------------------------------------------------------------------*/
@@ -781,7 +782,7 @@ FlopCount(il)
     return( count);
 }
 
-
+
 #ifdef goldenoldie
 /*-----------------FEupdate---------------------------------------------
  *----------------------------------------------------------------------*/
@@ -841,13 +842,13 @@ XchSol( v, which)
 	    FEnd[i]->sol[j] += v[ i*FEdf + j];
 	break;
     case DELV:
-	loop 
+	loop
     default:
 	panic("notreached");
     }
     return(0);
 }
-
+
 /*-----------------MXVL-------------------------------------------------
  * Sparse matrix with levels multiply (currently unused)
  *----------------------------------------------------------------------*/
@@ -875,7 +876,7 @@ mxvl(nv, ia, aoff, a, v, av, lvl)
 
 #endif /*goldenoldie*/
 
-
+
 #ifdef DoPreBubble
 
 /* An interesting idea that turned out not to make a difference. */
@@ -912,20 +913,20 @@ bubbleUp( Preorder)
 	free( reorder);
 	return(0);
     }
-	    
+
     /* Then go back and pick up the normal ones, putting them after the bubbles */
     iNorm = iBub;
     for( in = 0; in < FEnn; in++)
 	if( reorder[ in] < 0)
 	    reorder[ in] = iNorm++;
-    
+
     assert( iNorm == FEnn);
     *Preorder = reorder;
     return( iBub);
 }
 #endif
 
-
+
 /*#################### D E B U G ########################################*/
 #ifdef debug
 /*----------------------------------------------------------------------
@@ -997,7 +998,7 @@ dump_A(ia,aoff, il, loff)
 	fprintf(stderr, "all confused\n"); fflush(stderr); return(-1);
     }
     lneq = ia[0]-1;
-    
+
     a = salloc( double, ia[lneq] + aoff);
     rhs=salloc( double, lneq);
     FEassmb( ia, aoff, a, rhs);
@@ -1077,8 +1078,8 @@ dump_A(ia,aoff, il, loff)
     free( arhs);
     free( l);
     free( work); free( mega); free( ipvt);
-    
-#endif    
+
+#endif
 
 
     printf("got here\n"); fflush(stdout);
@@ -1095,7 +1096,7 @@ dump_A_convex()
 
 
 #ifdef notdef
-
+
 /*-----------------DoBandOrd--------------------------------------------
  * Quick hack to time band ordering for small problems.
  *----------------------------------------------------------------------*/
@@ -1110,10 +1111,10 @@ DoBandOrd(ia,a)
 
     mins = salloc( int, neq);
     idiag = salloc( int, neq);
-    
+
     /* Find min in each column */
     for( col = 0; col < neq; col++) mins[col] = col;
-    
+
     for( col = 0; col < neq; col++) {
 	for (j=ia[col]; j < ia[col+1]; j++) {
 	    row = ia[j];
@@ -1145,7 +1146,7 @@ DoBandOrd(ia,a)
     /* Fix up for fortran */
     for (i = 0; i < neq; i++)
 	idiag[i] ++;
-    
+
     TICK("set up");
     vfactor_( newa, idiag, neq, tmp);
     TICK("band factorization");

@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 10:50:12 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #ifdef ALLIANT
 #include <cncall.h>
@@ -74,7 +75,7 @@ double *rhs2;		/*the two norm of the right hand side*/
 	bs = cs.sol[bi];
 
 	/*do all the diffusing terms*/
-	setup_2d(bs, cs.temp, cs.nsol, cs.sol, inter, vacan, cs.new, cs.newa, 
+	setup_2d(bs, cs.temp, cs.nsol, cs.sol, inter, vacan, cs.new, cs.newa,
 		       equil, cs.nco, bval, bcnum );
     }
 
@@ -133,13 +134,13 @@ struct call_str *cs;
 	dzero( newb[bs], nn );
 	dzero( cs->newa[bs], nn );
 #else
-	for(i = 0; i < nn; i++) 
-	    equil[bs][i] = dequ[bs][i] = net[i] = dnet[bs][i] = 
+	for(i = 0; i < nn; i++)
+	    equil[bs][i] = dequ[bs][i] = net[i] = dnet[bs][i] =
 	    rhs[bs][i] = newb[bs][i] = cs->newa[bs][i] = 0.0;
 #endif
 	for(j = 0; j < cs->nsol; j++) {
 	    js = cs->sol[j];
-	    if ( blktype[bs][js] != B_NONE ) 
+	    if ( blktype[bs][js] != B_NONE )
 		dzero(a[bs][js], bia[bs][js][nn]+baoff[bs][js]);
 
 	}
@@ -253,7 +254,7 @@ struct call_str *cs;
 
 	    /*right hand side terms*/
 	    rhs[sol][i] = newb[sol][i];
-	    rhs[sol][i] -=   cs->nco[i] * t1 * cs->new[sol][i] 
+	    rhs[sol][i] -=   cs->nco[i] * t1 * cs->new[sol][i]
 			   - cs->mco[i] * t2 * cs->mid[sol][i]
 			   + cs->oco[i] * t3 * cs->old[sol][i];
 
@@ -297,7 +298,7 @@ int bcnum;
     imp = soltoimp[ sol ];
 
     /*Setup the diffision terms if we have a mobile species*/
-    if ( impur[imp].block_set != NULL ) 
+    if ( impur[imp].block_set != NULL )
 	impur[imp].block_set(sol, temp, nsol, solve, newarea, chem, act, inter, vacan );
 
     /*if no boundary conditions, we are done*/

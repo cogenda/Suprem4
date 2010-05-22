@@ -12,6 +12,8 @@
 /*   Last Modification : 7/3/91  08:41:07 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include "global.h"
 #include "expr.h"
@@ -50,9 +52,9 @@ int param;
 	fprintf(stdout, "%s\n", tmp);
 	fprintf(stdout, "%s\n", err);
     }
-    else 
+    else
 	fprintf(stdout, "%g\n", val);
-	
+
     fflush(stdout);
     if ( out != NULL ) free_expr( out );
 
@@ -86,13 +88,13 @@ uPause()
 	    gets( CommandBuf);
 	    if (!CommandBuf[0]) break;
 #endif
-	
+
 	    do_string( CommandBuf, NULL, 0);
 	    fflush( stdout);
 	    fflush( stderr);
 	}
     }
-    
+
     return(0);
 }
 
@@ -126,11 +128,11 @@ int param;
 	/*check for a real number expression*/
 	strcpy(tmp, argv[i]);
 
-	if ( (parse_expr( tmp, &out )) != NULL ) 
+	if ( (parse_expr( tmp, &out )) != NULL )
 	    fprintf(stdout, "%s ", argv[i]);
-	else if ( (eval_real( out, &val )) != NULL ) 
+	else if ( (eval_real( out, &val )) != NULL )
 	    fprintf(stdout, "%s ", argv[i]);
-	else 
+	else
 	    fprintf(stdout, "%g ", val);
 
 	if ( out != NULL ) free_expr( out );

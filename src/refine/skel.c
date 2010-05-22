@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 15:40:51 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <global.h>
 #include <constant.h>
@@ -61,7 +62,7 @@ int r;
 	    e1 = edg_reg(r, i);
 	    if ( ask(edg[e1], ESURF) || ask(edg[e1], EBACK) )
 		fnd = TRUE;
-	    else if ( num_tri_edg(e1) == 1 ) 
+	    else if ( num_tri_edg(e1) == 1 )
 		fnd = TRUE;
 	    else {
 		for(j = 0; j < num_tri_edg(e1); j++)
@@ -85,9 +86,9 @@ int r;
 	    e = edge_nd(n,i);
 	    if ( (e != el) && (e != e1) && is_border(e) ) {
 		/*make sure it is a border on this region!*/
-		for(j = 0; j < num_ele_edg(e) && 
+		for(j = 0; j < num_ele_edg(e) &&
 		       reg_tri(tri_edg(e,j)) != r; j++);
-		
+
 		if ( j < num_ele_edg(e) ) {
 		    fnd = TRUE;
 		    ad_edge(sr, e, sreg[sr]->bnd, MAYBE, BEFORE);
@@ -103,7 +104,7 @@ int r;
     ck_clock(sr, TRUE);
     return(sr);
 }
-	
+
 
 #define IN 1
 #define ON 2
@@ -164,7 +165,7 @@ int *inside;
     for(g = 1, bp = bnd; g || bp != bnd; g=0, bp = bp->next) {
 
 	if ( ( (inside[nB(bp)] != OUT) && (inside[nF(bp)] == OUT) ) ||
-	     ( (inside[nF(bp)] != OUT) && (inside[nB(bp)] == OUT) ) ) { 
+	     ( (inside[nF(bp)] != OUT) && (inside[nB(bp)] == OUT) ) ) {
 
 	    if ( (inside[nB(bp)] != OUT) && (inside[nF(bp)] == OUT) )
 		dir = 1;
@@ -186,17 +187,17 @@ int *inside;
 
 	    /*convolutions to figure out the edge*/
 	    if ( enew < 0 ) {
-		if ( nd_edg(e,enew+2) != out_node ) 
+		if ( nd_edg(e,enew+2) != out_node )
 		    ad_edge(s[num], e, sreg[s[num]]->bnd, MAYBE, BEFORE);
 	    }
-	    else if ( (out_node == nd_edg(e,0)) || (out_node == nd_edg(e,1)) ) 
+	    else if ( (out_node == nd_edg(e,0)) || (out_node == nd_edg(e,1)) )
 		ad_edge(s[num], e, sreg[s[num]]->bnd, MAYBE, BEFORE);
 	    else
 		ad_edge(s[num], enew, sreg[s[num]]->bnd, MAYBE, BEFORE);
 
 	    /*walk around the existing region until we cross again*/
 	    for(bq = nexedg(bp);
-		(inside[begpt(bq)] == OUT) && (inside[endpt(bq)] != IN); 
+		(inside[begpt(bq)] == OUT) && (inside[endpt(bq)] != IN);
 		bq = nexedg(bq)) {
 		e = bq->edge;
 		ad_edge(s[num], e, sreg[s[num]]->bnd, MAYBE, BEFORE);
@@ -232,7 +233,7 @@ int *inside;
 	/*if this point is in or on the etch region, make it a surface point*/
 	if ( inside[nB(bp)] != OUT ) mk_surf(pt_nd(nB(bp)));
 
-	if ( (inside[nB(bp)] != OUT) && (inside[nF(bp)] == OUT) ) { 
+	if ( (inside[nB(bp)] != OUT) && (inside[nF(bp)] == OUT) ) {
 
 	    /*create a new skeleton...*/
 	    num++;
@@ -255,13 +256,13 @@ int *inside;
 
 	    /*convolutions to figure out the edge*/
 	    if ( enew < 0 ) {
-		if ( nd_edg(e,enew+2) != out_node ) 
+		if ( nd_edg(e,enew+2) != out_node )
 		    ad_edge(s[num], eadd=e, sreg[s[num]]->bnd, MAYBE, BEFORE);
-		else 
+		else
 		    eadd = e;
 	    }
 	    else {
-		if ( (out_node == nd_edg(e,0)) || (out_node == nd_edg(e,1)) ) 
+		if ( (out_node == nd_edg(e,0)) || (out_node == nd_edg(e,1)) )
 		    eadd = e;
 		else
 		    eadd = enew;
@@ -275,8 +276,8 @@ int *inside;
 	    }
 
 	    /*walk around the existing region until we cross again*/
-	    for(bq = bp->next; 
-		(inside[nF(bq)] == OUT); 
+	    for(bq = bp->next;
+		(inside[nF(bq)] == OUT);
 		bq = bq->next) {
 		e = bq->edge;
 		set(edg[e],MARKED);
@@ -301,13 +302,13 @@ int *inside;
 
 	    /*convolutions to figure out the edge*/
 	    if ( enew < 0 ) {
-		if ( nd_edg(e,enew+2) != out_node ) 
+		if ( nd_edg(e,enew+2) != out_node )
 		    ad_edge(s[num], eadd=e, sreg[s[num]]->bnd, MAYBE, BEFORE);
-		else 
+		else
 		    eadd = e;
 	    }
 	    else {
-		if ( (out_node == nd_edg(e,0)) || (out_node == nd_edg(e,1)) ) 
+		if ( (out_node == nd_edg(e,0)) || (out_node == nd_edg(e,1)) )
 		    eadd = e;
 		else
 		    eadd = enew;
@@ -364,7 +365,7 @@ int *inside;
 }
 
 
-	
+
 check_in(s1, s2, inside, ai, ao )
 int s1, s2;
 int *inside;
@@ -443,7 +444,7 @@ int sr;			/*The coordinates of the points. */
 	    d_perp( edg[bp->edge], p, alph );
 
 	    /*if we are closer than one angstrom*/
-	    if ( fabs(alph[1] * len) < 1.0e-8 ) 
+	    if ( fabs(alph[1] * len) < 1.0e-8 )
 		if ( (alph[0] >= 0.0) && (alph[0] <= 1.0) )
 		    return( TRUE );
 	}
@@ -547,7 +548,7 @@ float c[MAXDIM];
 	    if ( lil(p,dp,q,dq,alph) == 0 ) {
 
 		/*if they cross, nice and easy*/
-		if ((alph[0] >= 0.0) && (alph[0] <= 1.0) && 
+		if ((alph[0] >= 0.0) && (alph[0] <= 1.0) &&
 		    (alph[1] >= 0.0) && (alph[1] <= 1.0) ) {
 		    c[0] = alph[0] * dp[0] + p[0];
 		    c[1] = alph[0] * dp[1] + p[1];
@@ -574,7 +575,7 @@ float c[MAXDIM];
 	}
 	else {
 	    if (lil(p,dp,q,dq,alph) == 0) {
-		if ((alph[0] >= 0.0) && (alph[0] <= 1.0) && 
+		if ((alph[0] >= 0.0) && (alph[0] <= 1.0) &&
 		    (alph[1] >= 0.0) && (alph[1] <= 1.0) ) {
 		    c[0] = alph[0] * dp[0] + p[0];
 		    return( bp );

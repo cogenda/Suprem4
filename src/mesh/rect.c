@@ -19,6 +19,8 @@ static char sccsid[]="$Header: rect.c rev 5.1 7/3/91 08:30:53";
  *----------------------------------------------------------------------*/
 
 #include <stdio.h>	/* For malloc & stderr */
+#include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include <sysdep.h>
 
@@ -117,7 +119,7 @@ rline (par, param)
     /* Where the line is */
     lloc = 1e-4 * get_float (param, "location");
     if (nu > 0 && lloc <= uloc[dim][nu-1]) {
-	fprintf( stderr, "Error: %c node %d is in non-increasing order\n", 
+	fprintf( stderr, "Error: %c node %d is in non-increasing order\n",
 				XY[ dim], nu);
 	return( -1);
     }
@@ -179,10 +181,10 @@ smooth (dim)
     /* Now make 'em positive */
     for (in = 0; in < und[dim]; in++)
 	if (uspa[dim][in] < 0) uspa[dim][in] = -uspa[dim][in];
-	
+
     /* Search points in order of increasing h, and round down big h */
     done = salloc(int, maxuser);
-    for (in = 0; in < und[dim]; in++) 
+    for (in = 0; in < und[dim]; in++)
 	done[in] = 0;
 
     for (in = 0; in < und[dim]; in++) {
@@ -194,7 +196,7 @@ smooth (dim)
 		hmin = uspa[dim][jn];
 		jmin = jn;
 	    }
-	} 
+	}
 
 	for (jmax = jmin - 1; jmax < jmin + 2; jmax += 2) {
 	    if (jmax < 0 || jmax >= und[dim]) continue;
@@ -224,13 +226,13 @@ addint (dim)
     rloc  [dim][0] = uloc[dim][0];
     nxy [dim] = 1;
 
-    for (is = 0; is < und[dim]-1; is++) 
+    for (is = 0; is < und[dim]-1; is++)
     {
 	x = uloc[dim][is];
 	dx = uloc[dim][is+1] - x;
 	dvpram (uspa[dim][is], uspa[dim][is+1], fabs(dx),  &nn, &r, &f);
 
-	for (j = 0; j < nn; j++) 
+	for (j = 0; j < nn; j++)
 	{
 	    x += f*dx;
 	    rloc [dim][nxy[dim]] = x;
@@ -254,8 +256,8 @@ addint (dim)
     }
     return( 0);
 }
-	
-	
+
+
 
 /*-----------------DVPRAM-----------------------------------------------
  * Spacing parameters for dividing an edge.
@@ -290,12 +292,12 @@ dvpram (hl, hr, el, nnew, ratio, first)
 
     /* Ideally, the spacing increases by a fixed ratio, starting at
      * hleft, and increasing to hright, so that
-     *     elength = hl + r*hl + r**2*hl + ... + r**n*hl, and 
+     *     elength = hl + r*hl + r**2*hl + ... + r**n*hl, and
      *                                           \------->is hr.
      * Then elength = (r**(n+1)-1)/(r-1)*hl = (r*hr-1)/(r-1)*hl
      * which can be solved as r = (el-hl/el-hr), and
      * plug back in hr/hl = r**n to calculate n.
-     * However, n may not be an integer - round and adjust first step 
+     * However, n may not be an integer - round and adjust first step
      * accordingly.
      */
 
@@ -308,16 +310,16 @@ dvpram (hl, hr, el, nnew, ratio, first)
     rn = hr/hl;
     *nnew = (int) ((log(rn)/log(r))+0.5);
     /*
-    if (Debug) 
+    if (Debug)
        printf("rn=%g,r=%g,fnew=%g,nnew=%d\n",r,rn,((log(rn)/log(r))+0.5),*nnew);
     */
 
     if (*nnew == 0) return;
 
     *ratio = exp(log(rn)/ *nnew);
-    if (*ratio < 1/mr) *ratio = 1/mr;  
-    if (*ratio > mr  ) *ratio = mr;                 
-    
+    if (*ratio < 1/mr) *ratio = 1/mr;
+    if (*ratio > mr  ) *ratio = mr;
+
 
     *first = (*ratio-1) / (exp ((*nnew+1) * log(*ratio)) - 1);
     return;
@@ -363,20 +365,20 @@ squares(new_mr)
     /*for all regions*/
     for(ir = 0; ir < nur; ir++)
 	/*for all dimensions*/
-	for(dim = 0; dim < mode; dim++) 
+	for(dim = 0; dim < mode; dim++)
 	    /*for high and low...*/
 	    for(k = 0; k < 2; k++)
 		ureg[ir][ 2*dim + k ] = umap[dim][ ureg[ir][2*dim + k] ];
-	
+
 
     /*for all edges*/
     for (ij = 0; ij < nuj; ij++)
 	/*for all dimensions*/
-	for(dim = 0; dim < mode; dim++) 
+	for(dim = 0; dim < mode; dim++)
 	    /*for high and low...*/
 	    for(k = 0; k < 2; k++)
 		uedge[ij][ 2*dim + k ] = umap[dim][ uedge[ij][2*dim + k] ];
-	
+
 
     for(ix[0] = 0; ix[0] < nxy[0]; ix[0]++) {
 	for(ix[1] = 0; ix[1] < nxy[1]; ix[1]++) {
@@ -427,7 +429,7 @@ squares(new_mr)
     case ONED :
 	for(ir = 0; ir < nur; ir++) {
 	    for(ie = ureg[ir][0]; ie < ureg[ir][1]; ie++) {
-		vl[0] = ie; 
+		vl[0] = ie;
 		vl[1] = ie+1;
 		(void)mk_ele_pt(2, vl, ureg[ir][TYPLOC]);
 	    }

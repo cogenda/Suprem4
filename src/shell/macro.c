@@ -12,6 +12,8 @@
 /*   Last Modification : 7/3/91  08:28:12 */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include "global.h"
 #include "shell.h"
@@ -35,7 +37,7 @@ struct macro_table *macro;
     /*display each macro on a new line*/
     for(temp = macro; temp != NULL; temp = temp->next) {
 	/*this is easy...*/
-	if ( temp->args != NULL ) 
+	if ( temp->args != NULL )
 	    printf("%s%s\t%s\n", temp->name, temp->args, temp->replace);
 	else
 	    printf("%s\t%s\n", temp->name, temp->replace );
@@ -70,7 +72,7 @@ struct macro_table **macro;
 
     /*copy into name until end of name portion.
       The end of the name is defined to be either white space, or
-      a parenthesis. 
+      a parenthesis.
     */
     for(t = str; isalnum( *t ); t++);
 
@@ -122,7 +124,7 @@ struct macro_table **macro;
 
     /*undefine any old one that may be there*/
     (void)undef_macro(name, macro);
-    
+
     /*first malloc space for the new entry*/
     temp = salloc(struct macro_table , 1);
     temp->next = macro[0];
@@ -147,7 +149,7 @@ struct macro_table **macro;
 	if ( (eval_real( out, &val )) == NULL )
 	    sprintf(body, "%g", val);
     }
-	
+
     if ( out != NULL ) free_expr( out );
 
     /*copy the replacement portion*/
@@ -186,7 +188,7 @@ struct macro_table *macro;
 
     /*if no macros to check, return*/
     if (macro == NULL) return( 0 );
-    
+
     for( buf = *expand_str; *buf; ) {
 
 	/*if we happened to have stopped on a % sign, stop macro expansion*/
@@ -197,7 +199,7 @@ struct macro_table *macro;
 	}
 
 	save = buf;
-	    
+
 	/*if $ signals for expansion, do it*/
 	if ( *buf == '$' ) {
 
@@ -208,15 +210,15 @@ struct macro_table *macro;
 		buf++;
 	    }
 	    /*macros must be alphanumeric*/
-	    else 
+	    else
 		for( buf++, nl=0; isalnum( *buf ) ; name[nl++] = *(buf++) );
 	    mac = macro;
 	}
 	else  {
 	    for( nl=0; isalnum( *buf ) ; name[nl++] = *(buf++) );
-	    if ( domac ) 
+	    if ( domac )
 		mac = macro;
-	    else 
+	    else
 		mac = NULL;
 	}
 
@@ -227,7 +229,7 @@ struct macro_table *macro;
 
 	/*if mac is non-null, we have a match*/
 	if ( mac != NULL ) {
-	    
+
 	    /*check for arguments in this pup*/
 	    if (*buf == '(' ) {
 		/*returns a pointer to the string to be put in*/
@@ -242,7 +244,7 @@ struct macro_table *macro;
 	    }
 	    else
 		body = mac->replace;
-		    
+
 	    /*save the portion after the macro*/
 	    s = salloc(char , strlen(*expand_str) + 1);
 	    strcpy(s, buf);
@@ -257,7 +259,7 @@ struct macro_table *macro;
 
 	    /*put in the replacement portion*/
 	    for(t = body; *save = *t;  save++, t++ ) ;
-    
+
 	    /*now copy on the save portion*/
 	    strcpy(save, s);
 	    sfree( s );
@@ -293,7 +295,7 @@ struct macro_table **macro;
 
     for(old = NULL, mac = macro[0]; (mac != NULL) && strcmp(mac->name, name);
        old = mac, mac = mac->next);
-    
+
     if (mac == NULL)
 	/*didn't find a match*/
 	return(-1);

@@ -12,6 +12,8 @@
 /*   Last Modification : 7/3/91 08:28:08 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include "shell.h"
 extern char *read_line();
@@ -36,7 +38,7 @@ int per;
 
 	/*clear the current pointers*/
 	supbpt = 0;
-	
+
 	/*read input until and end of file or end of line*/
 	if ( isatty( fileno(in) ) )  {
 	    s = read_line(prompt);
@@ -59,8 +61,8 @@ int per;
     }
 
     /*read an input line into the lex buffer and macro expand*/
-    for( bufptr = 0; 
-	 supbuf[supbpt] && (buffer[bufptr] = supbuf[supbpt]) != '\n'; 
+    for( bufptr = 0;
+	 supbuf[supbpt] && (buffer[bufptr] = supbuf[supbpt]) != '\n';
 	 bufptr++, supbpt++);
     if ( supbuf[supbpt] == '\n' ) {
 	buffer[bufptr++] = '\n';
@@ -77,7 +79,7 @@ int per;
 	}
     }
 }
-   
+
 
 #ifndef HAVE_KSH
 char *read_line(prompt)

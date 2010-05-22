@@ -17,6 +17,7 @@
 /*   Last Modification : 2/3/93 14:02:27 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <signal.h>

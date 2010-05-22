@@ -17,7 +17,9 @@
 /*   Last Modification : 7/3/91 15:40:45 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
+
 #include <global.h>
 #include <constant.h>
 #include <geom.h>
@@ -45,7 +47,7 @@ int r1, r2;
     done = salloc( int, nn );
     for(ie1 = 0; ie1 < nn; ie1++) done[ie1] = FALSE;
 
-    /* 
+    /*
      This has to be done in a somewhat cludgey fashion,
      because the region structure has not been built yet for r1
     */
@@ -53,7 +55,7 @@ int r1, r2;
     /*step over all the elements in the first region*/
     ie1 = 0;
     while( done_tri(ie1) ) {
-	
+
 	/*if this triangle is in the region*/
 	if ( reg_tri(ie1) == r1 ) {
 	    for(i = 0; i < num_vert(ie1); i++) {
@@ -202,7 +204,7 @@ int pvt[3];
 
     /*perform pivoting*/
     am = 0.0;
-    for(i = 0; i < 3; i++) 
+    for(i = 0; i < 3; i++)
 	if ( fabs(a[i][0]) > am ) {am = fabs(a[i][0]); pvt[0] = i;}
 
     /*first row*/
@@ -239,7 +241,7 @@ int pvt[3];
 double ans[3];
 {
     double temp[3];
-    
+
     /*first do the the for solve*/
     ans[p0] /= a[p0][0];
     ans[p1] = (ans[p1] - a[p1][0] * ans[p0]) / a[p1][1];

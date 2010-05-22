@@ -17,13 +17,14 @@
 /*   Last Modification : 2/3/93 15:10:37 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 #include "sysdep.h"
 #include "constant.h"
-#include "global.h"	
+#include "global.h"
 #include "geom.h"
-#include "material.h"	
+#include "material.h"
 #include "implant.h"
 #include "refine.h"
 
@@ -168,7 +169,7 @@ double lat;
 
 
 
-/************************************************************************ 
+/************************************************************************
  *									*
  *	get_mat() - This routine finds the material indices for a given	*
  *  surface point.							*
@@ -176,7 +177,7 @@ double lat;
  *  Original:	MEL	12/86						*
  *									*
  ************************************************************************/
-get_mat( cur, angle ) 
+get_mat( cur, angle )
 struct surf_info *cur;
 int angle;
 {
@@ -220,7 +221,7 @@ int angle;
 	    break;
 	}
 
-	for( j = 1; j < mnum; j++ ) 
+	for( j = 1; j < mnum; j++ )
 	    mval[j] = (mval[j] - mval[0]) / tr[0][0] + x[0];
 	mval[0] = x[0];
     }
@@ -237,7 +238,7 @@ int angle;
 
 
 
-/************************************************************************ 
+/************************************************************************
  *									*
  *	free_surf() - This routine finds and orders a surface list	*
  *  for use in implantation.						*
@@ -249,7 +250,7 @@ free_surf( v )
 struct surf_info **v;
 {
     struct surf_info *cur, *next;
-	
+
     cur = *v;
 
     while( cur != NULL ) {

@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 10:50:18 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <assert.h>
 #include "global.h"

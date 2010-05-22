@@ -11,6 +11,8 @@ static char sccsid[]="smisc.c 5.1  7/3/91 08:28:18";
  * Original: CSR Thu Jul 16 16:47:28 1987
  *---------------------------------------------------------------------*/
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "global.h"
 #include "expr.h"
 #include "shell.h"

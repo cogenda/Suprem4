@@ -15,14 +15,15 @@
  * This effort has no justification whatsoever except raw speed.
  * Elastic is a misnomer = this is a viscous flow model without incompressiblity
  *----------------------------------------------------------------------*/
-
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
 #include "impurity.h"
 #include "material.h"
-#include <stdio.h>
-#include <assert.h>
+
 
 #define IAJA(R,C) iaja(ia, aoff, R, C)
 #define X 0
@@ -44,7 +45,7 @@ elast_growth( temp, dt)
 
     /* Get symbolic arrays */
     times( before);
-    
+
     /* Count # of real variables */
     for (j = 0, i = 0; i < nn; i++) if (nd[i]->mater != Si) j++;
 
@@ -59,13 +60,13 @@ elast_growth( temp, dt)
 	return;
     }
     a  = scalloc( double, 2*np + aoff+2);
-    
+
 
     /* smart new Ssymfac reallocs if necessary */
     loff = 2*np + 20*aoff;
     il = scalloc( int, loff);
     assert( !symfac( 2*np, (int *)0, 1, ia, aoff, &il, &loff));
-    
+
     l  = scalloc( double, 2*np+loff+2);
     rhs = scalloc( double, 2*np);
     aoff = loff = 0;
@@ -100,7 +101,7 @@ elast_growth( temp, dt)
 	    p = nd[ n]->pt;
 	    rhs[2*p + X] = - (1 - 1/alpha[SiO2][Si]) * ln[ X];
 	    rhs[2*p + Y] = - (1 - 1/alpha[SiO2][Si]) * ln[ Y];
-	    
+
 	    /* Mark these displacements as known */
 	    fix[ 2*p +X] = 1;
 	    fix[ 2*p +Y] = 1;
@@ -151,7 +152,7 @@ elast_growth( temp, dt)
 
 			/* Symmetry */
 			if (lcol > lrow) continue;
-			
+
 			where = IAJA( row, col);
 			a[ where] += elstif[ lrow][ lcol];
 		    }
@@ -165,7 +166,7 @@ elast_growth( temp, dt)
     numbac( 2*np, il, loff, l, rhs);
 
     times(after); print_time("Compressible matrix solution", before, after); times(before);
-    
+
     /* Transfer the answer into permanent storage */
     for (p = 0; p < np; p++) {
 	for (nx = pt[ p]->nd, nx1 = nx + pt[ p]->nn; nx < nx1; nx++) {
@@ -209,7 +210,7 @@ elem_stiff( ie)
     }
     Ym = E[ mat];
     Pr = pr[ mat];
-    
+
     /* Stiffness coeffts */
     C1 = Ym * (1 - Pr) / ((1 + Pr)*(1 - 2*Pr));
     C2 = Pr / (1 - Pr);
@@ -280,25 +281,25 @@ get_elasconn( ind, taken, num)
     int avail;
     int *nx, *nx1, tx, *j, *jj;
     tri_typ *at; pt_typ *ap;
-    
+
     avail = *num; *num = 0;
 
     /*tiptoe through the triangles at this point's nodes*/
     ap = pt[ ind];
     for (nx = ap->nd, nx1 = nx + ap->nn; nx < nx1; nx++) {
-	
+
 	for (tx = 0; tx < num_tri_nd(*nx); tx++) {
-	    
+
 	    at = tri[tri_nd(*nx,tx)];
 
 	    if (mat_reg(at->regnum) != Si) {
-		
+
 		/*include all the points of that triangle*/
 		for (j = at->nd, jj = j + 3; j < jj; j++) {
 		    taken[ (*num) ++] = nd[ *j]->pt;
 		    if ( (*num) >= avail) return( -1);
 		}
-		
+
 	    } else {
 		/* Silicon triangles only provide the self connection */
 		taken[ (*num) ++] = ind;
@@ -306,9 +307,9 @@ get_elasconn( ind, taken, num)
 	    }
 	}
     }
-    
+
     clean_list( taken, num);
-    
+
     return( 0);
 }
 

@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 12:08:51 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -44,7 +45,7 @@ int damage;	/*calculate the damage profile*/
 int sol;	/*storage location of implant*/
 int is;		/*storage location of I defects*/
 int vs;		/*storage location of V defects*/
-{ 
+{
     register int i, j, k, r;		/* every routine needs indices */
     struct imp_info  Idat[MAXREG];	/*the appropriate set*/
     struct imp_info  *data ;		/* pointer to constants */
@@ -95,7 +96,7 @@ int vs;		/*storage location of V defects*/
 
     /* For each vertical slice, compute the contribution */
     for( cur = surf; cur != NULL; cur = cur->next ) {
-	
+
 	/*work out the material by material offsets*/
 	bias = cur->top[0];		/*location of material top*/
 	dosofar = 0.0;
@@ -115,7 +116,7 @@ int vs;		/*storage location of V defects*/
 	    /* find the (new) equivalent depth */
 	    if ( dosofar != 0.0 ) {
 		depth = (cur->bot[rm] - cur->top[rm]) * 1.0e4;
-		bias = cur->top[rm] - 
+		bias = cur->top[rm] -
 		       zeqv(dosofar,dose,PRS_DX,depth,data)*1e-4;
 	    }
 
@@ -151,7 +152,7 @@ int vs;		/*storage location of V defects*/
 	    if ( ((mat == Si) || (mat == Poly) || (mat == GaAs) ) && damage ) {
 		for(j = 0; j < num_nd_reg(r); j++) {
 		    i = nd_reg(r, j);
-		
+
 		    l[0] = pt[ nd[i]->pt ]->cord[0];
 		    l[1] = pt[ nd[i]->pt ]->cord[1];
 		    l[2] = pt[ nd[i]->pt ]->cord[2];

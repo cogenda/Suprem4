@@ -13,6 +13,8 @@
 /*   Last Modification : 8/18/89  16:35:41 */
 
 #include <stdio.h>
+#include <stdlib.h>
+
 #define STATIC_ALLOCATION_TIME
 #include "sysdep.h"
 #include "check.h"

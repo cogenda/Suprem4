@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 10:50:23 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -170,7 +171,7 @@ int compute;	/*flag for computing the comparison*/
 	    sk = tm_sol[k];
 	    for(i = 0; i < nn; i++) {
 		if ( oarea[i] != 0.0 ) {
-		    Kt = (new[sk][i] - mid[sk][i]) / 
+		    Kt = (new[sk][i] - mid[sk][i]) /
 			 (LTE[soltoimp[sk]] * new[sk][i] + ABE[soltoimp[sk]]);
 		    nm += Kt * Kt;
 		}
@@ -179,14 +180,14 @@ int compute;	/*flag for computing the comparison*/
 
 	total = tsave;
 	nm = sqrt(nm / ( tm_nsol * nn ) );
-    
+
 	Kt = (nm > 0) ? exp( log( 60.0 / (9.0 * nm) ) / 3.0 ) : MAXFLOAT;
     }
     else {
 	Kt = 1.0;
 	for(nm = 0.0, k = 0; k < tm_nsol; k++) {
 	    sk = tm_sol[k];
-	    if ( !IS_LOCKED(soltoimp[sk]) ) 
+	    if ( !IS_LOCKED(soltoimp[sk]) )
 		for(i = 0; i < nn; i++) nd[i]->sol[sk] = new[sk][i];
 	}
     }

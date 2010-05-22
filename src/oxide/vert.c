@@ -9,6 +9,8 @@
 /*   vert.c                Version 5.1     */
 /*   Last Modification : 7/3/91  10:52:42 */
 
+#include <stdlib.h>
+
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
@@ -20,8 +22,7 @@
  * Try the assumption of vertical growth.
  * CSR Mar 86
  *----------------------------------------------------------------------*/
-vert_growth (temp)
-    float temp;		/* Processing temperature */
+void vert_growth (float temp)/* Processing temperature */
 {
     float *dofx;	/* List of dx(x) */
     float vel[2];		/* velocity at a point */
@@ -29,7 +30,7 @@ vert_growth (temp)
     int nrec = 1;		/* Number of interface nodes recorded */
     int n, p, jn, i, j;
     int vs = (mode == ONED)?(imptosol[XVEL]):(imptosol[YVEL]);
-    float x, xl, xh, vl, vh, dx1, dx2, dxdt; 
+    float x, xl, xh, vl, vh, dx1, dx2, dxdt;
 
     /* Compute dx/dt at each interface node */
     dofx = salloc( float, 2 * nn );
@@ -77,7 +78,7 @@ vert_growth (temp)
 
 	for (i = 0; i < nrec; i++)
 	    if (dofx[ 2*i + 0] > x) break;
-	
+
 	xl = dofx[ 2*(i-1) + 0];
 	xh = dofx[   2*i + 0];
 	vl = dofx[ 2*(i-1) + 1];
@@ -86,9 +87,9 @@ vert_growth (temp)
 	dx1 = vl + (vh - vl) * (x - xl) / (xh - xl);
 	dx2 = dx1 / alpha[SiO2][Si];
 
-	/* 
+	/*
 	 * Compute displacements of all nodes at this location.
-	 * Si3N4 nodes move with the SiO2 but Si nodes move 
+	 * Si3N4 nodes move with the SiO2 but Si nodes move
 	 * in the opposite direction, if they are on the boundary.
 	 */
 	for (j = 0; j < pt[ p]->nn; j++) {
@@ -104,8 +105,7 @@ vert_growth (temp)
     free(dofx);
 }
 
-int dofxcmp( a, b)
-    float *a, *b;
+int dofxcmp(float *a, float *b)
 {
     if      (*a <  *b) return(-1);
     else if (*a == *b) return( 0);

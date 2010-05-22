@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 10:44:13 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "global.h"
 
@@ -80,7 +81,7 @@ generate( nn, symb_var, symm, get_connect, pia, aoff)
 			    ia = *pia = sralloc( int, iamax, *pia);
 			}
 		    }
-		    
+
 		}
 	    ia[row + 1] = cnt;
 	}

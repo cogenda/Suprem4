@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:12:26 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 extern double erf(), erfc(), pow();
 #include <ctype.h>
@@ -69,10 +70,10 @@ float *val;
     char *err;
 
     /*evaluate the kids*/
-    if ( expr->left != NULL ) 
+    if ( expr->left != NULL )
 	if ( (err = eval_real( expr->left, &lval ) ) != NULL ) return(err);
 
-    if ( expr->right != NULL ) 
+    if ( expr->right != NULL )
 	if ( (err = eval_real( expr->right, &rval ) ) != NULL ) return(err);
 
     /*switch on the type of value contained in the passed argument*/
@@ -115,11 +116,11 @@ float *val;
 				else if ( rval < 0.0 ) *val = -1.0;
 				else *val = 0.0;
 				break;
-		case X     :    
-		case Y     :    
-		case Z     :    if ( (expr->left == NULL) || (expr->right == NULL) ) 
+		case X     :
+		case Y     :
+		case Z     :    if ( (expr->left == NULL) || (expr->right == NULL) )
 				    return("x,y,and z functions require two arguments\n");
-				else 
+				else
 				    *val = sol_interp( expr->value.ival, lval, rval );
 				break;
 		default    :    *val = interface( expr->value.ival, rval );
@@ -161,13 +162,13 @@ float *val;
 
     /*evaluate the kids*/
     if ( expr->type != VFN ) {
-	if ( expr->left != NULL ) 
+	if ( expr->left != NULL )
 	    if ( (err = eval_vec( expr->left, lval ) ) != NULL ) {
 		sfree(lval);
 		sfree(rval);
 		return(err);
 	    }
-	if ( expr->right != NULL ) 
+	if ( expr->right != NULL )
 	    if ( (err = eval_vec( expr->right, rval ) ) != NULL ) {
 		sfree(lval);
 		sfree(rval);
@@ -180,15 +181,15 @@ float *val;
     case OP1 :	/*plus or minus*/
 		/*check the unary case out*/
 		if (expr->left == NULL) {
-		    if ( expr->value.ival == '+' ) 
+		    if ( expr->value.ival == '+' )
 			for(i = 0; i < nn; i++) val[i] = rval[i];
-		    if ( expr->value.ival == '-' ) 
+		    if ( expr->value.ival == '-' )
 			for(i = 0; i < nn; i++) val[i] = - rval[i];
 		}
 		else {
-		    if ( expr->value.ival == '+' ) 
+		    if ( expr->value.ival == '+' )
 			for(i = 0; i < nn; i++) val[i] = lval[i] + rval[i];
-		    if ( expr->value.ival == '-' ) 
+		    if ( expr->value.ival == '-' )
 			for(i = 0; i < nn; i++) val[i] = lval[i] - rval[i];
 		}
 		break;
@@ -214,7 +215,7 @@ float *val;
 				break;
 		case ERFC  :	for(i=0; i<nn; i++) val[i] = erfc(rval[i]);
 				break;
-		case ABS   :	for(i=0; i<nn; i++) 
+		case ABS   :	for(i=0; i<nn; i++)
 				    val[i]=(rval[i]>0.0)?(rval[i]):(-rval[i]);
 				break;
 		case SQRT  :	for(i=0; i<nn; i++) val[i] = (double)sqrt( rval[i] );
@@ -225,9 +226,9 @@ float *val;
 				    else val[i] = 0.0;
 				}
 				break;
-		case X     :    
-		case Y     :    
-		case Z     :    if ( (expr->left == NULL) || (expr->right == NULL) ) 
+		case X     :
+		case Y     :
+		case Z     :    if ( (expr->left == NULL) || (expr->right == NULL) )
 				    err = "x,y,and z functions require two arguments\n";
 				else {
 				    tmp = sol_interp( expr->value.ival, *lval, *rval );
@@ -237,21 +238,21 @@ float *val;
 		}
 		break;
 
-    case RCONST :  
+    case RCONST :
 		for(i = 0; i < nn; i++) val[i] = expr->value.dval;
 		break;
 
-    case SOLVAL :  
+    case SOLVAL :
 		err = get_solval( val, expr->value.ival );
 		break;
 
-    case VFN    :  
+    case VFN    :
 		if ( (err = vfunc( rval, expr->value.ival, expr )) == NULL)
 		   for(i=0; i<nn; i++) val[i] = rval[i];
 		break;
 
     case STRING    :
-		err = "string not allowed in expression"; 
+		err = "string not allowed in expression";
 		break;
     }
     sfree(lval);

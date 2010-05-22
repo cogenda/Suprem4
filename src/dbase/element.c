@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:20:45 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <global.h>
 #include <constant.h>
 #include <dbaccess.h>
@@ -68,8 +69,8 @@ char *alloc_tri()
 }
 
 
-/* 
- * make an element with vertices and neighbor information 
+/*
+ * make an element with vertices and neighbor information
  */
 mk_ele( nv, v, nb, b, r, flag )
 int nv, *v;
@@ -180,13 +181,13 @@ dis_tri()
 {
     int i;
 
-    for (i=0; i < ne; i++) 
+    for (i=0; i < ne; i++)
 	dis_1tri(&(tri[i]));
     ne = 0;
 }
 
 
-/* 
+/*
  * discard a single triangle
  */
 dis_1tri (t)
@@ -278,7 +279,7 @@ tri_to_node()
     /*foreach triangle*/
     for(t = 0; t < ne; t++) {
 	if ( ! ask( tri[t], TRIPTS ) ) continue;
-	
+
 	/*get the material in a local*/
 	mat = mat_tri(t);
 
@@ -321,7 +322,7 @@ nxtel()
     /*set up the neighbor triangle list using the nd data for info*/
     jelema = 0;
     while ( done_tri(jelema) ) {
-	
+
 	if ( !ask(tri[jelema], NEIGHB)) {
 	    set(tri[jelema], NEIGHB);
 	    /*check each of the vertices connect list*/

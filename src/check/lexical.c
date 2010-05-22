@@ -17,6 +17,8 @@
 /*   Last Modification : 7/3/91 08:12:28 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include <ctype.h>
 #include "constant.h"
@@ -76,11 +78,11 @@ struct tok_str *tok;
 	       return( 0 );
 	       break;
     case '(' : tok->type = LPAR;
-	       tok->value.ival = NULL;
+	       tok->value.ival = 0;
                return( 0 );
 	       break;
     case ')' : tok->type = RPAR;
-	       tok->value.ival = NULL;
+	       tok->value.ival = 0;
                return( 0 );
 	       break;
     case '+' :
@@ -89,7 +91,7 @@ struct tok_str *tok;
 	       return( 0 );
 	       break;
     case '\0' : tok->type = EOI;
-	       tok->value.ival = NULL;
+	       tok->value.ival = 0;
                return( 0 );
 	       break;
     default  : break;
@@ -117,7 +119,7 @@ struct tok_str *tok;
     int ij;
     int mat1 = -1, mat2 = -1;
     int i, match;
-    
+
     /*sort of a mass case statement*/
     if ( ! strcmp( str, "log10" ) ) {
 	tok->type = FN;		tok->value.ival = LOG10;
@@ -177,7 +179,7 @@ struct tok_str *tok;
 		    if ( ij > match ) { match = ij; mat1 = i; }
 		}
 	    }
-	    
+
 	    /*do it for the second string*/
 	    for(match = -1, i = 0;  MatNames[i] != NULL; i++) {
 		if ( (*str2 == MatNames[i][1]) ) {
@@ -195,7 +197,7 @@ struct tok_str *tok;
     else return( -1 );
 }
 
-    
+
 
 
 /************************************************************************

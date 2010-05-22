@@ -17,6 +17,8 @@
 /*   Last Modification : 7/3/91 10:44:21 */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -120,7 +122,7 @@ int param;
     /*the size of the initial time step*/
     if ( is_specified( param, "init.time" ) )
 	methdata.init_time = get_float( param, "init.time" );
- 
+
     /*the type of timestep to use*/
     if ( TURNEDON( param, "trbdf"))   methdata.timemeth = TRBDF;
 
@@ -208,7 +210,7 @@ int param;
 
     if( is_specified( param, "oxide.early"))
 	oxide_Etol = get_float( param, "oxide.early");
-    
+
     if( is_specified( param, "oxide.late"))
 	oxide_Ltol = get_float( param, "oxide.late");
 
@@ -239,14 +241,14 @@ int param;
 	else
 	    gloop_imin = cos( tmpf/180*PI);
     }
-    
+
     /*skip silicon in stress calculation?*/
     if (is_specified( param, "skip.sil")) {
 	SilStress = !get_bool( param, "skip.sil");
     }
 
     /*get the iteration limit*/
-    if ( is_specified( param, "blk.itlim" ) ) 
+    if ( is_specified( param, "blk.itlim" ) )
 	methdata.blkitlim = get_int( param, "blk.itlim" );
 
     /*for the pairs - change them up*/
@@ -377,19 +379,19 @@ scramble( reorder)
 	    nd_reg(r,i) = reorder[ nd_reg(r,i) ];
 	}
     }
-	    
+
     /*change all the point node pointers in existence*/
     for(p = 0; p < np; p++) {
 	for(i = 0; i < pt[p]->nn; i++) {
 	    pt[p]->nd[i] = reorder[ pt[p]->nd[i] ];
 	}
     }
-	    
+
     /*generate the reverse of the reorder list, set up indices*/
     for(i = 0; i < nn; i++) newnd[ reorder[i] ] = nd[ i ];
 
     /*copy the new list over*/
-    for(i = 0; i < nn; i++) 
+    for(i = 0; i < nn; i++)
 	nd[i] = newnd[i];
 
     /*and that's all there is to it. */
@@ -472,6 +474,6 @@ int n;
     f = sqrt( f / n );
     return( f );
 }
-    
+
 
 

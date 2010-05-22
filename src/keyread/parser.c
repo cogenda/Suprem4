@@ -85,6 +85,7 @@
 /*   Last Modification : 3/20/91  09:25:42 */
 
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 #include "check.h"
 #include "key.h"
@@ -99,7 +100,7 @@
 
 
 /* Line 189 of yacc.c  */
-#line 103 "y.tab.c"
+#line 104 "y.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -190,7 +191,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 32 "parser.y"
+#line 33 "parser.y"
 
     int ival;
     float dval;
@@ -200,7 +201,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 204 "y.tab.c"
+#line 205 "y.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -212,7 +213,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 216 "y.tab.c"
+#line 217 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -510,10 +511,10 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    61,    61,    62,    66,    74,    78,    83,    91,   101,
-     109,   117,   125,   137,   141,   149,   153,   157,   162,   169,
-     174,   180,   185,   192,   196,   202,   208,   214,   220,   226,
-     232,   238,   244,   250,   256,   262,   270,   276,   282
+       0,    64,    64,    65,    69,    77,    81,    86,    94,   104,
+     112,   120,   128,   140,   144,   152,   156,   160,   165,   172,
+     177,   183,   188,   195,   199,   205,   211,   217,   223,   229,
+     235,   241,   247,   253,   259,   265,   273,   279,   285
 };
 #endif
 
@@ -1453,7 +1454,7 @@ yyreduce:
         case 4:
 
 /* Line 1455 of yacc.c  */
-#line 67 "parser.y"
+#line 70 "parser.y"
     {
 	    /*add the pointer to the top of the boolean tree*/
 	    current[0]->bexp = (yyvsp[(3) - (4)].bval);
@@ -1466,7 +1467,7 @@ yyreduce:
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 75 "parser.y"
+#line 78 "parser.y"
     {
 	    /*ignore the sucker*/
 	}
@@ -1475,7 +1476,7 @@ yyreduce:
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 79 "parser.y"
+#line 82 "parser.y"
     {
 	    /*push everything down on the stack*/
 	    current = (struct par_str **)push(current);
@@ -1485,7 +1486,7 @@ yyreduce:
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 84 "parser.y"
+#line 87 "parser.y"
     {
 	    /*pop a layer off and finish off the pointer list*/
 	    current = (struct par_str **)pop();
@@ -1498,7 +1499,7 @@ yyreduce:
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 92 "parser.y"
+#line 95 "parser.y"
     {
 	    /*ignore the line in error*/
 	    fprintf(stderr, "error in parsing the input key file\n");
@@ -1508,7 +1509,7 @@ yyreduce:
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 102 "parser.y"
+#line 105 "parser.y"
     {
 	    if (strlen((yyvsp[(2) - (3)].sval)) >= 12)
 		*((yyvsp[(2) - (3)].sval) + 11) = '\0';
@@ -1521,7 +1522,7 @@ yyreduce:
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 110 "parser.y"
+#line 113 "parser.y"
     {
 	    if (strlen((yyvsp[(2) - (4)].sval)) >= 12)
 		*((yyvsp[(2) - (4)].sval) + 11) = '\0';
@@ -1534,7 +1535,7 @@ yyreduce:
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 118 "parser.y"
+#line 121 "parser.y"
     {
 	    if (strlen((yyvsp[(2) - (4)].sval)) >= 12)
 		*((yyvsp[(2) - (4)].sval) + 11) = '\0';
@@ -1547,7 +1548,7 @@ yyreduce:
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 126 "parser.y"
+#line 129 "parser.y"
     {
 	    if (strlen((yyvsp[(2) - (5)].sval)) >= 12)
 		*((yyvsp[(2) - (5)].sval) + 11) = '\0';
@@ -1560,7 +1561,7 @@ yyreduce:
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 138 "parser.y"
+#line 141 "parser.y"
     {
 	    (yyval.ival) = COMM;
 	}
@@ -1569,7 +1570,7 @@ yyreduce:
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 142 "parser.y"
+#line 145 "parser.y"
     {
 	    (yyval.ival) = (yyvsp[(1) - (1)].ival);
 	}
@@ -1578,7 +1579,7 @@ yyreduce:
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 150 "parser.y"
+#line 153 "parser.y"
     {
 	    current[0]->def.dval = (yyvsp[(2) - (2)].dval);
 	}
@@ -1587,7 +1588,7 @@ yyreduce:
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 154 "parser.y"
+#line 157 "parser.y"
     {
 	    current[0]->def.sval = (yyvsp[(2) - (2)].sval);
 	}
@@ -1596,7 +1597,7 @@ yyreduce:
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 158 "parser.y"
+#line 161 "parser.y"
     {
 	    current[0]->def.ival = (yyvsp[(2) - (2)].ival);
 	}
@@ -1605,7 +1606,7 @@ yyreduce:
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 162 "parser.y"
+#line 165 "parser.y"
     {
 	    current[0]->def.ival = 0;
 	}
@@ -1614,7 +1615,7 @@ yyreduce:
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 170 "parser.y"
+#line 173 "parser.y"
     {
 	    current[0]->err_msg = (yyvsp[(1) - (1)].sval);
 	}
@@ -1623,7 +1624,7 @@ yyreduce:
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 174 "parser.y"
+#line 177 "parser.y"
     {
 	    current[0]->err_msg = NULL;
 	}
@@ -1632,7 +1633,7 @@ yyreduce:
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 181 "parser.y"
+#line 184 "parser.y"
     {
 	    (yyval.bval) = (yyvsp[(2) - (2)].bval);
 	}
@@ -1641,7 +1642,7 @@ yyreduce:
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 185 "parser.y"
+#line 188 "parser.y"
     {
 	    (yyval.bval) = NULL;
 	}
@@ -1650,7 +1651,7 @@ yyreduce:
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 193 "parser.y"
+#line 196 "parser.y"
     {
 	    (yyval.bval) = (yyvsp[(2) - (3)].bval);
 	}
@@ -1659,7 +1660,7 @@ yyreduce:
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 197 "parser.y"
+#line 200 "parser.y"
     {
 	    val_str t;
 	    t.ival = '>';
@@ -1670,7 +1671,7 @@ yyreduce:
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 203 "parser.y"
+#line 206 "parser.y"
     {
 	    val_str t;
 	    t.ival = '<';
@@ -1681,7 +1682,7 @@ yyreduce:
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 209 "parser.y"
+#line 212 "parser.y"
     {
 	    val_str t;
 	    t.ival = 'g';
@@ -1692,7 +1693,7 @@ yyreduce:
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 215 "parser.y"
+#line 218 "parser.y"
     {
 	    val_str t;
 	    t.ival = 'l';
@@ -1703,7 +1704,7 @@ yyreduce:
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 221 "parser.y"
+#line 224 "parser.y"
     {
 	    val_str t;
 	    t.ival = '|';
@@ -1714,7 +1715,7 @@ yyreduce:
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 227 "parser.y"
+#line 230 "parser.y"
     {
 	    val_str t;
 	    t.ival = '&';
@@ -1725,7 +1726,7 @@ yyreduce:
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 233 "parser.y"
+#line 236 "parser.y"
     {
 	    val_str t;
 	    t.ival = '=';
@@ -1736,7 +1737,7 @@ yyreduce:
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 239 "parser.y"
+#line 242 "parser.y"
     {
 	    val_str t;
 	    t.ival = 'n';
@@ -1747,7 +1748,7 @@ yyreduce:
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 245 "parser.y"
+#line 248 "parser.y"
     {
 	    val_str t;
 	    t.ival = '!';
@@ -1758,7 +1759,7 @@ yyreduce:
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 251 "parser.y"
+#line 254 "parser.y"
     {
 	    val_str t;
 	    t.ival = '+';
@@ -1769,7 +1770,7 @@ yyreduce:
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 257 "parser.y"
+#line 260 "parser.y"
     {
 	    val_str t;
 	    t.ival = '*';
@@ -1780,7 +1781,7 @@ yyreduce:
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 263 "parser.y"
+#line 266 "parser.y"
     {
 	    (yyval.bval) = (yyvsp[(1) - (1)].bval);
 	}
@@ -1789,7 +1790,7 @@ yyreduce:
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 271 "parser.y"
+#line 274 "parser.y"
     {
 	    val_str t;
 	    t.dval = (yyvsp[(1) - (1)].dval);
@@ -1800,7 +1801,7 @@ yyreduce:
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 277 "parser.y"
+#line 280 "parser.y"
     {
 	    val_str t;
 	    t.sval = (yyvsp[(1) - (1)].sval);
@@ -1811,7 +1812,7 @@ yyreduce:
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 283 "parser.y"
+#line 286 "parser.y"
     {
 	    val_str t;
 	    t.dval = (float)(yyvsp[(1) - (1)].ival);
@@ -1822,7 +1823,7 @@ yyreduce:
 
 
 /* Line 1455 of yacc.c  */
-#line 1826 "y.tab.c"
+#line 1827 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2034,7 +2035,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 290 "parser.y"
+#line 293 "parser.y"
 
 
 #include "lexical.c"
@@ -2063,9 +2064,7 @@ struct bool_exp *left, *right;
     return(t);
 }
 
-int yyerror()
-{ return 1; }
+int yyerror() { return (1); }
 
-int yywrap()
-{ return -1; }
+int yywrap(void) { return (1); }
 

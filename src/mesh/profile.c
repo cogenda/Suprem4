@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:30:52 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <global.h>
 #include <constant.h>
@@ -70,7 +71,7 @@ int param;
 	fprintf(stderr, "Must specify impurity to read in!\n");
 	return(-1);
     }
-    if ( is_specified(param, "offset") ) 
+    if ( is_specified(param, "offset") )
 	    offset = get_float(param, "offset");
     else
 	offset = 0.0;
@@ -141,7 +142,7 @@ int col;
     /*read all the data in*/
     data = salloc(double, 2*3000);
     for(cnt = 0;  fgets( iline, BUFSIZ, lu) != NULL;  ) {
-	
+
 	if ( sscanf( iline, "%le %le", &x, &y ) == 2 ) {
 	    data[2*cnt+0] = (x - offset) * 1.0e-4;
 	    data[2*cnt+1] = log(y);
@@ -157,7 +158,7 @@ int col;
 
     /*for all mesh points, add in the new doping values*/
     for(i = 0; i < nn; i++) {
-	
+
 	x = depth_cord( pt_nd(i) );
 
 	/*don't process unless we are in the bounds of the doping*/
@@ -166,7 +167,7 @@ int col;
 	    for(j = 0; (j < cnt-1) && (x > data[2*(j+1)+0]); j++);
 
 	    if ( j < cnt-1 ) {
-		
+
 		y = (x - data[2*j+0]) / (data[2*(j+1)+0] - data[2*j+0]);
 		y = (data[2*(j+1)+1] - data[2*j+1]) * y + data[2*j+1];
 

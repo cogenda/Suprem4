@@ -12,6 +12,7 @@
 #define  WANT_STATIC
 #include "FEgeom.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 
 extern int noderiv;
@@ -41,7 +42,7 @@ FEassmb( ia, aoff, a, rhs)
 
     /*Once upfront to handle the noderiv case*/
     dzero( stiff, MELDOF*MELDOF);
-    
+
     /*loop on elements*/
     for (ie = 0; ie < FEne; ie++) {
 	pie = FEelt[ ie];
@@ -74,7 +75,7 @@ FEassmb( ia, aoff, a, rhs)
 
     return;
 }
-
+
 
 /************************************************************************
  *									*
@@ -136,9 +137,9 @@ addstf( ia, aoff, a, rhs, nel, stiff, wrhs,  eqns, fixity, dummy)
 	}
     }
 }
-	    
+
 #define salloc(S,N) (S *) malloc( (N)*sizeof(S))
-
+
 ave_stress()
 {
     static double xl[MELDOF], disp[MELDOF], bc[MELDOF];
@@ -156,7 +157,7 @@ ave_stress()
 	    FEnd[ in]->sig[j] = 0;
 	    FEnd[ in]->eps[j] = 0;
 	}
-    
+
     /*loop on elements*/
     for (ie = 0; ie < FEne; ie++) {
 	pie = FEelt[ ie];
@@ -181,7 +182,7 @@ ave_stress()
 
     /* Average contributions */
     for (in = 0; in < FEnn; in++) {
-	if (count[ in] != 0) 
+	if (count[ in] != 0)
 	    for (j = 0; j < FEnsc; j++) {
 		FEnd[ in]->sig[ j] /= count[in];
 		FEnd[ in]->eps[ j] /= count[in];
@@ -230,7 +231,7 @@ localize( ie, xl, disp, eqns, fixity, bc)
 
 /* Do a formatted dump of the element stiffness matrix */
 dump_stiff( stiff, rhs, nel, stride, offset)
-     double *stiff, *rhs; 
+     double *stiff, *rhs;
      int nel, stride, offset;
 {
     int i, j;

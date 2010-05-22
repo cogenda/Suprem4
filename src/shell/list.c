@@ -12,6 +12,8 @@
 /*   Last Modification : 7/3/91  08:28:11 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include "global.h"
 
@@ -32,11 +34,11 @@ int first;
 {
     char *value, *str;
     int count, i;
-    
+
     /*if we are on the first pass preprocess for stepping loops*/
     if (first)
 	loop_check(s);
-    
+
     str = s[0];
 
     /*if str has zero length, return NULL*/
@@ -44,9 +46,9 @@ int first;
 	return(NULL);
 
     /*step over any leading parens*/
-    if ( *str == '(' ) 
+    if ( *str == '(' )
 	strcpy(str, str+1);
-    
+
     while ( isspace( *str ) ) strcpy(str, str+1);
 
     if( *str == 0) return(NULL);
@@ -71,7 +73,7 @@ int first;
     else
 	return( value );
 }
-   
+
 
 
 /************************************************************************
@@ -119,4 +121,4 @@ char **str;
 
     strcat(str[0], ")");
 }
-	
+

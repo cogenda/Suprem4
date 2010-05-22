@@ -17,6 +17,8 @@
 /*   Last Modification : 7/3/91 08:39:05 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -69,7 +71,7 @@ int param;
 	ptype = YSEC;
 	y = (mode == ONED)?0.0:y;
     }
-    else { 
+    else {
 	ptype = BND;
 	mat1 = ChosenMater( par, param, 0);
 	mat2 = ChosenMater( par, param, 1);
@@ -122,7 +124,7 @@ int param;
      * --- A layer-type print? --------------------
      */
     if ( layers ) {
-	
+
 	/*initialize the layer counters*/
 	lnum = 1;
 	lmat = data[0].mat;
@@ -165,7 +167,7 @@ int param;
 		lmat = data[i].mat;
 		dose = 0.0;
 	    }
-	    if (i != count-1) 
+	    if (i != count-1)
 		dose += 0.5 * (data[i+1].x - data[i].x) * data[i].y;
 	}
 	printf(" %-2d    ", lnum);

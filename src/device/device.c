@@ -11,6 +11,7 @@
 /*   Last Modification : 7/3/91 15:44:22  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -69,7 +70,7 @@ device_init( )
     }
     CLEAR_FLAGS(N, ALL_FLAGS);
     SET_FLAGS(N, PSEUDO);
-    
+
     /*interstitials*/
     impur[H].diff_coeff = Hmobil;
     impur[H].coupling = Hcoupling;
@@ -153,7 +154,7 @@ device_init( )
 device( par, param )
 char *par;
 int param;
-{ 
+{
     double *area;
     int tfl, tfm;
     char *movie;
@@ -183,7 +184,7 @@ int param;
 	SET_FLAGS(N, PSEUDO);
 	qfn = get_float( param, "qfn" );
     }
-    
+
     /*do we solve for holes*/
     if ( get_bool(param, "holes") )
 	SET_FLAGS(H, (DIFFUSING | MOBILE) );
@@ -340,10 +341,10 @@ double temp;
 	}
     }
 
-    if ( Ns != -1 ) 
-	for(i = 0; i < nn; i++) 
+    if ( Ns != -1 )
+	for(i = 0; i < nn; i++)
 	    set_sol_nd(i, Ns, Ni(mat_nd(i)) * exp( sol_nd(i,Ps) / Vt ));
-    if ( Hs != -1 ) 
-	for(i = 0; i < nn; i++) 
+    if ( Hs != -1 )
+	for(i = 0; i < nn; i++)
 	    set_sol_nd(i, Hs, Ni(mat_nd(i)) * exp( -sol_nd(i,Ps) / Vt ));
 }

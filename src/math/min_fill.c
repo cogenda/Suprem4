@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 10:44:15 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <math.h>
 #include "global.h"
@@ -34,7 +35,7 @@ extern o_compar();
 struct d_sort {
        float x;
        int  nbin, mat;
-       } ; 	     
+       } ;
 
 /* All links come off a single big list */
 typedef struct _link {struct _link *n; int v;} link;
@@ -47,8 +48,8 @@ int   su, hwm;			/* Storage used, high water mark */
 #define new_link(A) {if (!freelist) new_storage(); takefrom( freelist, A);\
 		     if (++su > hwm) hwm = su;}
 #define free_link(A) {takefrom((A)->n, freelist); su--;}
-		    
-	
+
+
 /************************************************************************
  *									*
  *	min_ia_fill( ia, reorder, talk) - Find a minimum fill ordering. *
@@ -70,7 +71,7 @@ min_ia_fill(ia, reorder, talk)
     link *nbrs;			/* Base of each nodes nbr list: .v=length */
     int in, nn, j;
 
-    struct d_sort *order;	     
+    struct d_sort *order;
     int count=0;
     float tmp;
 
@@ -81,13 +82,13 @@ min_ia_fill(ia, reorder, talk)
     link *p, *workl, *bestl;
     register link *q, *lastq;
     int  nnb, step, Obestn = -1, total = 0, e;
-    
+
 
     /* Initialize storage - make a guess of l ~ 5*a, update later.*/
     nn = ia[0] - 1;
 
     order = salloc( struct d_sort, nn );
-    
+
     if ( mode == TWOD ) {
         mask = salloc( int, nn);
         remaining = salloc( int, nn);
@@ -166,7 +167,7 @@ min_ia_fill(ia, reorder, talk)
 		}
 	    }
 	}
-		
+
         break;
 
 
@@ -185,7 +186,7 @@ min_ia_fill(ia, reorder, talk)
 	best = remaining[ besti];
 	Obestn = bestn;
 	bestl = &nbrs[ best];
-	
+
 	/* Take it off the remaining list and add it to the reorder list*/
 	remaining[ besti] = remaining[ --nremain];
 	reorder[ best] = step;
@@ -217,7 +218,7 @@ min_ia_fill(ia, reorder, talk)
 	    /* Reset mask */
 	    mask[best] = 0;
 	    for (q = workl->n; q; q = q->n) mask[ q->v] = 0;
-		    
+
 	    /* Might have a new lower count [never happens?] */
 	    if (workl->v < Obestn) Obestn = workl->v;
 	}
@@ -235,10 +236,10 @@ min_ia_fill(ia, reorder, talk)
     break;
    }
 
-    if (talk) 
+    if (talk)
 	 printf("high water mark=%d [%f *asize]  loff=%d\n",
 		hwm, (float) hwm / ia[ nn], total);
-    
+
     free(nbrs);
     free(storage);
     free(order);
@@ -263,7 +264,7 @@ struct d_sort  *f1, *f2;
 new_storage()
 {
     link *start, *end, *p;
-    
+
     if (!storage) {
 	storage = salloc( link, storage_size);
 	start = storage;
@@ -276,7 +277,7 @@ new_storage()
 	storage_size *= 2;
     }
     assert( storage);
-    
+
     for (p = start; p < end; p++) p->n = p+1;
     end->n = 0;
     freelist = start;

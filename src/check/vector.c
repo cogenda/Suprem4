@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:12:35 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 extern double erf(), erfc();
 #include <ctype.h>
@@ -84,14 +85,14 @@ int type;
 	for(i = 0; i < nn; i++) val[ i ] = sol_nd(i, index);
 	return( NULL );
         break;
-    
+
     case OXY  :
 	index = imptosol[ (imptosol[O2] != -1)? O2 : H2O ];
 	if ( index == -1 ) return( "The value is not available for plotting\n" );
 	for(i = 0; i < nn; i++) val[ i ] = sol_nd(i, index);
 	return( NULL );
         break;
-    
+
     case I    :
     case V    :
     case Psi  :
@@ -193,19 +194,19 @@ int type;
     case Y    :
 	for( i = 0; i < nn; i++ ) val[i] = cordinate(pt_nd(i),1);
 	break;
-    
+
 #ifdef DEVICE
     case QFN :
 	psol = imptosol[Psi];
 	isol = imptosol[N];
-	for( i = 0; i < nn; i++ ) 
+	for( i = 0; i < nn; i++ )
 	    val[i] = Phi_n(sol_nd(i,isol), sol_nd(i,psol), Ec[i], mat_nd(i), &d1,&d2);
 	break;
 
     case QFP :
 	psol = imptosol[Psi];
 	isol = imptosol[H];
-	for( i = 0; i < nn; i++ ) 
+	for( i = 0; i < nn; i++ )
 	    val[i] = Phi_p(sol_nd(i,isol), sol_nd(i,psol), Ev[i], mat_nd(i), &d1,&d2);
 	break;
 
@@ -219,7 +220,7 @@ int type;
 	for( i = 0; i < nn; i++ ) val[i] = - sol_nd(i,index) + Ev[i];
 	break;
 #endif
-    
+
     default :
 	for(i = 0; i < nn; i++) val[i] = 0.0;
 	break;
@@ -252,9 +253,9 @@ struct vec_str *expr;	/*argument of the vector function*/
     case DO_ACTIVE:
 
 	rex = expr->right;
-	if ( rex->type != SOLVAL ) 
+	if ( rex->type != SOLVAL )
 	    return("Active can only be taken of an impurity value");
-	
+
 	imp = rex->value.ival;
 
 	/*relate a stored concentration to the active substitutional portion*/
@@ -298,7 +299,7 @@ struct vec_str *expr;	/*argument of the vector function*/
     case GRADY:
 	RoughGrad( type, val);
 	break;
-    
+
     case DATA :
 	lex = expr->left;
 	rex = expr->right;
@@ -324,7 +325,7 @@ struct vec_str *expr;	/*argument of the vector function*/
 	    }
 	}
 	break;
-	
+
     default:
 	fprintf(stderr, "Internal error: unknown vector function %d\n", type);
 	break;
@@ -348,7 +349,7 @@ constants( str, tok )
 char *str;
 struct tok_str *tok;
 {
-    
+
     /*sort of a mass case statement*/
     if ( ! strcmp( str, "Kb" ) ) {
 	tok->type = RCONST;		tok->value.dval = 8.62e-5;
@@ -356,7 +357,7 @@ struct tok_str *tok;
     }
     return( -1 );
 }
-    
+
 
 /************************************************************************
  *									*
@@ -568,7 +569,7 @@ struct tok_str *tok;
 	tok->value.ival = iG;
 	return(0);
     }
-    
+
     return( -1 );
 }
 
@@ -648,7 +649,7 @@ RoughGrad( which, vector)
 	    ehed = cpl_edg(e);
 	    nb = (nd_edg(e,0)==in)?(nd_edg(e,1)):(nd_edg(e,0));
 
-	    accum[in] += ehed * ((vector[in]-vector[nb]) / len ) * 
+	    accum[in] += ehed * ((vector[in]-vector[nb]) / len ) *
 			 (cordinate(pt_nd(in),which) - cordinate(pt_nd(nb),which)) / len;
 	    wt += ehed;
 	}
@@ -665,6 +666,6 @@ RoughGrad( which, vector)
 
 
 
-	
-    
-    
+
+
+
