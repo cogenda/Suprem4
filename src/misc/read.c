@@ -35,7 +35,7 @@
  *	Original	Mark E. Law		Oct, 1984		*
  *									*
  ************************************************************************/
-read_ukfile( name )
+int read_ukfile( name )
 char *name;
 {
     FILE *fd;
