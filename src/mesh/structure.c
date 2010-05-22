@@ -17,7 +17,7 @@
 /*   Last Modification : 7/3/91 08:30:57 */
 
 #include <stdio.h>
-
+#include <stdlib.h>
 #ifdef CONVEX
 #include <strings.h>
 #else
@@ -104,7 +104,7 @@ int param;
     skelfile = get_string( param, "skel" );
     piffile = get_string( param, "pif" );
 
-    /* See if we clear counter or if we are incrementing files */ 
+    /* See if we clear counter or if we are incrementing files */
     if (get_bool(param, "clear"))
 	filecount = 0;
 
@@ -117,7 +117,7 @@ int param;
 
   	/* pad ext with 0's */
 	for (i = 0; i < 3; i++)
-	    if (ext[i] == ' ') 
+	    if (ext[i] == ' ')
 		ext[i] = '0';
 
     /* since I add file extensions here we need to allocate more space */
@@ -135,7 +135,7 @@ int param;
     /* See if the mesh modification parameters are given */
     lflip = get_bool(param, "flip.y");
     scale = get_float( param, "scale");
-   
+
 
 
     /*Are we going in or out? */
@@ -150,7 +150,7 @@ int param;
     }
 
     /*write out the file if that is asked for*/
-    if (outfile) 
+    if (outfile)
 	if ((ier = ig2_write(outfile, lflip, scale)) < 0) return(ier);
 
     /*etcetc*/
@@ -178,7 +178,7 @@ int param;
         if ((ier = polygon_etch(etchfile, skip)) < 0) return(ier);
     }
 
-    if (skelfile) 
+    if (skelfile)
 	if ((ier = skel_write(skelfile, lflip, scale)) < 0) return(ier);
 
     if (piffile)

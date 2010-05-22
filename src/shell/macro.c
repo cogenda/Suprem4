@@ -233,8 +233,7 @@ struct macro_table *macro;
 	    /*check for arguments in this pup*/
 	    if (*buf == '(' ) {
 		/*returns a pointer to the string to be put in*/
-		body = (char *)arg_expand(buf, mac);
-		if (body == NULL) {
+                if (arg_expand(buf, mac) == 0) {
 		    fprintf(stderr, "argument mismatch with macro\n");
 		    return( -1 );
 		}
@@ -330,7 +329,7 @@ struct macro_table **macro;
  *  Original:	MEL	2/85						*
  *									*
  ************************************************************************/
-arg_expand(s, mac)
+int arg_expand(s, mac)
 char *s;
 struct macro_table *mac;
 {
@@ -355,7 +354,7 @@ struct macro_table *mac;
     for(cnam=0; (argvalue[cnam]=list_parse(&list,FALSE)) != NULL; cnam++);
 
     /*if we don't get the same number, exit*/
-    if ( (cval != cnam) || (cval == 0) ) return( NULL );
+    if ( (cval != cnam) || (cval == 0) ) return 0;
 
     /*build a sub macro table from these pups*/
     for(i = 0; i < cval; i++) {
@@ -381,5 +380,6 @@ struct macro_table *mac;
     sfree(list);
     sfree(args);
 
-    return( (int )body );
+    if(body) return 1;
+    return 0;
 }

@@ -47,7 +47,7 @@ extern panic();
 EXTERN char *MallocResult;
 #define salloc(O,N)  ((O *)malloc((unsigned)((N)*sizeof(O))))
 #define scalloc(O,N) ((O *)calloc((unsigned)(N),(unsigned)(sizeof(O))))
-#define sralloc(O,N,P) ((O *)realloc((char *)P, (unsigned)((N)*sizeof(O))))
+#define sralloc(O,N,P) ((O *)realloc((void *)(P), (unsigned)((N)*sizeof(O))))
 
 #define sfree(P) free((char *)P)
 

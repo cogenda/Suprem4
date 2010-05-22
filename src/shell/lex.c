@@ -53,7 +53,8 @@
 
 static int ylstate = C_STATE;
 static char *par_sep = ";>&\n\001";
-
+char * read_quote(char *str);
+char * read_until(char *str);
 
 /************************************************************************
  *									*
@@ -128,14 +129,14 @@ yylex()
 			    break;
 
 	case PAR_STATE  :    /*read until a separator character*/
-			    yylval.sval = (char *)read_quote( par_sep );
+			    yylval.sval = read_quote( par_sep );
 			    ylstate = C_STATE;
 			    if ( strlen( yylval.sval ) != 0 )
 				return( PARAMETER );
 			    break;
 
 	case READ_STATE :    /*read until the end of a line*/
-			    yylval.sval = (char *)read_until( "\n\001" );
+			    yylval.sval = read_until( "\n\001" );
 			    ylstate = C_STATE;
 			    if ( strlen( yylval.sval ) != 0 )
 				return( PARAMETER );
@@ -338,7 +339,7 @@ lex_command()
  *  Original:	MEL	2/85						*
  *									*
  ************************************************************************/
-read_until( str )
+char * read_until( str )
 char *str;
 {
     register char *s;
@@ -366,7 +367,7 @@ char *str;
     pushc( *s );
     *s = '\0';
 
-    return( (int) s0 );
+    return( s0 );
 }
 
 
@@ -383,7 +384,7 @@ char *str;
  *  Original:	MEL	11/86						*
  *									*
  ************************************************************************/
-read_quote( str )
+char * read_quote( str )
 char *str;
 {
     register char *s;
@@ -434,7 +435,7 @@ char *str;
     }
     pushc( *s );
     *s = '\0';
-    return( (int) s0 );
+    return( s0 );
 }
 
 

@@ -13,6 +13,8 @@
 /*   Last Modification : 7/3/91  08:41:08 */
 
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "global.h"
 #include "check.h"
 
@@ -35,14 +37,14 @@
  *	Original:	Mark E. Law	Oct, 1984			*
  * 									*
  ************************************************************************/
-get_value( par, name , value)
+int get_value( par, name , value)
 struct par_str **par;
 char *name;
 val_str *value;
 {
     int i;
     register char *s, *ss;
-    
+
     /*check each parameter*/
     for( ; par[0] != NULL; par++ ) {
 
@@ -74,7 +76,7 @@ val_str *value;
  *	Original:	Mark E. Law	Oct, 1984			*
  *									*
  ************************************************************************/
-get_bool(par, name)
+int get_bool(par, name)
 int par;
 char *name;
 {
@@ -82,7 +84,7 @@ char *name;
 
     if (get_value(((struct par_str *)par)->param, name, &value) != -1)
 	return( value.ival );
-	
+
     return(0);
 }
 
@@ -113,7 +115,7 @@ char *name;
  *	Original:	Mark E. Law	Oct, 1984			*
  *									*
  ************************************************************************/
-get_int(par, name)
+int get_int(par, name)
 int par;
 char *name;
 {
@@ -157,7 +159,7 @@ char *name;
  * Original:	MEL	1/85						*
  *									*
  ************************************************************************/
-is_specified(par, name)
+int is_specified(par, name)
 int par;
 char *name;
 {

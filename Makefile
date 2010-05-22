@@ -43,9 +43,9 @@ DATADIR = $(HERE)/data
 
 #.. Which C and Fortran Compiler?
 #CC	= cc
-CC	= gcc
+CC	= gcc -m32
 #FC	= f77
-FC	= gfortran
+FC	= gfortran -m32
 
 #.. What optimization level for the compilers?
 #COPT	= -O3
@@ -88,7 +88,8 @@ GROBJS	= xsupr4/Graph.o xsupr4/app1.o xsupr4/draw.o xsupr4/help.o \
 #LIBS	= $(GRLIBS) -ly -ll -lm -ltermlib
 # BSD uses termcap
 #LIBS	= $(GRLIBS) -ly -ll -lm -ltermcap
-LIBS  = $(GRLIBS) -lm -ltermcap
+#It seems termcap does not be required by linux
+LIBS  = $(GRLIBS) -lm
 
 
 #.. SysV users take note!  In src/Makefile.proto, down where the

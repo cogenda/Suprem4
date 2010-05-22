@@ -8,12 +8,16 @@
  * Graph.c - bitmap editor widget.
  */
 
-#include <X11/IntrinsicP.h>
-#include <X11/StringDefs.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <pwd.h>
+
+#include <X11/Xlib.h>
+#include <X11/IntrinsicP.h>
+#include <X11/StringDefs.h>
+
+
 
 #include "GraphP.h"
 

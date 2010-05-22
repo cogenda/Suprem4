@@ -9,7 +9,7 @@
  */
 
 #include <stdio.h>
-
+#include <stdlib.h>
 #include "sysdep.h"
 
 #define  OP_READ  "r"
@@ -48,7 +48,7 @@ fgtmom(elem, mattr, energy, rp, sigp, gam1, kurt, later)
 
 
 	/* ---- start gtmom ---- */
-	if ( file = (char *)getenv( "IMPFILE" ) ) 
+	if ( file = (char *)getenv( "IMPFILE" ) )
 	    fp = fopen( file, OP_READ );
 	else
 	    fp = fopen(IMP_FILE, OP_READ) ;
@@ -61,13 +61,13 @@ fgtmom(elem, mattr, energy, rp, sigp, gam1, kurt, later)
 	while (! found && fgets(line, 132, fp) ) {
 		if (line[0] == CMT_CHAR) continue ;	/* bag comment line */
 
-		sscanf(line , "%d %d %lf %lf %lf %lf %lf %lf" , 
+		sscanf(line , "%d %d %lf %lf %lf %lf %lf %lf" ,
 			    &kmatt, &kelem, &ax, &rx, &sx, &cx, &kx, &lx);
 
   		/* If this the material and element we want. */
 		if (kmatt == mattr  &&  kelem == elem) {
 
-			/* If this is the first time we've found this 
+			/* If this is the first time we've found this
 			 *  combination of material and impurity types.
 			 */
 			if (!already) {
@@ -79,7 +79,7 @@ fgtmom(elem, mattr, energy, rp, sigp, gam1, kurt, later)
 				already = T ;
 				}
 
-			/* Found energy or overshot */	
+			/* Found energy or overshot */
 			found = (energy <= ax) ;
 
 			/* If we havn't found the right data yet , save the
@@ -97,14 +97,14 @@ fgtmom(elem, mattr, energy, rp, sigp, gam1, kurt, later)
 
 			}/*of if matterial matches */
 
-		/* If this is not the material and element we want, but we 
+		/* If this is not the material and element we want, but we
 		 *  found them before, then the energy specified is too large.
 		 */
 		else if (already) {
 			ierr = E_GTMOM_EBIG ;
 			goto done ;
 			}
-		
+
 		}/* of while reading */
 
 	/* If we ended because of an EOF, then we never found the pair */
@@ -128,7 +128,7 @@ fgtmom(elem, mattr, energy, rp, sigp, gam1, kurt, later)
 	*later = l0 * fact1 + lx * fact2 ;	/* Lateral standard deviation*/
 
 #ifdef DEBUG
-	printf("gtmom: %g Kev -> Rp = %g, sigp = %g, gam1 = %g, kurt = %g\n" , 
+	printf("gtmom: %g Kev -> Rp = %g, sigp = %g, gam1 = %g, kurt = %g\n" ,
 			energy , *rp, *sigp, *gam1, *kurt);
 #endif
 

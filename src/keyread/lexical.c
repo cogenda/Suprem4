@@ -1,4 +1,6 @@
-# include "stdio.h"
+# include <stdio.h>
+# include <stdlib.h>
+
 # define U(x) x
 # define NLSTATE yyprevious=YYNEWLINE
 # define BEGIN yybgin = yysvec + 1 +

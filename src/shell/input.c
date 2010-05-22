@@ -48,7 +48,10 @@ int per;
 	    free(s);
 	}
 	else {
-	    i = (int)fgets(supbuf, supbln, in);
+	    if(fgets(supbuf, supbln, in)==NULL)
+              i=0;
+            else
+              i=1;
 	}
 
 	/*fix up the values*/

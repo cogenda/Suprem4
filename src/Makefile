@@ -31,8 +31,8 @@ HELPDIR	= $(HERE)/../help
 DATADIR	= $(HERE)/../data
 
 #.. Which C and Fortran Compiler?
-CC	= gcc
-FC	= gfortran
+CC	= gcc -m32
+FC	= gfortran -m32
 
 #.. What optimization level for the compilers?
 #COPT	= -O3
@@ -67,7 +67,8 @@ GROBJS	= xsupr4/Graph.o xsupr4/app1.o xsupr4/draw.o xsupr4/help.o \
 #LIBS	= $(GRLIBS) -ly -ll -lm -ltermlib
 # bsd uses termcap
 #LIBS	= $(GRLIBS) -ly -ll -lm -ltermcap
-LIBS  = $(GRLIBS) -lm -ltermcap
+#It seems termcap does not be required by linux
+LIBS  = $(GRLIBS) -lm
 
 
 #.. SysV users take note!  Down where the archive files are ranlib'd
