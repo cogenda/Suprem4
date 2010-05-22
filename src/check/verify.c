@@ -139,7 +139,7 @@ char *name;
  *	Original	Mark E. Law		Oct, 1984		*
  *									*
  ************************************************************************/
-verify(name, pars, value, parloc)
+int verify(name, pars, value, parloc)
 char *name;
 struct par_str **pars;
 val_str *value;

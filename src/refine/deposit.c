@@ -79,7 +79,7 @@ int param;
     sfile = get_string( param, "file" );
 
     if (sfile == NULL)  {
-	if ( is_specified( param, "space" ) ) 
+	if ( is_specified( param, "space" ) )
 	    space = get_float( param, "space" ) * 1.0e-4;
 	else
 	    space = thick / ndiv;
@@ -91,7 +91,7 @@ int param;
 	    return(-1);
 	}
 
-	if ( is_specified( param, "square" ) ) 
+	if ( is_specified( param, "square" ) )
 	    square = get_bool( param, "square" );
 	else
 	    square = TRUE;
@@ -119,7 +119,7 @@ int param;
 
     /*get the concentration*/
     conc = get_float( param, "concentrat" );
-    
+
     /*generate the line of the surface*/
     nump = find_surf( &p );
 
@@ -135,6 +135,8 @@ int param;
     /*build a skeleton region and go at it*/
     iskel = build_skel( nump, p, numop, op, ndiv, r, (double)thick/ndiv, square );
 
+    free(op);
+
     /*do the triangulation of the skeleton region*/
     grid( iskel, r, FALSE, TRUE );
 
@@ -145,7 +147,7 @@ int param;
     bd_connect( "after deposit" );
 
     /*deposit new nodes with dopant*/
-    if ( imp > 0 ) { 
+    if ( imp > 0 ) {
 	add_impurity( imp, 1.0e5, -1 );
 
 	switch( imp ) {
@@ -190,7 +192,7 @@ int param;
 	    pressure = get_float(param, "pressure");
 
 	/*add the grain size*/
-        add_impurity( GRN, 0.0, -1 ); 
+        add_impurity( GRN, 0.0, -1 );
 
 	/*inititialize the grain size*/
 	poly_init( oldnn, temp, pressure, thick, imp,conc,ndiv );
@@ -275,7 +277,7 @@ int square;
 		e = edge_nd(ln, e1);
 		if ( (nd_edg(e,0) == node) || (nd_edg(e,1) == node) ) ef = e;
 	    }
-	    if ( ef == -1 ) 
+	    if ( ef == -1 )
 		ef = mk_edg(ln, node);
 	    else
 		clr( edg[ef], ESURF );
@@ -296,7 +298,7 @@ int square;
 	c[0] = p[nump-1].x + (op[numop-1].x - p[nump-1].x) * (i + 1) / div;
 	c[1] = p[nump-1].y + (op[numop-1].y - p[nump-1].y) * (i + 1) / div;
 
-	if ((mode != ONED) && square && (c[0] > p[nump-1].x)) 
+	if ((mode != ONED) && square && (c[0] > p[nump-1].x))
 	    c[0] = p[nump-1].x;
 
 	/*make a point and a node*/
@@ -353,7 +355,7 @@ int square;
 	    c[0] = p[0].x + (op[0].x - p[0].x) * i / div;
 	    c[1] = p[0].y + (op[0].y - p[0].y) * i / div;
 
-	    if ((mode != ONED) && square && (c[0] < p[0].x)) 
+	    if ((mode != ONED) && square && (c[0] < p[0].x))
 		c[0] = p[0].x;
 
 	    /*make a point and a node*/

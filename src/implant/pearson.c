@@ -59,9 +59,6 @@ int vs;		/*storage location of V defects*/
     double l[MAXDIM];
     double maxlat = 0;
 
-    /*compute a node to region mapping*/
-    node_done = salloc(int, nn);
-
     /* for all used materials, get the implant data */
     for(r = 0; r < nreg; r++) {
 	mat = mat_reg(r);
@@ -80,6 +77,9 @@ int vs;		/*storage location of V defects*/
 	if ( Idat[r].lat[LATSIG] > maxlat ) maxlat = Idat[r].lat[LATSIG];
 
     }
+
+    /*compute a node to region mapping*/
+    node_done = salloc(int, nn);
 
     /*initialize the surface structure information*/
     make_surf( &surf, angle, 8*maxlat );

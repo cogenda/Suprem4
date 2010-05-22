@@ -208,12 +208,11 @@ struct tok_str *tok;
  *  Original:	MEL	2/85						*
  *									*
  ************************************************************************/
-lexical( str, tok )
-char *str;
-struct tok_str *tok;
+int lexical( char *str, struct tok_str *tok )
 {
     char *s, *t;
     char tmp[256];
+    char buf[256];
     int i;
     char *parse_real();
 
@@ -225,14 +224,16 @@ struct tok_str *tok;
 
     /*parse this particular character*/
     if (single_char( s, tok ) == 0) {
-	strcpy(str, s + 1);
+        strcpy(buf, s + 1);
+        strcpy(str, buf);
 	return( 0 );
     }
 
     /*it is getting harder*/
     if ( (t = parse_real(s, &(tok->value.dval))) != NULL )  {
 	tok->type = RCONST;
-	strcpy(str, t);
+        strcpy(buf, t);
+        strcpy(str, buf);
 	return( 0 );
     }
 
@@ -241,26 +242,31 @@ struct tok_str *tok;
     tmp[i] = '\0';
 
     if ( functions( tmp, tok ) == 0 ) {
-	strcpy(str, s);
+        strcpy(buf, s);
+        strcpy(str, buf);
 	return( 0 );
     }
     if ( constants( tmp, tok ) == 0 ) {
-	strcpy(str, s);
+        strcpy(buf, s);
+        strcpy(str, buf);
 	return( 0 );
     }
     if ( vec_func( tmp, tok ) == 0 ) {
-	strcpy(str, s);
+        strcpy(buf, s);
+        strcpy(str, buf);
 	return( 0 );
     }
     if ( sol_values( tmp, tok ) == 0 ) {
-	strcpy(str, s);
+        strcpy(buf, s);
+        strcpy(str, buf);
 	return( 0 );
     }
     else {
 	tok->type = STRING;
 	tok->value.sval = salloc( char, strlen(tmp)+1 );
 	strcpy(tok->value.sval, tmp);
-	strcpy(str, s);
+        strcpy(buf, s);
+        strcpy(str, buf);
 	return(0);
     }
     return(0);
