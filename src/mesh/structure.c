@@ -64,7 +64,7 @@ structure( par, param )
 char *par;
 int param;
 {
-    int ier, before[4], after[4];
+    int ier;
     int lflip;
     int i;
     int increment;
@@ -142,11 +142,7 @@ int param;
     if ( infile ) {
 	if ((ier = ig2_read(infile, lflip, scale) < 0)) return(ier);
 
-	times(before);
 	create_db( (nn==0) );
-	times(after);
-	print_time("connectivity setup", before, after);
-
     }
 
     /*write out the file if that is asked for*/

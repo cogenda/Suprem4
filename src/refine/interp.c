@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <sys/times.h>
 
 #include <global.h>
 #include <constant.h>
@@ -33,15 +34,14 @@
 /*
  * interpolate the solutions found in r2 onto those found in r1
 */
-interp( r1, r2)
-int r1, r2;
+void interp( int r1, int r2)
 {
     register int ie1, ie2;
     register int i,j, in, fnd;
     int *done;
-    int before[4], after[4];
+    struct tms before, after;
 
-    times(before);
+    times(&before);
 
     /*initialize the done array*/
     done = salloc( int, nn );
@@ -86,8 +86,8 @@ int r1, r2;
 	next_tri(ie1);
     }
     free(done);
-    times(after);
-    print_time("total interpolation time", before, after);
+    times(&after);
+    print_time("total interpolation time", &before, &after);
 }
 
 

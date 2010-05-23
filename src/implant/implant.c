@@ -18,6 +18,8 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <sys/times.h>
+
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
@@ -28,8 +30,6 @@
 #include "defect.h"
 #include "expr.h"
 
-
-
 /************************************************************************
  *									*
  *	implant( par, param ) - Implant calculates a simple gaussian 	*
@@ -38,16 +38,14 @@
  *  Original:	MEL	1/85						*
  *									*
  ************************************************************************/
-implant( par, param )
-char *par;
-int param;
+int implant( char * par, int param )
 {
     register int i, j;
     int imp, impa, ion, sol;
     int isol, vsol;
     int damage;
     double dose, energy;
-    int before[4], after[4];
+    struct tms before, after;
     double ang;
 
     if( InvalidMeshCheck()) return -1;
@@ -102,10 +100,10 @@ int param;
 	damage_read = TRUE;
     }
 
-    times(before);
+    times(&before);
     do_implant( ion, ang, dose, energy, damage, sol, isol, vsol );
-    times(after);
-    print_time("Implantation calculation", before, after);
+    times(&after);
+    print_time("Implantation calculation", &before, &after);
 
     /*untranslate the mesh onto the new angle coordinates*/
     for(i = 0; i < np; i++) {
@@ -153,10 +151,7 @@ int param;
  *  Mod 1:	SEH	02/92  Add GaAs elements			*
  *									*
  ************************************************************************/
-imp_select( param, imp, ion )
-int param;
-int *imp;
-int *ion;
+int imp_select( int param, int *imp, int *ion )
 {
     int	 i, gaas, si;
 

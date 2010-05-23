@@ -18,7 +18,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "math.h"
+#include <sys/times.h>
+#include <math.h>
+
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
@@ -30,14 +32,15 @@
  *----------------------------------------------------------------------*/
 int flip()
 {
-    int it,j,count,flips=0,all_done,need_flip(),*todo,*done;
-    int before[4], after[4]; char buf[100];
+    int it,j,count,flips=0,all_done,*todo,*done;
+    struct tms before, after;
+    char buf[100];
     int yes;
 
     /*no flipping required in one dimension*/
     if ( mode != TWOD ) return(0);
 
-    times(before);
+    times(&before);
 
     /*...Need to remember which points have been done, which to do. */
     if (!(
@@ -84,9 +87,9 @@ int flip()
 
     free(todo);	free(done);
 
-    times(after);
+    times(&after);
     sprintf(buf, "obtuse triangle flip (%d)", flips);
-    print_time( buf, before, after);
+    print_time( buf, &before, &after);
     return(flips);
 }
 

@@ -16,6 +16,8 @@
 /*   oxgrow.c                Version 5.1     */
 /*   Last Modification : 7/3/91 10:52:33 */
 #include <stdio.h>
+#include <sys/times.h>
+
 #include <global.h>
 #include <constant.h>
 #include <geom.h>
@@ -35,7 +37,9 @@ oxgrow (temp, ornt, oxhow, dt )
     double *dt;		/* Time increment */
 {
     extern double total;	/* Total diffusion time */
-    int before[4], after[4]; times(before);
+    struct tms before, after;
+
+    times(&before);
 
     /* Compute the velocity vector using whatever oxide growth model */
     oxide_vel (temp, ornt, oxhow, *dt);
@@ -59,7 +63,8 @@ oxgrow (temp, ornt, oxhow, dt )
     ChooseKillNodes( *dt);
 
     /* some barfola statistics */
-    times(after); print_time("Time for oxidation step", before, after);
+    times(&after);
+    print_time("Time for oxidation step", &before, &after);
 
     return;
 }

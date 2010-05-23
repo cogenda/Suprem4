@@ -137,7 +137,7 @@ int param;
     xgAxisLabels("x in microns", "y in microns", title);
 
     if (grid) {
-	/*xgNewSetLT(line_grid);*/
+	xgNewSet();
 	xgSetName("grid");
 	for(i = 0; i < ned; i++) edge_pl(i);
     }

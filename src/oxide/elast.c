@@ -18,6 +18,8 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/times.h>
+
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
@@ -38,13 +40,13 @@ elast_growth( temp, dt)
     int n, sXVEL, sYVEL, i, j, ie, v, w, s, t, get_elasconn();
     int col, row, lcol, lrow, nat_p, where, *fix, *nx, *nx1, p;
     int *ia=0, *il, aoff, loff;
-    int before[4], after[4];
+    struct tms before, after;
     double *a, *l, *rhs;
     double mult;
     float ln[ 2];		/* Velocity at a point */
 
     /* Get symbolic arrays */
-    times( before);
+    times( &before);
 
     /* Count # of real variables */
     for (j = 0, i = 0; i < nn; i++) if (nd[i]->mater != Si) j++;
@@ -71,7 +73,10 @@ elast_growth( temp, dt)
     rhs = scalloc( double, 2*np);
     aoff = loff = 0;
 
-    times(after); print_time("Compressible matrix symbolism", before, after); times(before);
+    times(&after);
+    print_time("Compressible matrix symbolism", &before, &after);
+
+    times(&before);
 
     /* Set up boundary conditions: */
     fix = scalloc( int, 2*np);
@@ -159,13 +164,18 @@ elast_growth( temp, dt)
 	    }
     }
 
-    times(after); print_time("Compressible matrix assembly", before, after); times(before);
+    times(&after);
+    print_time("Compressible matrix assembly", &before, &after);
+
+    times(&before);
 
     /* Go solve the problem */
     numfac( 2*np, (int*)0, 1, ia, aoff, a, il, loff, l);
     numbac( 2*np, il, loff, l, rhs);
 
-    times(after); print_time("Compressible matrix solution", before, after); times(before);
+    times(&after);
+    print_time("Compressible matrix solution", &before, &after);
+
 
     /* Transfer the answer into permanent storage */
     for (p = 0; p < np; p++) {

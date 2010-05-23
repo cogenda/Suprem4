@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/times.h>
 #include <math.h>
 #include "global.h"
 #include "constant.h"
@@ -280,7 +281,7 @@ double **l;	/*the l array for this set of variables*/
 int *loff;	/*the offset*/
 {
     register int si, i, j;
-    int before[4], after[4]; 	/*arrays for timing of the algorithms*/
+    struct tms before, after; 	/*arrays for timing of the algorithms*/
     int byte, cnt;
 
     /*set up each block*/
@@ -316,7 +317,7 @@ int *loff;	/*the offset*/
     }
 
     /*do a symbolic factorization*/
-    times(before);
+    times(&before);
 
     /*guess a length*/
     if ( nsol > 0 ) {
@@ -333,9 +334,9 @@ int *loff;	/*the offset*/
 	if ( *l ) free( *l );
 	*l = (double *)malloc( (il[0][nsol*nn] + *loff + 1) * sizeof(double) );
 
-	times(after);
+	times(&after);
 
-	print_time("symbolic factorization", before, after);
+	print_time("symbolic factorization", &before, &after);
     }
 
     if (verbose >= V_CHAT)

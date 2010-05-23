@@ -72,7 +72,7 @@ int param;
     }
     else symb = -1;
 
-    /*xgNewSetLT(line_type);*/
+    xgNewSet();
     if (sel_log)
 	xgSetValue(exp(log(10.0)*value));
     else

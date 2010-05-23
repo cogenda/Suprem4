@@ -20,19 +20,19 @@ beryllium gaas /nitride Seg.0=.5 Seg.E=0
 
 deposit nitride thick=.3
 
-#	select z=log10(beryllium)
-#	plot.1d x.min=0.0 x.ma=2.0 y.mi=14.0 y.max=20.0 line.type=2
+select z=log10(beryllium)
+plot.1d x.min=0.0 x.ma=2.0 y.mi=14.0 y.max=20.0 line.type=2
 
-#	select z=log10(isilicon)
-#	plot.1d x.min=0.0 x.ma=2.0 y.mi=14.0 y.max=20.0 cle=f axi=f line.type=3
+select z=log10(isilicon)
+plot.1d x.min=0.0 x.ma=2.0 y.mi=14.0 y.max=20.0 cle=f axi=f line.type=3
 
-#	select z=log10(carbon)
-#	plot.1d x.min=0.0 x.ma=2.0 y.mi=14.0 y.max=20.0 cle=f axi=f line.type=4
+select z=log10(carbon)
+plot.1d x.min=0.0 x.ma=2.0 y.mi=14.0 y.max=20.0 cle=f axi=f line.type=4
 
 method fermi init=1e-5
 method full.fac
 diffuse time=15 temp=800 argon
-#	select z=log10(beryllium)
-#	plot.1d x.min=0.0 x.ma=2.0 y.mi=14.0 y.max=20.0 cle=f axi=f line.type=5
+select z=log10(beryllium)
+plot.1d x.min=0.0 x.ma=2.0 y.mi=14.0 y.max=20.0 cle=f axi=f line.type=5
 
 quit

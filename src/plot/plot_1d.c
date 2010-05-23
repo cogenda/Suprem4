@@ -168,7 +168,7 @@ int param;
     /*
      * --- Do some drawing at last --------------------
      */
-    /*xgNewSetLT(line_type);*/
+    xgNewSet();
     xgSetName(label);
     if ( symb != -1 ) xgSetMark(symb);
 

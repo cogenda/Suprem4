@@ -17,7 +17,9 @@
 /*   Last Modification : 7/3/91 10:50:02 */
 
 #include <stdio.h>
+#include <sys/times.h>
 #include <math.h>
+
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
@@ -37,12 +39,10 @@
  *  Original:	MEL	1/85						*
  *									*
  ************************************************************************/
-diffuse( par, param )
-char *par;
-int param;
-{ 
+int diffuse( char *par, int param )
+{
     float time, temp, cs;
-    int before[4], after[4];
+    struct tms before, after;
     int cont;
     int dump;
     int r;
@@ -76,7 +76,7 @@ int param;
     if (get_bool (param, "carbon")) gas_type = GAS_C;
     if (get_bool (param, "generic")) gas_type = GAS_G;
 
-    if (is_specified( param, "solid.sol")) 
+    if (is_specified( param, "solid.sol"))
 	gas_conc = -1.0;
     else
 	gas_conc = get_float( param, "gas.conc" );
@@ -108,7 +108,7 @@ int param;
 	lose_impurity( O2);	lose_impurity( H2O);
 	lose_impurity( Sxx);	lose_impurity( Sxy);	lose_impurity( Syy);
     }
-	    
+
     if ( is_specified( param, "gold.surf" ) ) {
 	cs = get_float( param, "gold.surf" );
 	add_impurity( Au, cs, GAS);
@@ -149,13 +149,13 @@ int param;
 	printf("***************************************************************\n");
     }
 
-    times(before);
-    solve_time( time, temp, methdata.init_time, methdata.timemeth, 
+    times(&before);
+    solve_time( time, temp, methdata.init_time, methdata.timemeth,
 		dump, movie, cont);
-    times(after);
-    print_time("total diffusion time", before, after);
+    times(&after);
+    print_time("total diffusion time", &before, &after);
     damage_read=FALSE;
-    
+
     return(0);
 }
 

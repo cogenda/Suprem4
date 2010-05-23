@@ -10,7 +10,7 @@
 /*   Last Modification : 7/3/91  08:41:12 */
 
 #include <stdio.h>
-#include <sys/param.h>
+#include <sys/times.h>
 #include "global.h"
 #include "shell.h"
 /* couldn't find HZ on the CONVEX in an include file.  set it to
@@ -37,14 +37,12 @@
  *  Original:	MEL	11/84						*
  *									*
  ************************************************************************/
-print_time(name, before, after)
-char *name;
-int *before, *after;
+print_time(char *name, struct tms *before, struct tms *after)
 {
     if (cpufile != NULL) {
 	fprintf(cpufile, "%-30s ", name);
-	fprintf(cpufile, "user %8.6g\t",(after[0]-before[0])/(HZ*1.0));
-	fprintf(cpufile, "system %8.6g\n", (after[1]-before[1])/(HZ*1.0));
+        fprintf(cpufile, "user %8.6g\t",(after->tms_utime-before->tms_utime)/(HZ*1.0));
+        fprintf(cpufile, "system %8.6g\n", (after->tms_stime-before->tms_stime)/(HZ*1.0));
     }
 }
 

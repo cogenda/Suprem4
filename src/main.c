@@ -184,8 +184,7 @@ char **argv;
     if (cpufile != NULL)
 	fclose(cpufile);
 
-    /*xgUpdate(1);*/
-
+    xgUpdate(1);
 
 }
 

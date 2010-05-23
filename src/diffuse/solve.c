@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <sys/times.h>
 #include <sys/param.h>
 #include "global.h"
 #include "constant.h"
@@ -108,7 +109,7 @@ int init;		/*whether or not to reuse the last factorization*/
  *  Original:	MEL	1/86						*
  *									*
  ************************************************************************/
-soldif_bdf( del_t, old_t, temp, new, mid, old, newa, mida, olda, 
+soldif_bdf( del_t, old_t, temp, new, mid, old, newa, mida, olda,
 	    newarea, midarea, oldarea, init)
 double del_t;		/*the amount of time step*/
 double old_t;		/*last time step*/
@@ -127,7 +128,7 @@ int init;		/*whether or not a setup has been done*/
 
     /*compute the appropriate boundary condition elements*/
     bval_compute( temp, new, del_t );
-	     
+
     /*load the setup structure*/
     cs.new_del = del_t;
     cs.old_del = old_t;
@@ -215,7 +216,7 @@ double *newarea;
 
     /*compute the appropriate boundary condition elements*/
     bval_compute( temp, new, 0.0 );
-	     
+
     /*load the setup structure*/
     cs.old_del = 0.0;
     cs.new_del = 0.0;
@@ -253,7 +254,7 @@ double *newarea;
  *  Original:	MEL	5/88						*
  *									*
  ************************************************************************/
-soldif( init, label, do_setup ) 
+soldif( init, label, do_setup )
 int init;
 char *label;
 PTR_FNC do_setup;
@@ -261,7 +262,7 @@ PTR_FNC do_setup;
     register int i, si, j;			/*standard flame about indices*/
     int converge = FALSE;		/*are we converged yet??*/
     int count, blk;				/*loop count*/
-    int before[4], after[4];		/*for the system time call*/
+    struct tms before, after;		/*for the system time call*/
     double nm[MAXIMP], maxnorm; 	/*norms for the newton iteration*/
     float tset, tsol;			/*time for setup, time for solution*/
     double rhsnm[MAXIMP], rhs2, maxrhs;	/*two norm of the right hand side*/
@@ -280,18 +281,18 @@ PTR_FNC do_setup;
     if ( verbose >= V_NORMAL) { printf(s1, label); printf(s2); }
 
     /*compute the initial matrix terms*/
-    times(before);
+    times(&before);
     do_setup( rhsnm );
     for(rhs2=0.0, i = 0; i < cs.nsol; i++) rhs2 += rhsnm[cs.sol[i]];
     rhs2 = sqrt( rhs2 );
-    times(after);
-    tset = (after[0] - before[0]) / (HZ * 1.0);
+    times(&after);
+    tset = (after.tms_utime - before.tms_utime) / (HZ * 1.0);
 
     count = 0;
     while ( (! converge) && (!negat) ) {
 	count++;
-	
-	times(before);
+
+	times(&before);
 	/*figure if we need to factor the matrix*/
 	switch ( methdata.factor ) {
 	case RF_ALL : factor = TRUE;
@@ -304,8 +305,8 @@ PTR_FNC do_setup;
 
 	/*solve it with the appropriate method*/
 	solve_blocks(nn, cs.sol, cs.nsol, cs.elim, cs.il, cs.l, cs.loff, newb, factor );
-	times(after);
-	tsol = (after[0] - before[0]) / (HZ * 1.0);
+	times(&after);
+        tsol = (after.tms_utime - before.tms_utime) / (HZ * 1.0);
 
 	/*compute the update dot products*/
 
@@ -315,10 +316,10 @@ PTR_FNC do_setup;
 	if ( negat ) continue;
 
 	/*compute the initial matrix terms*/
-	times(before);
+	times(&before);
 	do_setup( rhsnm );
-	times(after);
-	tset = (after[0] - before[0]) / (HZ * 1.0);
+	times(&after);
+        tset = (after.tms_utime - before.tms_utime) / (HZ * 1.0);
 
 	lstnm = rhs2;
 	for(scrhs = rhs2 = 0.0, maxrhs = maxnorm = -1.0, i = 0; i < cs.nsol; i++)  {
@@ -402,11 +403,11 @@ double **update;
 		    if ( ! IS_PSEUDO( imp ) ) negat++;
 
 		    /*if the amount we are going negative is less than ABE*/
-		    if ( vars[si][j] > ABE[imp] ) 
+		    if ( vars[si][j] > ABE[imp] )
 			vars[si][j] = LTE[imp] * ABE[imp];
-		    else 
+		    else
 			vars[si][j] = LTE[imp] * LTE[imp] * vars[si][j];
-		
+
 		    tmp = update[si][j] / (LTE[imp] * vars[si][j] + ABE[imp]);
 		}
 		else {
@@ -415,8 +416,8 @@ double **update;
 		    tmp = update[si][j] / (LTE[imp] * vars[si][j] + ABE[imp]);
 		}
 		/*norm calculation*/
-		if ( tmp > nm[si] ) 
-		    nm[si] = tmp; 
+		if ( tmp > nm[si] )
+		    nm[si] = tmp;
 		else if ( - tmp > nm[si])
 		    nm[si] = - tmp;
 	    }
@@ -433,8 +434,8 @@ double **update;
 		tmp = update[si][j] / (LTE[imp] * vars[si][j] + ABE[imp]);
 
 		/*norm calculation*/
-		if ( tmp > nm[si] ) 
-		    nm[si] = tmp; 
+		if ( tmp > nm[si] )
+		    nm[si] = tmp;
 		else if ( - tmp > nm[si])
 		    nm[si] = - tmp;
 	    }

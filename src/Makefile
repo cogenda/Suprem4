@@ -31,8 +31,8 @@ HELPDIR	= $(HERE)/../help
 DATADIR	= $(HERE)/../data
 
 #.. Which C and Fortran Compiler?
-CC	= gcc -m32
-FC	= gfortran -m32
+CC	= gcc
+FC	= gfortran
 
 #.. What optimization level for the compilers?
 #COPT	= -O3

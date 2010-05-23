@@ -22,8 +22,6 @@ static char sccsid[]="FEsolve.c 3.6 9/9/88 23:46:05";
 #include "FEgeom.h"
 #include "FEmath.h"
 
-#define CLOCK(S,A) times(Before); A; times(After); print_time(S,Before, After);
-#define TICK(S) times( After); print_time(S, Before, After); times( Before);
 
 #define neq (ia[0]-1)
 static int FEverbose;
@@ -49,8 +47,7 @@ int *pv_ext;
 
 /*-----------------FEsolve----------------------------------------------
  *----------------------------------------------------------------------*/
-FEsolve( verbose)
-    int verbose;
+FEsolve( int verbose)
 {
     int *ia, *il, aoff, loff;	/* Matrix map */
     double *a, *l, *rhs;	/* Matrix elements, right hand side */
@@ -59,7 +56,6 @@ FEsolve( verbose)
     double elambda(); /* Lambda step, initial value, errnorm */
     int i, j, k;		/* Node, dof, eqn indices */
     int ContinMeth=2;		/* Which continuation method I decided on. */
-    int Before[4], After[4]; times( Before);
     FEverbose = verbose;
 
     /*
@@ -73,7 +69,7 @@ FEsolve( verbose)
     a = salloc( double, ia[neq] + aoff); a[0] = 0;
     l = salloc( double, il[neq] + loff);
     rhs=salloc( double, neq);
-    TICK( "Total viscous symbolic time");
+
 
 #ifdef DEBUG
 #ifdef CONVEX
@@ -96,7 +92,6 @@ FEsolve( verbose)
     /* Solve the initial linear problem */
     noderiv = 0;     a[0] = 0;
     (void)FEnewton( ia, aoff, a, il, loff, l, rhs);
-    TICK("initial solution");
     if (FEnonloop == 1) goto done;
 
     /*
@@ -363,7 +358,6 @@ FEnewton( ia, aoff, a, il, loff, l, rhs)
     static int tkDroppedThisLoop;
     double tk=1;
 
-    int Before[4], After[4]; times( Before);
 
     sol0 = salloc( double, neq);
     updv = salloc( double, neq);
@@ -371,7 +365,7 @@ FEnewton( ia, aoff, a, il, loff, l, rhs)
 
     /* If we come in with noderiv, need to get a rhs */
     if (noderiv)
-	{ FEassmb( ia, aoff, a, rhs); TICK( "Viscous RHS assembly"); }
+	{ FEassmb( ia, aoff, a, rhs);}
 
     /* The Newton loop. */
     nGrow=0;
@@ -379,13 +373,13 @@ FEnewton( ia, aoff, a, il, loff, l, rhs)
 
 	/* Get a new matrix? */
 	if (!noderiv) {
-	    FEassmb( ia, aoff, a, rhs); TICK( "Viscous matrix assembly");
+	    FEassmb( ia, aoff, a, rhs);
 	    numfac( neq, (int *) 0, 1, ia, aoff, a, il, loff, l);
 	}
 
 	/* Get an update, keep old solution */
 	onorm = FErhsnorm( a, rhs);
-	numbac( neq, il, loff, l, rhs); TICK( "Viscous matrix solution");
+	numbac( neq, il, loff, l, rhs);
 
 	VECTOR2 sol0[ k] = FEnd[i]->sol[j];
 	VECTOR updv[k] = rhs[k];
@@ -409,7 +403,7 @@ FEnewton( ia, aoff, a, il, loff, l, rhs)
 
 		/* See what that does to the RHS */
 		TmpND = noderiv; noderiv = 1;
-		FEassmb( ia, aoff, a, rhs); TICK( "Viscous RHS assembly");
+		FEassmb( ia, aoff, a, rhs);
 		noderiv = TmpND;
 
 		/* Calculate new norm of rhs */
@@ -526,7 +520,7 @@ FEsymb( Pia, Pil, Paoff, Ploff, Ppv)
     int *accord, *accordn, *pv;	/* Accumulated ordering, temp copy, temp iv */
     int i, *lvls, lsize=0, nonzero, FEconnect();
     char talk[60];
-    int Before[4], After[4]; times( Before);
+
 
     accord = salloc( int, FEnn);
     accordn = salloc( int, FEnn);
@@ -561,7 +555,7 @@ FEsymb( Pia, Pil, Paoff, Ploff, Ppv)
 	pv[ accord[i]] = i;
     free( accord);
     free( accordn);
-    TICK("Viscous matrix ordering");
+
 
     /* Generate Bank-Smith final form of ia */
     build_ia (&full_ia);
@@ -581,7 +575,7 @@ FEsymb( Pia, Pil, Paoff, Ploff, Ppv)
 	loff = 0;
     }
     sprintf(talk,"Viscous symfac %.3e", (float) FlopCount(il));
-    TICK(talk);
+
 
     /* Etc, etc */
     *Pia = ia; *Paoff = aoff; *Pil = il; *Ploff = loff;
@@ -599,7 +593,7 @@ FEsymb1( Pia, Pil, Paoff, Ploff, Ppv)
     int *ia, *il, aoff, loff;	/* The matrix maps to be built */
     int *reorder;		/* dummy ordering */
     int i, nonzero;
-    int Before[4], After[4]; times( Before);
+
 
     /* Call bobpack with clean arguments */
     build_ia( &full_ia);
@@ -993,7 +987,7 @@ dump_A(ia,aoff, il, loff)
     double *crhs, *arhs, mdiff, *arhs2;
     static double dtol = 1e-6;
     FILE *lu;
-    int Before[4], After[4]; times(Before);
+
     if (FEnn*FEdf != ia[0]-1) {
 	fprintf(stderr, "all confused\n"); fflush(stderr); return(-1);
     }
@@ -1107,7 +1101,7 @@ DoBandOrd(ia,a)
     int *mins, *idiag;
     int i,j,row,col,off;
     double *newa, *tmp;
-    int Before[4], After[4]; times( Before);
+
 
     mins = salloc( int, neq);
     idiag = salloc( int, neq);

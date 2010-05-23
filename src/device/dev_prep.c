@@ -12,7 +12,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/times.h>
 #include <math.h>
+
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
@@ -34,18 +36,17 @@
  *  Original:	MEL	7/85						*
  *									*
  ************************************************************************/
-dev_prep(area)
-double *area;
+dev_prep(double *area)
 {
-    register int i;
+    int i;
     int get_connect();
     int *reorder;
-    int before[4], after[4];
+    struct tms before, after;
     int nc[MAXIMP];
     int lnsol, lsol[MAXIMP];
 
     /* temporary L+U version of ia.  Malloc should split this in half later*/
-    times(before);
+    times(&before);
     aoff = 9*np;
     Alloc( ia, int, aoff);
     if( generate( nn, 1, 1, get_connect, &ia, &aoff) < 0) panic("out of memory");
@@ -55,8 +56,8 @@ double *area;
     (void)min_ia_fill( ia, reorder, (verbose >= V_BARF));
     scramble( reorder );
     free(reorder);
-    times(after);
-    print_time("minimum fill reorder", before, after );
+    times(&after);
+    print_time("minimum fill reorder", &before, &after );
     Free( ia);
 
     /*compute the ia indices*/

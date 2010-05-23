@@ -18,8 +18,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/times.h>
 #include <math.h>
 #include <assert.h>
+
 #include "global.h"
 #include "constant.h"
 #include "geom.h"
@@ -63,7 +65,7 @@ int cont;
     double last_ddf;		/* the last delta for the diffusion */
     double Ktd, Kto, Ktp;
     float time_form();
-    int before[4], after[4];
+    struct tms before, after;
     int wrcnt = 1;
     register int i;
     double err = 1.0;
@@ -72,6 +74,7 @@ int cont;
     /*set up the loop*/
     t = 0;
     UpdateSymbolic = 0;
+
 
     /*initialize the equilibrium defect concentrations*/
     err = start_step( temp, cont );
@@ -95,7 +98,7 @@ int cont;
 	    printf("Solving %12g + %12g = %12g, %8g%%, np %d\n",
 		   total,del_df, total+del_df, 100*del_df/last_ddf, np);
 
-	times(before);
+	times(&before);
 
 	/*The oxidation step.  It may cut back the time step */
 	if (oxidizing) {
@@ -146,8 +149,8 @@ int cont;
 
 	dump_data( total, dump, movie, &wrcnt );
 
-	times(after);
-	print_time("Time for step", before, after);
+	times(&after);
+	print_time("Time for step", &before, &after);
 
 	/* Flush those buffers, you sucker! */
 	flushbuf();
