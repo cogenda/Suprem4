@@ -76,13 +76,11 @@ val_str *value;
  *	Original:	Mark E. Law	Oct, 1984			*
  *									*
  ************************************************************************/
-int get_bool(par, name)
-int par;
-char *name;
+int get_bool(struct par_str * par, char *name)
 {
     val_str value;
 
-    if (get_value(((struct par_str *)par)->param, name, &value) != -1)
+    if (get_value(par->param, name, &value) != -1)
 	return( value.ival );
 
     return(0);
@@ -96,13 +94,11 @@ char *name;
  *	Original:	Mark E. Law	Oct, 1984			*
  *									*
  ************************************************************************/
-char *get_string(par, name)
-int par;
-char *name;
+char *get_string(struct par_str * par, char *name)
 {
     val_str value;
 
-    if (get_value(((struct par_str *)par)->param, name, &value) != -1)
+    if (get_value(par->param, name, &value) != -1)
 	return( value.sval );
     return(NULL);
 }
@@ -115,13 +111,11 @@ char *name;
  *	Original:	Mark E. Law	Oct, 1984			*
  *									*
  ************************************************************************/
-int get_int(par, name)
-int par;
-char *name;
+int get_int(struct par_str * par, char *name)
 {
     val_str value;
 
-    if (get_value(((struct par_str *)par)->param, name, &value) != -1)
+    if (get_value(par->param, name, &value) != -1)
 	return( value.ival );
     return(0);
 }
@@ -136,13 +130,11 @@ char *name;
  *	Original:	Mark E. Law	Oct, 1984			*
  *									*
  ************************************************************************/
-float get_float(par, name)
-int par;
-char *name;
+float get_float(struct par_str * par, char *name)
 {
     val_str value;
 
-    if (get_value(((struct par_str *)par)->param, name, &value) != -1)
+    if (get_value(par->param, name, &value) != -1)
 	return( value.dval );
     return(0);
 }
@@ -159,14 +151,12 @@ char *name;
  * Original:	MEL	1/85						*
  *									*
  ************************************************************************/
-int is_specified(par, name)
-int par;
-char *name;
+int is_specified(struct par_str * par, char *name)
 {
     int temp;
     val_str value;
 
-    if ((temp=get_value(((struct par_str *)par)->param, name, &value)) != -1)
+    if ((temp=get_value(par->param, name, &value)) != -1)
 	return( temp );
     return(0);
 }

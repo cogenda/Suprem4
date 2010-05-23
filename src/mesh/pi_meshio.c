@@ -53,11 +53,10 @@ static int corrmat[MAXMAT] =
 
 /*-----------------pi_write---------------------------------------------
  * write a pisces file
+   name   Where to write it
+   show   Whether to plot the electrode setup.
  *----------------------------------------------------------------------*/
-
-pi_write( name, show)
-     char *name;		/* Where to write it */
-     int show;			/* Whether to plot the electrode setup. */
+int pi_write( char *name, int show)
 {
     int i;
     float *Pr1, *Ptconc;
@@ -194,7 +193,7 @@ char *pi_elect( nb, nelect, nbc, ietype)
 /*-----------------ShowElect--------------------------------------------
  * @ needs to know how the pisces electrodes were numbered
  *----------------------------------------------------------------------*/
-ShowElect(show, Pnelect, Pnb, Pnbc, Pietype)
+int ShowElect(show, Pnelect, Pnb, Pnbc, Pietype)
      int show, Pnelect, Pnb, *Pnbc, *Pietype;
 {
     double xlo[NPE], xhi[NPE], ylo[NPE], yhi[NPE];
@@ -239,6 +238,7 @@ ShowElect(show, Pnelect, Pnb, Pnbc, Pietype)
     for (ie = 1; ie <= Pnelect; ie++)
 	printf( "Electrode %d: xmin %8.3f xmax %8.3f ymin %8.3f ymax %8.3f\n",
 	       ie, 1e4*xlo[ ie], 1e4*xhi[ ie], 1e4*ylo[ ie], 1e4*yhi[ ie]);
+    return 0;
 }
 
 
@@ -321,7 +321,7 @@ char *pi_mat( Pnp, Pne, Pnmat, Ppt, Preg)
 /*-----------------REFLECT----------------------------------------------
  * Reflect a grid around its left or right edge.
  *----------------------------------------------------------------------*/
-reflect_grid( sign, xy)
+void reflect_grid( sign, xy)
      float sign;		/* -1 is left, +1 is right */
     int xy;			/* 0 is x, 1 is y */
 {

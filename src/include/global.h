@@ -43,7 +43,7 @@ EXTERN int verbose;
 #define min(a,b) (((a) < (b))?(a):(b))
 #define strequ(a,b) (!strcmp(a,b))
 
-extern panic();
+extern void panic();
 EXTERN char *MallocResult;
 #define salloc(O,N)  ((O *)malloc((unsigned)((N)*sizeof(O))))
 #define scalloc(O,N) ((O *)calloc((unsigned)(N),(unsigned)(sizeof(O))))
@@ -58,8 +58,8 @@ EXTERN char *MallocResult;
  ***************************************************/
 extern int    mod();
 
-extern get_bool();
-extern get_int();
+extern int get_bool();
+extern int get_int();
 extern float get_float();
 extern char *get_string();
 #define Fetch( V, S ) if (is_specified(param,S)) V=get_float(param,S)

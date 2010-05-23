@@ -42,7 +42,7 @@ extern struct yysvf yysvec[], *yybgin;
 /*   Last Modification : 8/18/89  16:35:44 */
 
 
-#undef input()
+#undef input
 #define input() (((yytchar=yysptr>yysbuf?U(*--yysptr):getc(stdin))==10?(yylineno++,yytchar):yytchar)==EOF?1:yytchar)
 
 

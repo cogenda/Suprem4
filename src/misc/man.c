@@ -12,6 +12,7 @@
 /*   Last Modification : 7/3/91  08:41:09 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 #include "sysdep.h"

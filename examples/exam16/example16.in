@@ -19,27 +19,27 @@ interstitial gaas D.0=5e-14     D.E= 0.
 interstitial gaas Kr.0=1e-18    Kr.E= 0.
 interstitial gaas Cstar.0= 1.0e16    Cstar.E= 0.
 interstitial gaas  /nitride  Ksurf.0= 1e-3     Ksurf.E= 0.
-interstitial gaas neu.0=0 pos.0=1 neu.E=0 neg.0=0 pos.E=0 dneg.0=0 
+interstitial gaas neu.0=0 pos.0=1 neu.E=0 neg.0=0 pos.E=0 dneg.0=0
 interstitial gaas dpos.0=0 dpos.E=0 neg.E=0 tpos.0=0 tneg.0=0
 
 vacancy gaas D.0= 1e-15      D.E= 0.
 vacancy gaas Kr.0=1e-18      Kr.E= 0.
 vacancy gaas Cstar.0= 1e16    Cstar.E= 0.
 vacancy gaas  /nitride  Ksurf.0= 1e-3     Ksurf.E= 0.
-vacancy gaas neu.0=0 pos.0=0 neu.E=0 neg.0=0 pos.E=0 dneg.0=0 
+vacancy gaas neu.0=0 pos.0=0 neu.E=0 neg.0=0 pos.E=0 dneg.0=0
 vacancy	dpos.0=0 dpos.E=0 neg.E=0 tpos.0=0 tneg.0=1
 method full.fac
 
-	select z=log10(beryllium)	
+	select z=log10(beryllium)
 	plot.1d x.min=0 x.ma=2 y.mi=14 y.max=20 line.type=4
-	select z=log10(inter)	
+	select z=log10(inter)
 	plot.1d x.min=0 x.ma=2 y.mi=14 y.max=20 cle=f axi=f line.type=2
 
 method two.dim init=1e-5
-diffuse time=15 temp=800 argon 
-	select z=log10(beryllium)	
+diffuse time=15 temp=800 argon
+	select z=log10(beryllium)
 	plot.1d x.min=0 x.ma=2 y.mi=14 y.max=20 cle=f axi=f line.type=4
-	select z=log10(inter)	
+	select z=log10(inter)
 	plot.1d x.min=0 x.ma=2 y.mi=14 y.max=20 cle=f axi=f line.type=2
 
 

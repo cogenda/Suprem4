@@ -14,7 +14,7 @@
 /*   Last Modification : 8/18/89  16:35:44 */
 
 
-#undef input();
+#undef input
 #define input() (((yytchar=yysptr>yysbuf?U(*--yysptr):getc(stdin))==10?(yylineno++,yytchar):yytchar)==EOF?1:yytchar)
 
 
@@ -40,7 +40,7 @@ STRDEL  [\'\"]
 %%
 
 \{	{
-#ifdef DEBUG 
+#ifdef DEBUG
 	printf("returning begin group char\n");
 #endif
 	BEGIN 0;

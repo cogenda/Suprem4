@@ -246,7 +246,7 @@ int *len;	/*the allocated length of nodes*/
 
 		if ( contacts[n_con].np == (*len-1) ) {
 		    *len += 20;
-		    contacts[n_con].pt = sralloc( int, *len, contacts[n_con].np );
+                    contacts[n_con].pt = scalloc( int, *len );
 		    contacts[n_con].ndc = sralloc( int, *len, contacts[n_con].ndc );
 		}
 

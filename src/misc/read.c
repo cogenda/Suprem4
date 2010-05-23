@@ -17,6 +17,7 @@
 /*   Last Modification : 7/3/91 08:41:14 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "global.h"
 #include "sysdep.h"

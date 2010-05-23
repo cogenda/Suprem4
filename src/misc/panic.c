@@ -22,8 +22,7 @@ static char sccsid[]="panic.c 5.1  7/3/91 08:41:10";
 #include "shell.h"
 #include "sysdep.h"
 
-panic (s)
-    char *s;
+void panic (char *s)
 {
     fprintf(stderr,"suprem4 panic: %s\n",s);
     if( (!strcmp( s, "nocore")) || (!strcmp( s, "Out of memory")))
@@ -63,7 +62,7 @@ panic (s)
 /*-----------------GridSave---------------------------------------------
  * Store a valid grid before anything bad happens.
  *----------------------------------------------------------------------*/
-GridSave ()
+void GridSave ()
 {
 }
 
