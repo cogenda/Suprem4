@@ -24,26 +24,14 @@ static char *defColors[] = {
 
 
 static int rdFindMax(GraphWin *wi);
+void DrawTitle(char *w, GraphWin * wi);
+int DrawGridAndAxis(char *w, GraphWin * wi);
+int DrawData(char *w, GraphWin *wi);
+void DrawLabel(char *gw, GraphWin * wi);
+int DrawLegend(char *gw, GraphWin * wi);
+void DrawNumber(char *w, GraphWin * wi, double val, int x, int y, int just, int logflag);
 
 
-do_redraw(userdata, wi)
-char *userdata;
-GraphWin *wi;
-{
-    if ( TransformCompute(wi) ) {
-	DrawTitle(userdata, wi);
-	DrawLegend(userdata, wi);
-	DrawGridAndAxis(userdata, wi);
-	DrawData(userdata, wi);
-	DrawLabel(userdata, wi);
-    }
-}
-
-
-
-DrawTitle(w, wi)
-char  *w;
-GraphWin *wi;
 /*
  * This routine draws the title of the graph centered in
  * the window.  It is spaced down from the top by an amount
@@ -51,6 +39,7 @@ GraphWin *wi;
  * fixed width.  The routine returns the height of the
  * title in pixels.
  */
+void DrawTitle(char *w, GraphWin * wi)
 {
     wi->dev_info.xg_text(w, wi->dev_info.area_w/2,
 			 wi->dev_info.axis_pad,
@@ -65,13 +54,11 @@ GraphWin *wi;
     (ws->XOppY - ((int) (((userY) - ws->UsrOrgY)/ws->YUnitsPerPixel + 0.5)))
 
 
-int DrawGridAndAxis(w, wi)
-char *w;			/* Window information         */
-GraphWin *wi;
 /*
  * This routine draws grid line labels in engineering notation,
  * the grid lines themselves,  and unit labels on the axes.
  */
+int DrawGridAndAxis(char *w, GraphWin * wi)
 {
     int startX;
     int Yspot, Xspot;
@@ -213,10 +200,7 @@ static int gridNJuke, gridCurJuke;
 
 #define ADD_GRID(val)	(gridJuke[gridNJuke++] = log10(val))
 
-double initGrid(low, step, logFlag)
-double low;			/* desired low value          */
-double step;			/* desired step (user coords) */
-int logFlag;			/* is axis logarithmic?       */
+double initGrid(double low, double step, int logFlag)
 {
     double ratio, x;
     double RoundUp(), stepGrid();
@@ -278,13 +262,13 @@ double stepGrid()
     return(gridBase + gridJuke[gridCurJuke]);
 }
 
-double RoundUp(val)
-double val;			/* Value */
+
 /*
  * This routine rounds up the given positive number such that
  * it is some power of ten times either 1, 2, or 5.  It is
  * used to find increments for grid lines.
  */
+double RoundUp(double val)
 {
     int exponent, idx;
 
@@ -327,13 +311,11 @@ else if ((xval) > wi->UsrOppX) rtn = RIGHT_CODE; \
 if ((yval) < wi->UsrOrgY) rtn |= BOTTOM_CODE; \
 else if ((yval) > wi->UsrOppY) rtn |= TOP_CODE
 
-int DrawData(w, wi)
-char *w;
-GraphWin *wi;
 /*
  * This routine draws the data sets themselves using the macros
  * for translating coordinates.
  */
+int DrawData(char *w, GraphWin *wi)
 {
     DataSet *temp;
     double sx1, sy1, sx2, sy2, tx, ty;
@@ -443,9 +425,7 @@ GraphWin *wi;
     }
 }
 
-DrawLabel(gw, wi)
-char *gw;		/* Window information    */
-GraphWin *wi;
+
 /*
  * This routine draws the title of the graph centered in
  * the window.  It is spaced down from the top by an amount
@@ -453,6 +433,7 @@ GraphWin *wi;
  * fixed width.  The routine returns the height of the
  * title in pixels.
  */
+void DrawLabel(char *gw, GraphWin * wi)
 {
     LabelList *spot;
     int code1;
@@ -468,13 +449,11 @@ GraphWin *wi;
 }
 
 
-int DrawLegend(gw, wi)
-char *gw;
-GraphWin *wi;
 /*
  * This draws a legend of the data sets displayed.  Only those that
  * will fit are drawn.
  */
+int DrawLegend(char *gw, GraphWin * wi)
 {
     DataSet *temp;
     int cnt;
@@ -532,8 +511,6 @@ GraphWin *wi;
 }
 
 
-int TransformCompute(wi)
-GraphWin *wi;			/* Window information          */
 /*
  * This routine figures out how to draw the axis labels and grid lines.
  * Both linear and logarithmic axes are supported.  Axis labels are
@@ -543,6 +520,7 @@ GraphWin *wi;			/* Window information          */
  * of the points (it touches XOrgX, XOrgY, UsrOrgX, UsrOrgY, and
  * UnitsPerPixel).
  */
+int TransformCompute(GraphWin * wi)
 {
     DataSet *temp;
     double bbCenX, bbCenY, bbHalfWidth, bbHalfHeight;
@@ -622,13 +600,7 @@ GraphWin *wi;			/* Window information          */
 
 
 
-DrawNumber(w, wi, val, x, y, just, logflag)
-char *w;
-GraphWin *wi;
-double val;
-int x, y;
-int just;
-int logflag;
+void DrawNumber(char *w, GraphWin * wi, double val, int x, int y, int just, int logflag)
 {
     double mantval;
     int expval;
@@ -683,13 +655,11 @@ int logflag;
 
 
 
-
-static int rdFindMax(wi)
-GraphWin *wi;
 /*
  * Returns the maximum number of items in any one group of any
  * data set.
  */
+static int rdFindMax(GraphWin * wi)
 {
     DataSet *temp;
     int i;
@@ -702,6 +672,18 @@ GraphWin *wi;
         }
     }
     return max;
+}
+
+
+void do_redraw(char *userdata, GraphWin * wi)
+{
+  if ( TransformCompute(wi) ) {
+    DrawTitle(userdata, wi);
+    DrawLegend(userdata, wi);
+    DrawGridAndAxis(userdata, wi);
+    DrawData(userdata, wi);
+    DrawLabel(userdata, wi);
+  }
 }
 
 

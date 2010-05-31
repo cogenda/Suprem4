@@ -19,10 +19,7 @@
 
 extern XtAppContext help_context;
 
-static destroy_help(widget, client_data, call_data)
-Widget widget;
-XtPointer client_data;   /* cast to bigBitmap */
-XtPointer call_data;    /* unused */
+static void destroy_help(Widget widget, XtPointer client_data, XtPointer call_data)
 {
 
     XtDestroyApplicationContext(help_context);
@@ -30,17 +27,14 @@ XtPointer call_data;    /* unused */
 }
 
 
-help_win(widget, client_data, call_data)
-Widget widget;
-XtPointer client_data;   /* cast to bigBitmap */
-XtPointer call_data;    /* unused */
+void help_win(Widget widget, XtPointer client_data, XtPointer call_data)
 {
     Widget tL1, vpane, buttonbox;
     Widget close, txt;
     int one = 1;
     char *argv[2];
     Display * dpy;
-	
+
     if (help_context != NULL) return;
     argv[0] = "xsuprem";
     argv[1] = NULL;
@@ -54,21 +48,21 @@ XtPointer call_data;    /* unused */
 	XtErrorMsg("invalidDisplay","xtInitialize","XtToolkitError",
                    "Can't Open display", (String *) NULL, (Cardinal *)NULL);
 
-    tL1 = XtVaAppCreateShell( "XSupHelp", "XSuprem", 
+    tL1 = XtVaAppCreateShell( "XSupHelp", "XSuprem",
 			    applicationShellWidgetClass, dpy,
 			    XtNscreen, (XtArgVal)DefaultScreenOfDisplay(dpy),
 			    NULL );
-   
-    
+
+
     vpane = XtVaCreateManagedWidget("vpane", panedWidgetClass, tL1, NULL);
     buttonbox = XtVaCreateManagedWidget("buttonbox", boxWidgetClass, vpane, NULL);
 
     /*Make the Help Button*/
-    close = XtVaCreateManagedWidget("Cancel", commandWidgetClass, 
+    close = XtVaCreateManagedWidget("Cancel", commandWidgetClass,
 					      buttonbox, NULL);
     XtAddCallback(close, XtNcallback, destroy_help, NULL);
 
-    txt = XtVaCreateManagedWidget("help", asciiTextWidgetClass, vpane, 
+    txt = XtVaCreateManagedWidget("help", asciiTextWidgetClass, vpane,
 				  XtNscrollVertical, XawtextScrollAlways,
 				  XtNtype, XawAsciiFile,
 				  /*XtNstring, "/home/helios0/law/src/xgraph/help",*/

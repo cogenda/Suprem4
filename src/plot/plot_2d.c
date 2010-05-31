@@ -30,6 +30,12 @@
 #define YCORD(A) pt[ A ]->cord[1]
 
 
+void draw_vornoi();
+void draw_points (float );
+void draw_stress ( float vleng, float smax, int ccol, int tcol);
+void draw_flow( float vleng, float vmax, int col);
+
+
 /************************************************************************
  *									*
  *	plot_2d(par, param ) - this routine is the father of the 	*
@@ -39,9 +45,7 @@
  *  Original :	MEL, CSR, MRP	11, 1984 (modeled on pisces2)		*
  *									*
  ************************************************************************/
-plot_2d( par, param )
-char *par;
-int param;
+int plot_2d( char *par, int param )
 {
     int i;
     int boundary;
@@ -136,8 +140,9 @@ int param;
 	xgSetBounds(txmin*1.0e4, txmax*1.0e4, -tymax*1.0e4, -tymin*1.0e4);
     xgAxisLabels("x in microns", "y in microns", title);
 
+    xgNewSet();
+
     if (grid) {
-	xgNewSet();
 	xgSetName("grid");
 	for(i = 0; i < ned; i++) edge_pl(i);
     }
@@ -172,7 +177,7 @@ int param;
  * Draw the Vornoi tesselation. Boundary segments are done in material();
  * points can be done in draw_points().
  *----------------------------------------------------------------------*/
-draw_vornoi()
+void draw_vornoi()
 {
 	int ie, nj, j, j1, j2;
 	float ci[2], cj[2];
@@ -213,8 +218,7 @@ draw_vornoi()
 	}
 }
 
-draw_points (delt)
-    float delt;
+void draw_points (float delt)
 {
     int ip;
 
@@ -230,9 +234,7 @@ draw_points (delt)
 
 /*-----------------DRAW_STRESS------------------------------------------
  *----------------------------------------------------------------------*/
-draw_stress ( vleng, smax, ccol, tcol)
-     float vleng, smax;
-     int ccol, tcol;
+void draw_stress ( float vleng, float smax, int ccol, int tcol)
 {
     int in;
     float t1, t2, rho, p1, p2, sxx,syy,sxy, ang, dx, dy, cx, cy, delt;
@@ -295,9 +297,7 @@ draw_stress ( vleng, smax, ccol, tcol)
 /*-----------------DRAW_FLOW--------------------------------------------
  * Little arrows flowing in the stream...
  *----------------------------------------------------------------------*/
-draw_flow( vleng, vmax, col)
-     float vleng, vmax;
-     int col;
+void draw_flow( float vleng, float vmax, int col)
 {
     int in;
     float vel, vx, vy, dx, dy, cx, cy, delt;

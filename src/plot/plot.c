@@ -26,8 +26,7 @@
 #define XC(A)	cordinate( A, 0 )
 #define YC(A)	cordinate( A, 1 )
 
-node_pl(i)
-int i;
+void node_pl(int i)
 {
     char str[256];
 
@@ -36,8 +35,7 @@ int i;
     if ( pl_debug ) {xgUpdate(FALSE); check_x();}
 }
 
-edge_pl(i)
-int i;
+void edge_pl(int i)
 {
     xgNewGroup();
     xgPoint( XC( pt_edg(i,0) ), YC(pt_edg(i,0)) );
@@ -45,8 +43,7 @@ int i;
     if ( pl_debug ) {xgUpdate(FALSE); check_x();}
 }
 
-reg_pl (i)
-int i;
+void reg_pl (int i)
 {
     struct LLedge *f, *b;
     int temp;
@@ -64,8 +61,7 @@ int i;
     if ( pl_debug ) {xgUpdate(FALSE); check_x();}
 }
 
-surf_pl(color)
-int color;
+void surf_pl(int color)
 {
     int i;
 
@@ -74,7 +70,7 @@ int color;
     }
 }
 
-xgdebug()
+void xgdebug()
 {
     pl_debug=1;
     xgNewSet();

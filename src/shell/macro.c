@@ -18,7 +18,7 @@
 #include "global.h"
 #include "shell.h"
 #include "expr.h"
-extern char *strpbrk();
+
 
 
 /************************************************************************
@@ -29,8 +29,7 @@ extern char *strpbrk();
  *	Original	Mark E. Law		Sept, 1984		*
  *									*
  ************************************************************************/
-dump_macro( macro )
-struct macro_table *macro;
+void dump_macro( struct macro_table * macro )
 {
     struct macro_table *temp;
 
@@ -54,9 +53,7 @@ struct macro_table *macro;
  *	Original	Mark E. Law		Sept, 1984		*
  *									*
  ************************************************************************/
-define_macro(str, macro)
-char *str;
-struct macro_table **macro;
+void define_macro(char *str, struct macro_table ** macro)
 {
     struct macro_table *temp;
     char name[256];
@@ -171,10 +168,7 @@ struct macro_table **macro;
  *	Original	Mark E. Law		Sept, 1984		*
  *									*
  ************************************************************************/
-expand_macro( expand_str, len, macro )
-char **expand_str;
-int *len;
-struct macro_table *macro;
+int expand_macro( char **expand_str, int *len, struct macro_table * macro )
 {
     int j;
     char *s, *t;
@@ -279,9 +273,7 @@ struct macro_table *macro;
  *	Original	Mark E. Law		Sept, 1984		*
  *									*
  ************************************************************************/
-undef_macro(name, macro)
-char *name;
-struct macro_table **macro;
+int undef_macro(char *name, struct macro_table ** macro)
 {
     struct macro_table *old, *mac;
     char *t;
@@ -329,9 +321,7 @@ struct macro_table **macro;
  *  Original:	MEL	2/85						*
  *									*
  ************************************************************************/
-int arg_expand(s, mac)
-char *s;
-struct macro_table *mac;
+int arg_expand(char *s, struct macro_table * mac)
 {
     char *argvalue[20];
     char *argnames[20];

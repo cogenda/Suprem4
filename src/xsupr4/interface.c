@@ -192,12 +192,11 @@ void xgNewGroup()
 }
 
 #define INITSIZE 4
-void xgPoint(xval, yval)
-double xval, yval;		/* New point         */
 /*
  * Adds a new point to the current group of the current
  * data set.
  */
+void xgPoint(double xval, double yval)
 {
     if ( curpt == NULL ) {
 	curspot->list = (PointList *)malloc(sizeof(PointList));
