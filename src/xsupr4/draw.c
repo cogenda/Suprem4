@@ -3,6 +3,7 @@
 #include <X11/StringDefs.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 #include "GraphP.h"

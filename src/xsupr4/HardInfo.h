@@ -19,7 +19,7 @@ typedef struct print_info {
 
 typedef enum hard_dev_docu_defn { NONE, NO, YES } hard_dev_docu;
 
-typedef struct hard_dev {
+typedef struct hard_dev{
     char *dev_name;		/* Device name                */
     int (*dev_init)();		/* Initialization function    */
     char *dev_spec;		/* Default pipe program       */
@@ -31,5 +31,5 @@ typedef struct hard_dev {
     char dev_axis_font[MFNAME];	/* Default name of axis font         */
     double dev_axis_size;	/* Default size of axis font (pnts)  */
     hard_dev_docu dev_docu;	/* Document predicate                */
-};
+} ;
 

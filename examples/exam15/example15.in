@@ -15,13 +15,13 @@ profile infile=be1 beryllium
 implant beryllium dose=1e1 energy=100 pearson
 deposit nitride thick=.3
 
-#	select z=log10(beryllium)
-#	plot.1d x.min=0 x.ma=2 y.mi=14 y.max=20 line.type=4
+	select z=log10(beryllium)
+	plot.1d x.min=0 x.ma=2 y.mi=14 y.max=20 line.type=4
 
 method fermi init=1e-5
 method full.fac
 diffuse time=15 temp=800 argon
-#	select z=log10(beryllium)
-#	plot.1d x.min=0 x.ma=2 y.mi=14 y.max=20 cle=f axi=f line.type=2
+	select z=log10(beryllium)
+	plot.1d x.min=0 x.ma=2 y.mi=14 y.max=20 cle=f axi=f line.type=2
 
 quit

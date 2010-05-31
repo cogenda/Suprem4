@@ -73,8 +73,7 @@ int l_len;                      /* Length of spec   */
 }
 
 
-void set_X(new)
-Widget new;
+void set_X(Widget new)
 /*
  * Sets some of the common parameters for the X output device.
  */

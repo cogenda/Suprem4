@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <X11/Intrinsic.h>
 #include <X11/StringDefs.h>
 
@@ -33,7 +34,7 @@ static char check_bits[] = {
 
 extern void unzoom();
 
-static do_label(widget, client_data, call_data)
+static void do_label(widget, client_data, call_data)
 Widget widget;
 XtPointer client_data;
 XtPointer call_data;
@@ -47,7 +48,7 @@ XtPointer call_data;
 }
 
 
-static Printout(widget, client_data, call_data)
+static void Printout(widget, client_data, call_data)
 Widget widget;
 XtPointer client_data;   
 XtPointer call_data;    
@@ -61,7 +62,7 @@ XtPointer call_data;
 }
 
 
-static cleanup(widget, client_data, call_data)
+static void cleanup(widget, client_data, call_data)
 Widget widget;
 XtPointer client_data;   /* cast to bigBitmap */
 XtPointer call_data;    /* unused */
@@ -109,8 +110,7 @@ GraphWin *win;
    
     vpane = XtVaCreateManagedWidget("vpane", panedWidgetClass, tL1, NULL);
     buttonbox = XtVaCreateManagedWidget("buttonbox", boxWidgetClass, vpane, NULL);
-    graph = XtVaCreateManagedWidget("graph", graphWidgetClass, vpane, 
-				  XtNGraphWin, win, NULL);
+    graph = XtVaCreateManagedWidget("graph", graphWidgetClass, vpane, XtNGraphWin, win, NULL);
 
     /*Make the Help Button*/
     help = XtVaCreateManagedWidget("Help", commandWidgetClass, 
@@ -215,7 +215,7 @@ GraphWidget gw;
     XtAddCallback(temp, XtNcallback, do_cn, &foo);
 }
 
-static cancelLabel(widget, client_data, call_data)
+static void cancelLabel(widget, client_data, call_data)
 Widget widget;
 XtPointer client_data;   /* cast to bigBitmap */
 XtPointer call_data;    /* unused */
@@ -226,7 +226,7 @@ XtPointer call_data;    /* unused */
 
 
 
-extern add_label();
+extern void add_label();
 
 
 
@@ -276,8 +276,7 @@ GraphWidget graph;
 }
 
 
-do_error(str)
-char *str;
+void do_error(char *str)
 {
     printf ("%s\n", str);
 }
