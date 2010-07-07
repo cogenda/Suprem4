@@ -171,7 +171,7 @@ array = (unsigned char *) calloc( NX * NY , sizeof(char));
 	fdd=open(filename,O_WRONLY | O_CREAT | O_TRUNC,0644);
 	write(fdd,array,NX*NY);
 	close(fdd);
-        cfree( array );
+        free( array );
 	return(0);
 }
 

@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <pwd.h>
 
+#define __UNIXOS2__
 #include <X11/Xlib.h>
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
