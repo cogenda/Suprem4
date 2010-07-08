@@ -86,7 +86,7 @@ FOPT	= -O2
 
 
 #or disable the plot function by use fake gp functions
-GRARC	= $(LIBDEST)/gpfake.a
+GRARC	= $$(LIBDEST)/gpfake.a
 GRSRCS	= gpsup/gpfake.c
 GROBJS	= gpsup/gpfake.o
 
