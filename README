@@ -1,3 +1,27 @@
+(C) Copyright (1994) The Board of Trustees of the Leland Stanford Junior
+University. Except for commercial resale, lease, license or other commercial
+transactions, permission is hereby given to use, copy, modify, and
+distribute this software. STANFORD MAKES NO REPRESENTATIONS OR WARRANTIES
+OF ANY KIND CONCERNING THIS SOFTWARE.
+
+No support is implied or provided for these older versions of Stanford
+TCAD software.
+
+============
+
+Cogenda Pte Ltd provides a series of patches to the SUPREM-IV in the hope
+that they are useful. The patches are provided under the same license terms
+as the original SUPREM-IV program (quoted above).
+
+Cogenda does not sell SUPREM-IV. If you are seeking a commercial version of
+it, please contact a commercial vendor listed in the web page
+[ http://www-tcad.stanford.edu/tcad/programs/oldftpable.html ].
+
+We do not intend to add new functionality to SUPREM-IV, since this is a
+very old code base.
+
+------------
+
 To compile the SUPREM-IV.GS code and install the files, several changes
 to the Makefile may be required.  The Makefile is documented to help
 you decide what changes to make where. 
