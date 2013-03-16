@@ -35,6 +35,6 @@ plot.2d bound y.mi=-0.5 line.b=2
 pause
 
 diffuse tim=90 tem=1000 weto2 movie="plot.2d bound cle=f axi=f"
-stru    outf=fc.mesh
+stru    outf=fc.sup
 
 plot.2d bound flow vleng=0.1
