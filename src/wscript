@@ -1,0 +1,32 @@
+def build(bld):
+
+  dirs = 'diffuse oxide mesh math shell check implant refine finel device imagetool dbase misc geom plot'.split()
+
+  sources = []
+  for d in dirs:
+    sources.extend(bld.path.ant_glob('%s/*.c'%d))
+    sources.extend(bld.path.ant_glob('%s/*.f'%d))
+  sources.extend(bld.path.ant_glob('gpsup/gpfake.c'))
+
+  sources = filter(lambda s: not s.abspath().endswith('misc/sint.c'), sources)
+
+  dirs.append(bld.path.get_bld().parent)
+
+  bld.objects(
+                source    = sources,
+                includes  = 'include',
+                features  = 'c',
+                use       = 'opt',
+                target    = 's4objects',
+             )
+
+  bld.program(
+                source    = 'main.c',
+                includes  = 'include',
+                features  = 'c cprogram',
+                use       = 'opt s4objects',
+                target    = 'suprem',
+                defines   = ['MANLOC="/help"', 'KEYLOC="/data/suprem.uk"', 'MODELLOC="/data/modelrc"', 'IMPLOC="/data/sup4gs.imp"'],
+                install_path = '${PREFIX}/bin',
+             )
+
