@@ -64,7 +64,7 @@ init_diffuse()
     diff_blocks();
 
     /*now do the rest*/
-    (void)upd_diff( 0.0, area, TRUE, TRUE );
+    (void)upd_diff( 0.0, area, TRUE, FALSE );
 
     /*perform symbolic actions on the matrices*/
     upd_matrix( );
@@ -124,7 +124,7 @@ int min_ok;
 	upd_matrix();
 
 	/*allocate space for the new nodal structures*/
-	if ( min_ok ) diff_alloc();
+	diff_alloc();
 
 	UpdateSymbolic = 0;
     }
