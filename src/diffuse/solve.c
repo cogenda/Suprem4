@@ -268,7 +268,7 @@ PTR_FNC do_setup;
     double rhsnm[MAXIMP], rhs2, maxrhs;	/*two norm of the right hand side*/
     double scrhs, lstnm = 1.0e37;
     int negat = FALSE;
-    int factor;
+    int factor = TRUE;
     double t1, norm2();
     double absrhserr = (mode==ONED)?(1.0e5):(10);
     char *ans = "  %c%-4d    %-11.5g  %-6.4g  %-6.4g  %-7.5g  %4d\n";
@@ -294,14 +294,7 @@ PTR_FNC do_setup;
 
 	times(&before);
 	/*figure if we need to factor the matrix*/
-	switch ( methdata.factor ) {
-	case RF_ALL : factor = TRUE;
-		      break;
-	case RF_ERR : factor = lstnm < (rhs2 * 0.1);
-		      break;
-	case RF_TIM : factor = (count == 1) && init;
-		      break;
-	}
+        /* alway do LU factor, CPU is faster now. fix by gongding 2013.03.18 */
 
 	/*solve it with the appropriate method*/
 	solve_blocks(nn, cs.sol, cs.nsol, cs.elim, cs.il, cs.l, cs.loff, newb, factor );
