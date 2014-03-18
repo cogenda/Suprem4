@@ -64,7 +64,7 @@ init_diffuse()
     diff_blocks();
 
     /*now do the rest*/
-    (void)upd_diff( 0.0, area, TRUE, FALSE );
+    (void)upd_diff( 0.0, area, TRUE, TRUE );
 
     /*perform symbolic actions on the matrices*/
     upd_matrix( );

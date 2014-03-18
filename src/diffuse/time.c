@@ -75,7 +75,7 @@ int compute;	/*flag for computing the comparison*/
     tsave = total;
 
     /*compute the initial symbolic*/
-    fact = upd_diff( 0.0, oarea, FALSE, FALSE );
+    fact = upd_diff( 0.0, oarea, FALSE, TRUE );
 
     /*load the values*/
     for( j = 0; j < n_imp; j++ ) {
