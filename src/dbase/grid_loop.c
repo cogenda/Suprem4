@@ -29,7 +29,7 @@
 
 double fmin(x,y) double x,y; {return (x<=y)? x : y;}
 double fmax(x,y) double x,y; {return (x>=y)? x : y;}
-    
+
 #define PC(x) if (err = (x)) panic(err)
 
 /* Addiction to convenience fodder */
@@ -42,7 +42,7 @@ double fmax(x,y) double x,y; {return (x>=y)? x : y;}
 #define Y 1
 #define cross(A,B) ((A)[X] * (B)[Y] - (A)[Y] * (B)[X])
 #define dot(A,B) ((A)[X] * (B)[X] + (A)[Y] * (B)[Y])
-#define vcos(A,B) (dot(A,B)/sqrt(dot(A,A)*dot(B,B)))
+#define vcos(A,B) (dot(A,B)/sqrt(dot(A,A)*dot(B,B)+1e-10))
 
 #define point(n)    nd[n]->pt
 
@@ -68,14 +68,14 @@ DetectLoop()
     for( pass = 0, didSomething = 1; didSomething; pass++) {
 	didSomething = 0;
 	if (pass > 10) panic("DetectLoop infinite looped!");
-    
+
     /* For each interface edge */
     ie = 0;
     while( done_tri(ie) ) {
 
 	    /*for each triangle face*/
 	    for(j = 0; j < num_face(ie); j++) {
-	    
+
 		nbj = neigh_fc(ie, j);
 		if( nbj >= 0 && reg_tri(nbj) == reg_tri(ie)) continue;
 
@@ -99,14 +99,14 @@ DetectLoop()
 		d2[X] = cordinate(pc2,0) - cordinate(pc,0);
 		d2[Y] = cordinate(pc2,1) - cordinate(pc,1);
 		dcos = vcos(d1,d2);
-		dsin = cross(d1,d2) / sqrt( dot(d1,d1)*dot(d2,d2) );
+                dsin = cross(d1,d2) / sqrt( fabs(dot(d1,d1)*dot(d2,d2))+1e-10 );
 
 		/* Inside corner or outside corner? */
 		if( dsin > 0) {
 
 		    /* Does the boundary turn back sharply? (Intrusion!)*/
 		    if (dcos > gloop_imin) continue;
-		
+
 		    /* Fix by swallowing the intrusion area into this region */
 		    /* Is that area currently vaccuum? */
 		    if (nbj < 0) {
@@ -122,7 +122,7 @@ DetectLoop()
 			fix_conn++;
 			if( verbose >= V_BARF)
 			    printf("GridLoop: adding %s triangle\n", MatNames[iem]+1);
-		    
+
 			/* A new triangle */
 			v[0] = nc;
 			v[1] = vert_tri( toje, tjj);
@@ -131,7 +131,7 @@ DetectLoop()
 			nb[1] = ie;
 			nb[2] = toje;
 			ntri = mk_ele(3, v, 3, nb, reg_tri(ie), FALSE);
-		    
+
 			/* Update neighbor connections */
 			set_neigh_t(ie,j,ntri);
 			set_neigh_t(toje,3-tj-tjj,ntri);
@@ -139,7 +139,7 @@ DetectLoop()
 			/* Take care of any gas node that might be there. */
 			if ( (inl = node_mat(nd_pt(pc,0),GAS)) != -1 )
 			    rem_1nd( inl );
-			    
+
 		    }
 
 		    /* Intrusion currently belongs to a different material */
@@ -153,7 +153,7 @@ DetectLoop()
 			fix_conn++;
 			if( verbose >= V_BARF)
 			    printf("GridLoop: taking  %s triangle from %s\n", MatNames[iem]+1, MatNames[mat_tri( nbj)]+1);
-		    
+
 			/* Subvert that triangle's material */
 			LoseMat = mat_reg( reg_tri(nbj));
 			reg_tri(nbj) = reg_tri(ie);
@@ -162,7 +162,7 @@ DetectLoop()
 			vert_tri(tje,0) = node_mat( vert_tri(tje,0), iem);
 			vert_tri(tje,1) = node_mat( vert_tri(tje,1), iem);
 			vert_tri(tje,2) = node_mat( vert_tri(tje,2), iem);
-			
+
 			/* The corner node is no longer on a material interface */
 			if ( (inl = node_mat(nd_pt(pc,0),LoseMat)) != -1 )
 			    rem_1nd( inl );
@@ -176,7 +176,7 @@ DetectLoop()
 		    /* Does the boundary turn more than 90 degrees? */
 		    if (dcos > gloop_emin) continue;
 
-		    
+
 		    /* Definitely a problem if more than 170 */
 		    if (dcos < gloop_emax) {
 			if ( ie != toje) {
@@ -184,15 +184,15 @@ DetectLoop()
 			    continue;
 			}
 		    }
-			
+
 		    /* Otherwise take next and previous edges into consideration */
 		    else {
-			
+
 			if( ie != toje) continue;
-						
+
 			/* Look forward */
 			trotate( toje, tjj, 0, &ttje, &ttoje, &ttj, &ttjj);
-			
+
 			pcf = pt_nd(vert_tri(ttoje, ttjj));
 			df[X] = cordinate(pcf,0) - cordinate(pc2,0);
 			df[Y] = cordinate(pcf,1) - cordinate(pc2,1);
@@ -203,7 +203,7 @@ DetectLoop()
 
 			/* Look back */
 			trotate( ie, (j+2)%3, 1, &tttje, &tttoje, &tttj, &tttjj);
-			
+
 			pcb = pt_nd(vert_tri( tttoje, tttjj));
 			db[X] = cordinate(pcc,0) - cordinate(pcb,0);
 			db[Y] = cordinate(pcc,1) - cordinate(pcb,1);
@@ -230,12 +230,12 @@ DetectLoop()
 			    fprintf( stderr, "Can't decide whether to give %s triangle to %s or %s\n", MatNames[iem]+1, MatNames[ mat_tri(nbj)]+1, MatNames[ mat_tri( tje)]+1);
 			    continue;
 			}
-			
+
 			didSomething = 1;
 			fix_conn++;
 			if( verbose >= V_BARF)
 			    printf("GridLoop: giving %s triangle to %s\n", MatNames[iem]+1, MatNames[ mat_tri(nbj)]+1);
-		    
+
 			/* Subvert the material */
 			reg_tri( ie) = reg_tri( nbj);
 
@@ -243,7 +243,7 @@ DetectLoop()
 			vert_tri(ie,0) = node_mat( vert_tri(ie,0), mat_tri(ie));
 			vert_tri(ie,1) = node_mat( vert_tri(ie,1), mat_tri(ie));
 			vert_tri(ie,2) = node_mat( vert_tri(ie,2), mat_tri(ie));
-			
+
 			/* The corner node loses its node of this material */
 			if ( (inl = node_mat(nd_pt(pc,0),iem)) != -1 )
 			    rem_1nd( inl );
@@ -251,12 +251,12 @@ DetectLoop()
 
 		    /* Otherwise give it to the vacuum */
 		    else {
-		    
+
 			didSomething = 1;
 			fix_conn++;
 			if( verbose >= V_BARF)
 			    printf("GridLoop: losing %s triangle\n", MatNames[ iem]+1);
-		    
+
 			/* Kill the node at the point that is sticking out */
 			if ( (inl = node_mat(nd_pt(pc,0),iem)) != -1 )
 			    rem_1nd( inl );
@@ -271,7 +271,7 @@ DetectLoop()
 	    next_tri(ie);
 	}
     }
-    
+
     if (fix_conn) bd_connect("after loop removal");
     return(fix_conn);
 }
