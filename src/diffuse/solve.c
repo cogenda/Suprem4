@@ -334,8 +334,8 @@ PTR_FNC do_setup;
 	    converge = (rhs2 < absrhserr) || (maxnorm*NEWT < 1.0e-6) ;
 
 	/*check to make sure we are making a least a little progress*/
-	if ( (count > 10) && (rhs2 / lstnm > 0.999) ) negat = TRUE;
-	if ( ( rhs2 / lstnm > 1.0e10 ) ) negat = TRUE;
+        if ( (count > 10) && (rhs2 / (lstnm+1e-10) > 0.999) ) negat = TRUE;
+        if ( ( rhs2 / (lstnm+1e-10) > 1.0e10 ) ) negat = TRUE;
 	if ( isnan( rhs2 ) ) negat = TRUE;
 
 	/*print out the loop data*/

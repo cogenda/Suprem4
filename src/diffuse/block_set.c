@@ -382,9 +382,17 @@ double spot;		/*the sign for the potential terms*/
 	newb[ss][row] += cpl * grad;
 	newb[ss][col] -= cpl * grad;
 
-	/*compute the derivitive w/r to value*/
-	jacrow  = cpl * ( 1.0 - grpot * 0.5 * sqval[col] / sqval[row]);
-	jaccol  = cpl * ( 1.0 + grpot * 0.5 * sqval[row] / sqval[col]);
+        /*compute the derivitive w/r to value*/
+        if(sqval[row] != 0.0)
+          jacrow  = cpl * ( 1.0 - grpot * 0.5 * sqval[col] / sqval[row]);
+        else
+          jacrow  = cpl;
+
+        if(sqval[col] != 0.0)
+          jaccol  = cpl * ( 1.0 + grpot * 0.5 * sqval[row] / sqval[col]);
+        else
+          jaccol  = cpl;
+
 
 	/*compute the derivative w/r to the chemical concentration*/
 	pcrow   = jacrow * dvs[row];
