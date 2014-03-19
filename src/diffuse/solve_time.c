@@ -123,7 +123,7 @@ int cont;
 	t += del_df;
 
 	last_ddf = del_df;
-        del_df = min(2*del_df, min(Ktd, min(Kto, Ktp)));
+        del_df = min(Ktd, min(Kto, Ktp));
 
 	/* But if given a formula, take that instead */
 	if( timemeth == FORM)
