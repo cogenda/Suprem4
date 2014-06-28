@@ -48,8 +48,8 @@ CC	= gcc -m32
 FC	= gfortran -m32
 
 #.. What optimization level for the compilers?
-COPT	= -O2
-FOPT	= -O2
+COPT	= -O1
+FOPT	= -O1
 #COPT	= -g
 #FOPT	= -g
 
