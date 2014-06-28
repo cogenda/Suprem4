@@ -45,7 +45,7 @@ ig2_read (name, flip, scale)
     int i, ierr, line, n, a, r, p, t;
     float cord[MAXDIM];
     int vert[MAXVRT], bc[MAXSID];
-
+    int vertf[MAXVRT], bcf[MAXSID], b;
     FILE *lu;
     double x, scal[3];
 
@@ -67,7 +67,7 @@ ig2_read (name, flip, scale)
     /*default to reading in a two dimensional mesh*/
     set_dim( 2 );
 
-#define SKIP(I) while(isspace(*I)) I++; while(!isspace(*I)) I++; 
+#define SKIP(I) while(isspace(*I)) I++; while(!isspace(*I)) I++;
 
     /* Read */
     line = ierr = 0;
@@ -77,7 +77,7 @@ ig2_read (name, flip, scale)
 
 	switch(flag[0]) {
 
-	case 'D' : 
+	case 'D' :
 	    /*read the dimensionality*/
 	    if ((sscanf(iline, "D %d %d %d", &mode, &nvrt, &nedg)) != 3)
 		{ ugh (line,"incomplete dimensional terms",ierr++); }
@@ -88,7 +88,7 @@ ig2_read (name, flip, scale)
 	    /*read the line data*/
 	    if ( sscanf(iline,"c %d", &i ) != 1 )
 		ugh( line, "incomplete point line", ierr++ );
-	
+
 	    /*read the solution values*/
 	    ip = iline + 1;
 	    SKIP( ip );
@@ -192,20 +192,39 @@ ig2_read (name, flip, scale)
 		SKIP(ip);
 	    }
 
-	    /*final true is for point creation, rather than node*/
-	    t = mk_ele(nvrt, vert, nedg, bc, r, TRUE);
+            if(flip)
+            {
+              for(i = 0; i < nvrt; i++)
+                vertf[i] = vert[nvrt-1-i];
+              for(i = 0; i < nedg; i++)
+              {
+                b = bc[nedg-1-i];
+                if(b == -1022)
+                  bcf[i] = -1023;
+                else if(b == -1023)
+                  bcf[i] = -1022;
+                else
+                  bcf[i] = b;
+              }
+            }
 
-	    /*optional data on sons and fathers*/
+	    /*final true is for point creation, rather than node*/
+            if(flip)
+	      t = mk_ele(nvrt, vertf, nedg, bcf, r, TRUE);
+            else
+              t = mk_ele(nvrt, vert, nedg, bc, r, TRUE);
+
+            /*optional data on sons and fathers*/
 	    if ( sscanf(ip,"%d %d", &n, &r ) == 2 ) {
 		set_father(t, n);
 		set_offspr(t, r);
 	    }
 
 	    break;
-	
+
 	case 's' :
 	    /*read in the number of solutions and their impurity numbers*/
-	    if ( sscanf(iline,"s %d", &n_imp) != 1 ) 
+	    if ( sscanf(iline,"s %d", &n_imp) != 1 )
 		ugh( line, "no impurities on the s line", ierr++ );
 
 	    /*loop to read in all the solution numbers*/
@@ -229,7 +248,7 @@ ig2_read (name, flip, scale)
 	    break;
 
 	case 'I' :
-	    if ( sscanf(iline,"I %d", &n_imp) != 1 ) 
+	    if ( sscanf(iline,"I %d", &n_imp) != 1 )
 		ugh( line, "no impurities on the I line", ierr++ );
 
 	    /*loop to read in all the solution numbers*/
@@ -257,7 +276,7 @@ ig2_read (name, flip, scale)
 	    /*read the line data*/
 	    if ( sscanf(iline,"n %d %d", &i, &n ) != 2 )
 		ugh( line, "incomplete node line", ierr++ );
-	
+
 	    p = mk_nd(i, n);
 
 	    /*read the solution values*/
@@ -315,7 +334,7 @@ int ig2_write (name, lflip, scale)
 {
     FILE *lu;
     double scal[3];
-    int ip, ir, it, is, in, i;
+    int ip, ir, it, is, in, i, bc;
 
     scal[0] = 1e+4*scale;
     scal[1] = 1e+4*((lflip)? -scale : scale);
@@ -353,9 +372,29 @@ int ig2_write (name, lflip, scale)
 
     for(it = 0; it < ne; it++) {
 	fprintf (lu, "t %d %d ", it+1, reg_tri(it) + 1);
-	for(i=0; i < num_vert(it); i++) 
+
+        if(lflip)
+        {
+          for(i=num_vert(it)-1; i>=0; i--)
 	    fprintf(lu,"%d ",pt_nd(vert_tri(it,i))+1);
-	for(i=0; i < num_face(it); i++) fprintf (lu, "%d ", tcode(it, i) );
+          for(i=num_face(it)-1; i>=0; i--)
+          {
+            /* exchange bot/top boundary code */
+            bc = tcode(it, i);
+            if(bc == -1022)
+              fprintf (lu, "%d ",  -1023 );
+            else if( bc == -1023)
+              fprintf (lu, "%d ",  -1022 );
+            else
+              fprintf (lu, "%d ",  bc );
+          }
+        }else
+        {
+          for(i=0; i < num_vert(it); i++)
+            fprintf(lu,"%d ",pt_nd(vert_tri(it,i))+1);
+          for(i=0; i < num_face(it); i++)
+            fprintf (lu, "%d ", tcode(it, i) );
+        }
 	fprintf(lu, "%d %d ", father(it), offspr(it));
 	fprintf( lu, "\n" );
     }
