@@ -388,10 +388,13 @@ double **update;
 
 		/*calculate the value of the update*/
 		tmp = vars[si][j] + update[si][j];
+                if ( fabs(tmp) < 1.0 )
+                {
+                  tmp = 1.0;
+                }
 
 		/*check to see if the new conc will be negative*/
-		if ( tmp < 0.0 ) {
-
+		if ( tmp < 0 ) {
 		    /*only sweat non pseudo vars*/
 		    if ( ! IS_PSEUDO( imp ) ) negat++;
 
