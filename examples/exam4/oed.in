@@ -35,5 +35,5 @@ method two.d
 diffuse time=30 temp=1100 dry
 
 #save the data
-structure out=oed.str
+structure out=oed.sup
 

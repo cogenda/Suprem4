@@ -43,13 +43,13 @@ DATADIR = $(HERE)/data
 
 #.. Which C and Fortran Compiler?
 #CC	= cc
-CC	= gcc
+CC	= gcc -m32
 #FC	= f77
-FC	= g77
+FC	= gfortran -m32
 
 #.. What optimization level for the compilers?
-COPT	= -O2
-FOPT	= -O2
+COPT	= -O1
+FOPT	= -O1
 #COPT	= -g
 #FOPT	= -g
 

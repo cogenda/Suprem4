@@ -29,4 +29,4 @@ plot.2 bound y.mi=-0.3 x.mi=-0.3 x.ma=0.3
 
 diffuse tim=90 tem=1000 weto2  movie="plot.2 bound cl=f ax=f line.b=1"
 
-stru outf=sdep15.str
+stru outf=sdep15.sup

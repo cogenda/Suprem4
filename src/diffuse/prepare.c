@@ -124,7 +124,7 @@ int min_ok;
 	upd_matrix();
 
 	/*allocate space for the new nodal structures*/
-	if ( min_ok ) diff_alloc();
+        if(min_ok) diff_alloc();
 
 	UpdateSymbolic = 0;
     }

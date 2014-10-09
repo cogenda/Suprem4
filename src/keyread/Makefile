@@ -8,6 +8,7 @@ SYS     = BSD
 LOCDEFS = -D$(SYS)
 INCLUDE = -I../include
 CFLAGS  = -c $(COPT) $(LOCDEFS) $(INCLUDE)
+LDFLAGS = $(COPT) $(LOCDEFS)
 
 HFILES  =
 SCCS	= s.expand.c s.lexical.l s.main.c s.parser.y s.write.c

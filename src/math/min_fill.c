@@ -95,7 +95,7 @@ min_ia_fill(ia, reorder, talk)
     }
 
     nbrs = salloc( link, nn);
-    storage_size = 1.5*ia[ nn];
+    storage_size = 10*ia[ nn];
     su = hwm = 0;
     storage = 0;
     new_storage();
@@ -272,7 +272,7 @@ new_storage()
     }
     else {
 	storage = sralloc( link, 2*storage_size, storage);
-	start = storage + storage_size;
+	start = storage + storage_size -1;
 	end   = storage + 2*storage_size -1;
 	storage_size *= 2;
     }

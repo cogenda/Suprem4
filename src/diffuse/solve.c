@@ -268,7 +268,7 @@ PTR_FNC do_setup;
     double rhsnm[MAXIMP], rhs2, maxrhs;	/*two norm of the right hand side*/
     double scrhs, lstnm = 1.0e37;
     int negat = FALSE;
-    int factor;
+    int factor = TRUE;
     double t1, norm2();
     double absrhserr = (mode==ONED)?(1.0e5):(10);
     char *ans = "  %c%-4d    %-11.5g  %-6.4g  %-6.4g  %-7.5g  %4d\n";
@@ -294,14 +294,7 @@ PTR_FNC do_setup;
 
 	times(&before);
 	/*figure if we need to factor the matrix*/
-	switch ( methdata.factor ) {
-	case RF_ALL : factor = TRUE;
-		      break;
-	case RF_ERR : factor = lstnm < (rhs2 * 0.1);
-		      break;
-	case RF_TIM : factor = (count == 1) && init;
-		      break;
-	}
+        /* alway do LU factor, CPU is faster now. fix by gongding 2013.03.18 */
 
 	/*solve it with the appropriate method*/
 	solve_blocks(nn, cs.sol, cs.nsol, cs.elim, cs.il, cs.l, cs.loff, newb, factor );
@@ -338,11 +331,11 @@ PTR_FNC do_setup;
 	if ( cs.type == SS )
 	    converge = maxnorm < 1.0e-3;
 	else
-	    converge = (rhs2 < absrhserr) || (maxnorm*NEWT < 1.0e-6) ;
+	    converge = (rhs2 < absrhserr) || (maxnorm*NEWT < 1.0e-5) ;
 
 	/*check to make sure we are making a least a little progress*/
-	if ( (count > 10) && (rhs2 / lstnm > 0.999) ) negat = TRUE;
-	if ( ( rhs2 / lstnm > 1.0e10 ) ) negat = TRUE;
+        if ( (count > 10) && (rhs2 > 0.999*lstnm) ) negat = TRUE;
+        if ( ( rhs2 > 1.0e10*lstnm ) ) negat = TRUE;
 	if ( isnan( rhs2 ) ) negat = TRUE;
 
 	/*print out the loop data*/
@@ -395,10 +388,13 @@ double **update;
 
 		/*calculate the value of the update*/
 		tmp = vars[si][j] + update[si][j];
+                if ( fabs(tmp) < 1.0 )
+                {
+                  tmp = 1.0;
+                }
 
 		/*check to see if the new conc will be negative*/
-		if ( tmp < 0.0 ) {
-
+		if ( tmp < 0 ) {
 		    /*only sweat non pseudo vars*/
 		    if ( ! IS_PSEUDO( imp ) ) negat++;
 
